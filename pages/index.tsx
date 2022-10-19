@@ -1,27 +1,33 @@
-import MoblieMainNav from "components/navs/mobile_main_nav";
-import type { NextPage } from "next";
-import { Skipper, View } from "page_components/home";
+import { NextPageX } from "types/next";
 import styles from "styles/pages/Home.module.css";
 import Head from "next/head";
+import Layout from "components/layouts";
+import Link from "next/link";
 
-const Home: NextPage = () => {
+const Home: NextPageX = () => {
   return (
     <div className={styles.main}>
-      <div className={styles.top}>
-        <Skipper href="/wallet/create" />
-      </div>
-
-      <div className={styles.center}>
-        <View />
-      </div>
-
-      <div className={styles.bottom}>{/* <MoblieMainNav /> */}</div>
-
       <Head>
         <title>Mola Wallet</title>
       </Head>
+      <div className={styles.padder}>
+        <div className={styles.hero}>
+          <h1>Mola Digital</h1>
+          <p>
+            Digital Marketplace For Collectibles, Event Tickets, Membership
+            Passes And More.
+          </p>
+          <Link href="/wallet/create">
+            <a className={styles.action_primary}>Create new wallet</a>
+          </Link>
+          <Link href="#">
+            <a className={styles.action_secondary}>Access wallet</a>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
 
+Home.Layout = Layout;
 export default Home;

@@ -38,9 +38,7 @@ export default function Steps({ steps, step }: argType) {
           ))}
         </div>
       </div>
-      <h2>
-        Step {step}: {steps[step - 1].title2 ?? steps[step - 1].title}
-      </h2>
+      <h2>{steps[step - 1].title2 ?? steps[step - 1].title}</h2>
     </div>
   );
 }

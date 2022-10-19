@@ -1,8 +1,10 @@
 import styles from "styles/pages/wallet/create_access.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { NextPageX } from "types/next";
+import Layout from "components/layouts";
 
-export default function CreateWalletPage() {
+const CreateWalletPage: NextPageX = () => {
   return (
     <div className={styles.main}>
       <div className={styles.container}>
@@ -46,4 +48,7 @@ export default function CreateWalletPage() {
       </div>
     </div>
   );
-}
+};
+
+CreateWalletPage.Layout = Layout;
+export default CreateWalletPage;

@@ -2,11 +2,15 @@ import styles from "styles/pages/wallet/create_access.module.css";
 import Steps from "page_components/wallet/create_access/steps";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { NextPageX } from "types/next";
+import Layout from "components/layouts";
 
-export default function CreateWithMnemonic() {
+const CreateWithMnemonic: NextPageX = () => {
   const [words, setWords] = useState<undefined | string[]>();
 
   function generateWords(): string[] {
+    //insert generating random word fn
+    //return array of strings
     return new Array(12).fill("Words");
   }
 
@@ -47,4 +51,7 @@ export default function CreateWithMnemonic() {
       </div>
     </div>
   );
-}
+};
+
+CreateWithMnemonic.Layout = Layout;
+export default CreateWithMnemonic;
