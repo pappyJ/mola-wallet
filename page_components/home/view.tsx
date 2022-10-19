@@ -34,7 +34,7 @@ export default function View() {
       </div>
       <div className={styles.next_button_container}>
         <Link
-          href={idx === 2 ? "/create_password" : `/?section=${idx + 2}`}
+          href={idx === 2 ? "/wallet/create" : `/?section=${idx + 2}`}
           scroll={false}
           shallow={true}
         >

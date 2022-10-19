@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.main}>
       <div className={styles.top}>
-        <Skipper href="/create_password" />
+        <Skipper href="/wallet/create" />
       </div>
 
       <div className={styles.center}>

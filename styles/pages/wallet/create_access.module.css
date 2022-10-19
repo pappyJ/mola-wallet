@@ -1,0 +1,136 @@
+.main {
+  background-color: rgb(245, 255, 250);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.4rem;
+}
+.main > .container {
+  background-color: white;
+  max-width: 64rem;
+  width: 100%;
+  border-radius: 1.2rem;
+  box-shadow: 0 0 5px #eee;
+}
+
+.main h1 {
+  font-size: 3.2rem;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  padding: 2.4rem;
+}
+
+.main h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 1rem;
+}
+
+.option {
+  margin: 0 3.2rem 3.2rem;
+  padding: 2.4rem;
+  border-radius: 1.2rem;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  color: #333;
+}
+.option .description {
+  display: flex;
+  align-items: flex-start;
+}
+.option .description .image_container {
+  display: inline-flex;
+  margin-left: 2rem;
+  flex: 0 0 6.4rem;
+  height: 6.4rem;
+  position: relative;
+}
+
+.step_container {
+  margin: 2.4rem 3.2rem 3.2rem;
+}
+
+.steps .hr {
+  width: calc(100% - 150px);
+  display: flex;
+  margin: 0 auto;
+  background-color: #aaa;
+  height: 1px;
+}
+.steps > .container {
+  position: relative;
+  top: -2.5rem;
+  margin-bottom: 1.6rem;
+}
+
+.steps_list_container,
+.index_list_container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.steps_list,
+.index_list {
+  width: 150px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  color: #aaa;
+}
+.index_list .index {
+  display: inline-flex;
+  background-color: #aaa;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  box-sizing: content-box;
+  border: 1rem solid white;
+  margin-bottom: 0.2rem;
+}
+
+.index_list .index.active {
+  background-color: #00244e;
+}
+.steps_list.active {
+  color: black;
+}
+
+.words_container {
+  display: grid;
+  grid-template-columns: 10rem 10rem 10rem 10rem;
+  gap: 2rem;
+  justify-content: center;
+  padding: 1rem 3.2rem 3.2rem;
+}
+.words_container span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.6rem;
+  padding: 1.6rem;
+  background-color: #e9f5f3;
+}
+
+.next_button_container {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 3.2rem 3.2rem;
+}
+.next_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.2rem 2.4rem;
+  background-color: #00244e;
+  color: white;
+  border-radius: 0.6rem;
+  width: 20rem;
+}

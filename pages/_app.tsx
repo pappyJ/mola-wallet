@@ -7,6 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <link rel="icon" href="/mola-logo-1.png" />
+        <title>Mola Wallet</title>
       </Head>
       <Component {...pageProps} />
     </>
