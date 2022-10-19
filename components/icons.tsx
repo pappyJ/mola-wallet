@@ -34,6 +34,26 @@ export function CaretRight() {
   );
 }
 
+export function CloseIcon() {
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 60 57"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M22.875 21.6563L37.125 35.3438M37.125 21.6563L22.875 35.3438M58.5 28.5C58.5 32.0949 57.7628 35.6547 56.3306 38.976C54.8983 42.2972 52.799 45.315 50.1525 47.857C47.5061 50.3991 44.3643 52.4155 40.9065 53.7912C37.4487 55.1669 33.7427 55.875 30 55.875C26.2573 55.875 22.5513 55.1669 19.0935 53.7912C15.6357 52.4155 12.4939 50.3991 9.84746 47.857C7.20099 45.315 5.10169 42.2972 3.66943 38.976C2.23717 35.6547 1.5 32.0949 1.5 28.5C1.5 21.2397 4.50267 14.2768 9.84746 9.14295C15.1922 4.00914 22.4413 1.125 30 1.125C37.5587 1.125 44.8078 4.00914 50.1525 9.14295C55.4973 14.2768 58.5 21.2397 58.5 28.5Z"
+        stroke="#D9D9D9"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function CopyIcon() {
   return (
     <svg
@@ -127,6 +147,42 @@ export function MenuIcon() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function ReloadIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="100%"
+      height="100%"
+      viewBox="0 0 512 512"
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="32"
+        d="M320 120l48 48-48 48"
+      />
+      <path
+        d="M352 168H144a80.24 80.24 0 00-80 80v16M192 392l-48-48 48-48"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="32"
+      />
+      <path
+        d="M160 344h208a80.24 80.24 0 0080-80v-16"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="32"
       />
     </svg>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NextPageX } from "types/next";
 import Layout from "components/layouts";
+import { CloseIcon, ReloadIcon } from "components/icons";
 
 const CreateWithMnemonic: NextPageX = () => {
   const [words, setWords] = useState<undefined | string[]>();
@@ -22,7 +23,14 @@ const CreateWithMnemonic: NextPageX = () => {
     <div className={styles.main}>
       <div className={styles.container}>
         <div className={styles.mnemonic}>
-          <h1>Create wallet with Mnemonic Phrase</h1>
+          <div className={styles.close_icon_container}>
+            <Link href="/wallet/create">
+              <a className={styles.close_icon}>
+                <CloseIcon />
+              </a>
+            </Link>
+          </div>
+          <h1 className={styles.sm_pad}>Create wallet with Mnemonic Phrase</h1>
 
           <div className={styles.step_container}>
             <Steps
@@ -36,6 +44,14 @@ const CreateWithMnemonic: NextPageX = () => {
               step={1}
             />
           </div>
+        </div>
+        <div className={styles.update_btn_container}>
+          <button>
+            <span className={styles.icon_container}>
+              <ReloadIcon />
+            </span>
+            <span>Update</span>
+          </button>
         </div>
         <div className={styles.words_container}>
           {words
