@@ -37,6 +37,53 @@ export function CaretRight() {
 export function CloseIcon() {
   return (
     <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="100%"
+      height="100%"
+      viewBox="0 0 512 512"
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="32"
+        d="M368 368L144 144M368 144L144 368"
+      />
+    </svg>
+  );
+}
+
+export function CloseIconInCircle() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      width="100%"
+      height="100%"
+    >
+      <path
+        d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"
+        fill="none"
+        stroke="currentColor"
+        strokeMiterlimit="10"
+        strokeWidth="32"
+      />
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="32"
+        d="M320 320L192 192M192 320l128-128"
+      />
+    </svg>
+  );
+}
+
+export function CloseIconInBigCircle() {
+  return (
+    <svg
       width="100%"
       height="100%"
       viewBox="0 0 60 57"

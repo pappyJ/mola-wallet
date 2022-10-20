@@ -6,8 +6,13 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { NextPageX } from "types/next";
 import Layout from "components/layouts";
 import { createMnemonic } from "utils/wallet";
-import { CloseIcon, ReloadIcon } from "components/icons";
+import {
+  CloseIconInBigCircle,
+  CloseIconInCircle,
+  ReloadIcon,
+} from "components/icons";
 import { useRouter } from "next/router";
+import { clear } from "console";
 
 const steps = [
   { title: "Write down these words" },
@@ -50,7 +55,7 @@ const CreateWithMnemonic: NextPageX = () => {
           <div className={styles.close_icon_container}>
             <Link href="/wallet/create">
               <a className={styles.close_icon}>
-                <CloseIcon />
+                <CloseIconInBigCircle />
               </a>
             </Link>
           </div>
@@ -119,32 +124,54 @@ function Step2Component({ words: _words }: { words: string[] }) {
   );
   const [selectedWords, setSelectedWords] = useState(new Array(12).fill(""));
 
-  function addToSelectedWords(e: string) {
+  function addToSelectedWords(e: string, i: number) {
     setSelectedWords((prev) => {
       let done = false;
       return prev.map((ee) => {
         if (ee == "" && e != "" && !done) {
           done = true;
-          removeFromWords(e);
+          removeFromWords(i);
           return e;
         } else return ee;
       });
     });
   }
 
-  function removeFromWords(e: string) {
-    setWords((prev) => prev?.map((ee) => (ee == e ? "" : ee)));
+  function clearSelectedWords() {
+    setSelectedWords(new Array(12).fill(""));
+    setWords(JSON.parse(JSON.stringify(_words)).sort());
+  }
+
+  function removeFromWords(i: number) {
+    setWords((prev) => {
+      let n = JSON.parse(JSON.stringify(prev));
+      n[i] = "";
+      return n;
+    });
   }
 
   useEffect(() => {
-    setWords(_words);
+    setWords(JSON.parse(JSON.stringify(_words)).sort());
   }, [_words]);
 
   return (
     <>
+      <div className={styles.update_btn_container}>
+        <button onClick={clearSelectedWords}>
+          <span className={styles.icon_container}>
+            <CloseIconInCircle />
+          </span>
+          <span>Clear</span>
+        </button>
+      </div>
       <div className={styles.words_container}>
         {selectedWords.map((e, i) => (
-          <span key={i} className={styles.word_box}>
+          <span
+            key={i}
+            className={`${styles.word_box} ${
+              e !== "" && e !== _words[i] ? styles.error : ""
+            }`}
+          >
             <span key={i} className={styles.counter}>
               {i + 1}
             </span>
@@ -161,7 +188,7 @@ function Step2Component({ words: _words }: { words: string[] }) {
             key={i}
             className={`${styles.word_box} ${styles.no_bg}`}
             onClick={() => {
-              if (e !== "") addToSelectedWords(e);
+              if (e !== "") addToSelectedWords(e, i);
             }}
             tabIndex={e === "" ? -1 : 0}
             style={{ cursor: e === "" ? "default" : "pointer" }}
