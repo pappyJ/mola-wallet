@@ -56,7 +56,7 @@ input:focus {
 .c-scroll::-webkit-scrollbar-thumb {
   border-radius: 10px;
   border: 4px solid white;
-  background-color: #176bad;
+  background-color: #afd1eb;
 }
 .c-scroll::-webkit-scrollbar-thumb:hover {
   border: 3px solid white;
