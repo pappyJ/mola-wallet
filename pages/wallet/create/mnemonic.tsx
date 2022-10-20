@@ -4,14 +4,15 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NextPageX } from "types/next";
 import Layout from "components/layouts";
+import { createMnemonic } from "utils/wallet";
 
 const CreateWithMnemonic: NextPageX = () => {
   const [words, setWords] = useState<undefined | string[]>();
 
   function generateWords(): string[] {
-    //insert generating random word fn
-    //return array of strings
-    return new Array(12).fill("Words");
+    //create 12 ramdom words
+    const mnemonics = createMnemonic();
+    return mnemonics;
   }
 
   useEffect(() => {
