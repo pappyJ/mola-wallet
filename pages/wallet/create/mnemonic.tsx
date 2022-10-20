@@ -17,7 +17,7 @@ const steps = [
 
 const CreateWithMnemonic: NextPageX = () => {
   const [step, setStep] = useState(1);
-  const [words, setWords] = useState<undefined | string[]>();
+  const [words, setWords] = useState<string[]>(new Array(12).fill(""));
   const router = useRouter();
 
   function generateWords(): string[] {
@@ -66,7 +66,7 @@ const CreateWithMnemonic: NextPageX = () => {
               generateAndSetWords={generateAndSetWords}
             />
           ) : step == 2 ? (
-            <Step2Component />
+            <Step2Component words={words} />
           ) : step == 3 ? (
             <Step3Component />
           ) : (
@@ -82,7 +82,7 @@ function Step1Component({
   words,
   generateAndSetWords,
 }: {
-  words: string[] | undefined;
+  words: string[];
   generateAndSetWords: () => void;
 }) {
   return (
@@ -96,9 +96,12 @@ function Step1Component({
         </button>
       </div>
       <div className={styles.words_container}>
-        {words
-          ? words.map((e, i) => <span key={i}>{e}</span>)
-          : new Array(12).fill("").map((e, i) => <span key={i}></span>)}
+        {words.map((e, i) => (
+          <span key={i} className={styles.word_box}>
+            {e}
+            <span className={styles.counter}>{i + 1}</span>
+          </span>
+        ))}
       </div>
 
       <div className={styles.next_button_container}>
@@ -109,9 +112,64 @@ function Step1Component({
     </>
   );
 }
-function Step2Component() {
+
+function Step2Component({ words: _words }: { words: string[] }) {
+  const [words, setWords] = useState<string[]>(
+    JSON.parse(JSON.stringify(_words)).sort()
+  );
+  const [selectedWords, setSelectedWords] = useState(new Array(12).fill(""));
+
+  function addToSelectedWords(e: string) {
+    setSelectedWords((prev) => {
+      let done = false;
+      return prev.map((ee) => {
+        if (ee == "" && e != "" && !done) {
+          done = true;
+          removeFromWords(e);
+          return e;
+        } else return ee;
+      });
+    });
+  }
+
+  function removeFromWords(e: string) {
+    setWords((prev) => prev?.map((ee) => (ee == e ? "" : ee)));
+  }
+
+  useEffect(() => {
+    setWords(_words);
+  }, [_words]);
+
   return (
     <>
+      <div className={styles.words_container}>
+        {selectedWords.map((e, i) => (
+          <span key={i} className={styles.word_box}>
+            <span key={i} className={styles.counter}>
+              {i + 1}
+            </span>
+            {e}
+          </span>
+        ))}
+      </div>
+      <h3 className={styles.center_text}>
+        Click the words in the correct order
+      </h3>
+      <div className={styles.words_container}>
+        {words.map((e: string, i: number) => (
+          <button
+            key={i}
+            className={`${styles.word_box} ${styles.no_bg}`}
+            onClick={() => {
+              if (e !== "") addToSelectedWords(e);
+            }}
+            tabIndex={e === "" ? -1 : 0}
+            style={{ cursor: e === "" ? "default" : "pointer" }}
+          >
+            {e}
+          </button>
+        ))}
+      </div>
       <div className={styles.next_button_container}>
         <Link href="?step=1" shallow={true}>
           <a className={styles.next_button_secondary}>Previous</a>

@@ -23,11 +23,20 @@
   padding: 0 3.2rem 2.4rem;
 }
 
-.main h2 {
+.main h2,
+.main h3 {
   font-size: 2.4rem;
   font-weight: 600;
   color: #00244e;
   margin-bottom: 1rem;
+}
+
+.main h3 {
+  font-size: 2rem;
+}
+
+.center_text {
+  text-align: center;
 }
 
 .close_icon_container {
@@ -128,7 +137,7 @@
   justify-content: center;
   padding: 1rem 3.2rem 3.2rem;
 }
-.words_container span {
+.words_container .word_box {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -136,6 +145,30 @@
   height: 4.5rem;
   background-color: #e9f5f3;
   font-size: 1.5rem;
+  position: relative;
+  border: none;
+}
+.words_container .word_box.no_bg {
+  background-color: transparent;
+  color: #00244e;
+  transition: all 300ms;
+  font-size: 1.6rem;
+}
+.words_container button.word_box.no_bg:hover {
+  color: #1e89dd;
+}
+.words_container .word_box .counter {
+  position: absolute;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  left: 0;
+  top: 0;
+  color: #00244e;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .next_button_container {
