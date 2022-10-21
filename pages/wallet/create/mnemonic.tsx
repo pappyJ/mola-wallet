@@ -2,7 +2,7 @@
 import styles from "styles/pages/wallet/create_access.module.css";
 import Steps from "page_components/wallet/create_access/steps";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
 import { NextPageX } from "types/next";
 import Layout from "components/layouts";
 import { createMnemonic } from "utils/wallet";
@@ -12,7 +12,6 @@ import {
   ReloadIcon,
 } from "components/icons";
 import { useRouter } from "next/router";
-import { clear } from "console";
 
 const steps = [
   { title: "Write down these words" },
@@ -23,6 +22,7 @@ const steps = [
 const CreateWithMnemonic: NextPageX = () => {
   const [step, setStep] = useState(1);
   const [words, setWords] = useState<string[]>(new Array(12).fill(""));
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
 
   function generateWords(): string[] {
@@ -71,9 +71,9 @@ const CreateWithMnemonic: NextPageX = () => {
               generateAndSetWords={generateAndSetWords}
             />
           ) : step == 2 ? (
-            <Step2Component words={words} />
+            <Step2Component words={words} setSuccess={setSuccess} />
           ) : step == 3 ? (
-            <Step3Component />
+            <Step3Component success={success} setSuccess={setSuccess} />
           ) : (
             <></>
           )}
@@ -118,11 +118,18 @@ function Step1Component({
   );
 }
 
-function Step2Component({ words: _words }: { words: string[] }) {
+function Step2Component({
+  words: _words,
+  setSuccess,
+}: {
+  words: string[];
+  setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [words, setWords] = useState<string[]>(
     JSON.parse(JSON.stringify(_words)).sort()
   );
   const [selectedWords, setSelectedWords] = useState(new Array(12).fill(""));
+  const router = useRouter();
 
   function addToSelectedWords(e: string, i: number) {
     setSelectedWords((prev) => {
@@ -148,6 +155,17 @@ function Step2Component({ words: _words }: { words: string[] }) {
       n[i] = "";
       return n;
     });
+  }
+
+  function validateSelectedAndContinue(ev: MouseEvent) {
+    ev.preventDefault();
+    if (selectedWords.every((e, i) => e === _words[i])) {
+      setSuccess(true);
+      router.replace("?step=3", undefined, { shallow: true });
+    } else {
+      alert("The order of words are incorrect");
+      clearSelectedWords();
+    }
   }
 
   useEffect(() => {
@@ -202,13 +220,30 @@ function Step2Component({ words: _words }: { words: string[] }) {
           <a className={styles.next_button_secondary}>Previous</a>
         </Link>
         <Link href="?step=3" shallow={true}>
-          <a className={styles.next_button}>Next</a>
+          <a
+            className={styles.next_button}
+            onClick={(e) => validateSelectedAndContinue(e)}
+          >
+            Next
+          </a>
         </Link>
       </div>
     </>
   );
 }
-function Step3Component() {
+function Step3Component({
+  success,
+  setSuccess,
+}: {
+  success: boolean;
+  setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!success) router.replace("?step=1", undefined, { shallow: true });
+    setSuccess(false);
+  }, []);
   return (
     <>
       <div className={styles.next_button_container}>
