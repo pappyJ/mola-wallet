@@ -1,4 +1,4 @@
-import styles from "styles/pages/wallet/create_access.module.css";
+import styles from "styles/pages/wallet/create_access/index.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { NextPageX } from "types/next";

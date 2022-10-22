@@ -1,22 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import styles from "styles/pages/wallet/create_access.module.css";
-import Steps from "page_components/wallet/create_access/steps";
+import styles from "styles/pages/wallet/create_access/index.module.css";
+import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.css";
+
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
+import { createMnemonic } from "utils/wallet";
+
 import { NextPageX } from "types/next";
 import Layout from "components/layouts";
-import { createMnemonic } from "utils/wallet";
+import Steps from "page_components/wallet/create_access/steps";
 import {
   CloseIconInBigCircle,
   CloseIconInCircle,
   ReloadIcon,
 } from "components/icons";
-import { useRouter } from "next/router";
 
 const steps = [
   { title: "Write down these words" },
   { title: "Verification" },
-  { title: "Well done" },
+  { title: "Congratulations" },
 ];
 
 const CreateWithMnemonic: NextPageX = () => {
@@ -51,33 +54,31 @@ const CreateWithMnemonic: NextPageX = () => {
   return (
     <div className={styles.main}>
       <div className={styles.container}>
-        <div className={styles.mnemonic}>
-          <div className={styles.close_icon_container}>
-            <Link href="/wallet/create">
-              <a className={styles.close_icon}>
-                <CloseIconInBigCircle />
-              </a>
-            </Link>
-          </div>
-          <h1 className={styles.sm_pad}>Create wallet with Mnemonic Phrase</h1>
-
-          <div className={styles.step_container}>
-            <Steps steps={steps} step={step} />
-          </div>
-
-          {step == 1 ? (
-            <Step1Component
-              words={words}
-              generateAndSetWords={generateAndSetWords}
-            />
-          ) : step == 2 ? (
-            <Step2Component words={words} setSuccess={setSuccess} />
-          ) : step == 3 ? (
-            <Step3Component success={success} setSuccess={setSuccess} />
-          ) : (
-            <></>
-          )}
+        <div className={styles.close_icon_container}>
+          <Link href="/wallet/create">
+            <a className={styles.close_icon}>
+              <CloseIconInBigCircle />
+            </a>
+          </Link>
         </div>
+        <h1 style={{ paddingTop: 0 }}>Create wallet with Mnemonic Phrase</h1>
+
+        <div className={styles.step_container}>
+          <Steps steps={steps} step={step} />
+        </div>
+
+        {step == 1 ? (
+          <Step1Component
+            words={words}
+            generateAndSetWords={generateAndSetWords}
+          />
+        ) : step == 2 ? (
+          <Step2Component words={words} setSuccess={setSuccess} />
+        ) : step == 3 ? (
+          <Step3Component success={success} setSuccess={setSuccess} />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
@@ -92,19 +93,19 @@ function Step1Component({
 }) {
   return (
     <>
-      <div className={styles.update_btn_container}>
+      <div className={styles.btn_with_icon_container}>
         <button onClick={generateAndSetWords}>
           <span className={styles.icon_container}>
             <ReloadIcon />
           </span>
-          <span>Update</span>
+          <span>Regenerate</span>
         </button>
       </div>
-      <div className={styles.words_container}>
+      <div className={mnemonic_styles.words_container}>
         {words.map((e, i) => (
-          <span key={i} className={styles.word_box}>
+          <span key={i} className={mnemonic_styles.word_box}>
             {e}
-            <span className={styles.counter}>{i + 1}</span>
+            <span className={mnemonic_styles.counter}>{i + 1}</span>
           </span>
         ))}
       </div>
@@ -174,7 +175,7 @@ function Step2Component({
 
   return (
     <>
-      <div className={styles.update_btn_container}>
+      <div className={styles.btn_with_icon_container}>
         <button onClick={clearSelectedWords}>
           <span className={styles.icon_container}>
             <CloseIconInCircle />
@@ -182,15 +183,15 @@ function Step2Component({
           <span>Clear</span>
         </button>
       </div>
-      <div className={styles.words_container}>
+      <div className={mnemonic_styles.words_container}>
         {selectedWords.map((e, i) => (
           <span
             key={i}
-            className={`${styles.word_box} ${
-              e !== "" && e !== _words[i] ? styles.error : ""
+            className={`${mnemonic_styles.word_box} ${
+              e !== "" && e !== _words[i] ? mnemonic_styles.error : ""
             }`}
           >
-            <span key={i} className={styles.counter}>
+            <span key={i} className={mnemonic_styles.counter}>
               {i + 1}
             </span>
             {e}
@@ -200,11 +201,11 @@ function Step2Component({
       <h3 className={styles.center_text}>
         Click the words in the correct order
       </h3>
-      <div className={styles.words_container}>
+      <div className={mnemonic_styles.words_container}>
         {words.map((e: string, i: number) => (
           <button
             key={i}
-            className={`${styles.word_box} ${styles.no_bg}`}
+            className={`${mnemonic_styles.word_box} ${mnemonic_styles.no_bg}`}
             onClick={() => {
               if (e !== "") addToSelectedWords(e, i);
             }}
@@ -246,9 +247,15 @@ function Step3Component({
   }, []);
   return (
     <>
+      <div className={styles.congrats_msg}>
+        <p>
+          You are now ready to take advantage of all that Mola Digital has to
+          offer!
+        </p>
+      </div>
       <div className={styles.next_button_container}>
-        <Link href="?step=1" shallow={true}>
-          <a className={styles.next_button}>Back</a>
+        <Link href="/wallet/access" shallow={true}>
+          <a className={styles.next_button}>Access Wallet</a>
         </Link>
       </div>
     </>

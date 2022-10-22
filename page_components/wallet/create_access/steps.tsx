@@ -1,4 +1,4 @@
-import styles from "styles/pages/wallet/create_access.module.css";
+import styles from "styles/pages/wallet/create_access/index.module.css";
 
 type argType = {
   steps: { title: string; title2?: string; description?: string }[];
