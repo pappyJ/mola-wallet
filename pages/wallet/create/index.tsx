@@ -9,7 +9,7 @@ const CreateWalletPage: NextPageX = () => {
     <div className={styles.main}>
       <div className={styles.container}>
         <h1>Create Wallet</h1>
-        <Link href="#">
+        <Link href="/wallet/create/keystore">
           <a className={styles.option}>
             <h2>Key Store File</h2>
             <div className={styles.description}>

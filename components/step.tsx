@@ -1,11 +1,32 @@
+import { useState, useLayoutEffect, useEffect } from "react";
+import { useRouter } from "next/router";
 import styles from "styles/pages/wallet/create_access/index.module.css";
 
-type argType = {
-  steps: { title: string; title2?: string; description?: string }[];
-  step: number;
-};
+type steps = { title: string; title2?: string; description?: string }[];
 
-export default function Steps({ steps, step }: argType) {
+export function useStep(steps: steps): [number] {
+  const [step, setStep] = useState(1);
+  const router = useRouter();
+
+  function setStepByQuery() {
+    let step = Number(new URLSearchParams(window.location.search).get("step"));
+
+    if (typeof !isNaN(step) && step <= steps.length && step >= 1) setStep(step);
+    else setStep(1);
+  }
+
+  useLayoutEffect(setStepByQuery, [steps]);
+
+  useEffect(() => {
+    router.events.on("routeChangeComplete", setStepByQuery);
+    return () => router.events.off("routeChangeComplete", setStepByQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return [step];
+}
+
+export default function Steps({ steps, step }: { steps: steps; step: number }) {
   return (
     <div className={styles.steps}>
       <div className={styles.hr} />
