@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import styles from "styles/pages/wallet/create_access/index.module.css";
 import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.css";
 
@@ -9,7 +8,7 @@ import { createMnemonic } from "utils/wallet";
 
 import { NextPageX } from "types/next";
 import Layout from "components/layouts";
-import Steps from "page_components/wallet/create_access/steps";
+import Steps, { useStep } from "components/step";
 import {
   CloseIconInBigCircle,
   CloseIconInCircle,
@@ -23,10 +22,9 @@ const steps = [
 ];
 
 const CreateWithMnemonic: NextPageX = () => {
-  const [step, setStep] = useState(1);
+  const [step] = useStep(steps);
   const [words, setWords] = useState<string[]>(new Array(12).fill(""));
   const [success, setSuccess] = useState(false);
-  const router = useRouter();
 
   function generateWords(): string[] {
     //create 12 ramdom words
@@ -36,20 +34,8 @@ const CreateWithMnemonic: NextPageX = () => {
   function generateAndSetWords() {
     setWords(generateWords());
   }
-  function setStepByQuery() {
-    let step = Number(new URLSearchParams(window.location.search).get("step"));
 
-    if (typeof !isNaN(step) && step <= steps.length && step >= 1) setStep(step);
-    else setStep(1);
-  }
-
-  useLayoutEffect(setStepByQuery, []);
-  useEffect(() => {
-    generateAndSetWords();
-
-    router.events.on("routeChangeComplete", setStepByQuery);
-    return () => router.events.off("routeChangeComplete", setStepByQuery);
-  }, []);
+  useEffect(generateAndSetWords, []);
 
   return (
     <div className={styles.main}>
@@ -244,7 +230,9 @@ function Step3Component({
   useEffect(() => {
     if (!success) router.replace("?step=1", undefined, { shallow: true });
     setSuccess(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <>
       <div className={styles.congrats_msg}>
