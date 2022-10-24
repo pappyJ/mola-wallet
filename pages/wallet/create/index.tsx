@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NextPageX } from "types/next";
 import Layout from "components/layouts";
+import { generateWalletUsingKeyStore , storeWalletKey} from '../../../utils/wallet';
 
 const CreateWalletPage: NextPageX = () => {
   return (
@@ -10,7 +11,14 @@ const CreateWalletPage: NextPageX = () => {
       <div className={styles.container}>
         <h1>Create Wallet</h1>
         <Link href="#">
-          <a className={styles.option}>
+          <a className={styles.option} onClick={async (e) => {
+          e.preventDefault();
+          
+          const keyFile = await generateWalletUsingKeyStore('pappy');
+
+          storeWalletKey(keyFile, `${new Date(Date.now()).toISOString()}.mola`);
+
+        }}>
             <h2>Key Store File</h2>
             <div className={styles.description}>
               <p>
