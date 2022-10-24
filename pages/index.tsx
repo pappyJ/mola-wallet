@@ -20,7 +20,7 @@ const Home: NextPageX = () => {
           <Link href="/wallet/create">
             <a className={styles.action_primary}>Create new wallet</a>
           </Link>
-          <Link href="#">
+          <Link href="/wallet/access">
             <a className={styles.action_secondary}>Access wallet</a>
           </Link>
         </div>

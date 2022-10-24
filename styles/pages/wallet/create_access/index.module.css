@@ -6,7 +6,7 @@
 }
 .main > .container {
   background-color: white;
-  max-width: 64rem;
+  max-width: 72rem;
   width: 100%;
   box-shadow: 0 0 45px rgba(0, 36, 78, 0.1);
 }

@@ -10,6 +10,10 @@
   text-align: center;
   margin: 0;
 }
+.steps > p {
+  text-align: center;
+  font-size: 1.7rem;
+}
 .steps > .container {
   position: relative;
   top: -2.5rem;

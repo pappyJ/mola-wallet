@@ -60,6 +60,7 @@ export default function Steps({ steps, step }: { steps: steps; step: number }) {
         </div>
       </div>
       <h2>{steps[step - 1].title2 ?? steps[step - 1].title}</h2>
+      <p>{steps[step - 1].description ?? ""}</p>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 .words_container {
   display: grid;
-  grid-template-columns: 12rem 12rem 12rem 12rem;
+  grid-template-columns: 14rem 14rem 14rem 14rem;
   gap: 1.8rem;
   justify-content: center;
   padding: 1rem 3.2rem 3.2rem;
