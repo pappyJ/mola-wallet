@@ -61,21 +61,40 @@ function Step1Component({
   setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const router = useRouter();
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
-  function handleClick() {
+  function afterUploadHandler() {
+    console.log(getFile());
     setSuccess(true);
     router.push("?step=2", undefined, { shallow: true });
   }
+
+  function getFile() {
+    return uploadInputRef.current?.files?.[0];
+  }
+
+  function selectFile() {
+    uploadInputRef.current?.click();
+  }
+
   return (
-    <div className={styles.next_button_container}>
-      <button
-        className={styles.next_button}
-        style={{ marginTop: "2rem" }}
-        onClick={handleClick}
-      >
-        Select file
-      </button>
-    </div>
+    <>
+      <input
+        type="file"
+        ref={uploadInputRef}
+        style={{ display: "none" }}
+        onInput={afterUploadHandler}
+      />
+      <div className={styles.next_button_container}>
+        <button
+          className={styles.next_button}
+          style={{ marginTop: "2rem" }}
+          onClick={selectFile}
+        >
+          Select file
+        </button>
+      </div>
+    </>
   );
 }
 
@@ -84,7 +103,7 @@ function Step2Component({ success }: { success: boolean }) {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!success) router.push("?step=1");
+    if (!success) router.replace("?step=1");
   }, []);
 
   function handleSubmit(e: any) {

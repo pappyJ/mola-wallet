@@ -117,7 +117,7 @@ function Step2Component({ success }: { success: boolean }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!success) router.push("?step=1", undefined, { shallow: true });
+    if (!success) router.replace("?step=1", undefined, { shallow: true });
   }, []);
 
   return (
@@ -191,7 +191,7 @@ function Step3Component({ success }: { success: boolean }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!success) router.push("?step=1", undefined, { shallow: true });
+    if (!success) router.replace("?step=1", undefined, { shallow: true });
   }, []);
 
   return (
