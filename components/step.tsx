@@ -29,35 +29,39 @@ export function useStep(steps: steps): [number] {
 export default function Steps({ steps, step }: { steps: steps; step: number }) {
   return (
     <div className={styles.steps}>
-      <div className={styles.hr} />
+      {steps.length > 1 && <div className={styles.hr} />}
       <div className={styles.container}>
-        <div className={styles.index_list_container}>
-          {steps.map((e, i) => (
-            <div className={styles.index_list} key={i}>
-              <div
-                className={`${styles.index} ${
-                  step - 1 == i ? styles.active : ""
-                }`}
-              >
-                {i + 1}
-              </div>
+        {steps.length > 1 && (
+          <>
+            <div className={styles.index_list_container}>
+              {steps.map((e, i) => (
+                <div className={styles.index_list} key={i}>
+                  <div
+                    className={`${styles.index} ${
+                      step - 1 == i ? styles.active : ""
+                    }`}
+                  >
+                    {i + 1}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className={styles.steps_list_container}>
-          {steps.map((e, i) => (
-            <div
-              className={`${styles.steps_list} ${
-                step - 1 == i ? styles.active : ""
-              }`}
-              key={i}
-            >
-              <p>
-                STEP {i + 1}: {e.title}
-              </p>
+            <div className={styles.steps_list_container}>
+              {steps.map((e, i) => (
+                <div
+                  className={`${styles.steps_list} ${
+                    step - 1 == i ? styles.active : ""
+                  }`}
+                  key={i}
+                >
+                  <p>
+                    STEP {i + 1}: {e.title}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
       <h2>{steps[step - 1].title2 ?? steps[step - 1].title}</h2>
       <p>{steps[step - 1].description ?? ""}</p>

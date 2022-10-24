@@ -49,7 +49,7 @@ const CreateWithKeystorePage: NextPageX = () => {
         ) : step == 2 ? (
           <Step2Component success={success} />
         ) : step == 3 ? (
-          <Step3Component />
+          <Step3Component success={success} />
         ) : (
           <></>
         )}
@@ -78,7 +78,7 @@ function Step1Component({
       return;
     }
     setSuccess(true);
-    router.push("?step=2");
+    router.push("?step=2", undefined, { shallow: true });
   }
 
   useEffect(() => {
@@ -117,7 +117,7 @@ function Step2Component({ success }: { success: boolean }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!success) router.push("?step=1");
+    if (!success) router.push("?step=1", undefined, { shallow: true });
   }, []);
 
   return (
@@ -178,7 +178,7 @@ function Step2Component({ success }: { success: boolean }) {
       </div>
 
       <div className={styles.next_button_container}>
-        <Link href="?step=3">
+        <Link href="?step=3" shallow={true}>
           <a className={styles.next_button} style={{ width: "70%" }}>
             Download
           </a>
@@ -187,7 +187,13 @@ function Step2Component({ success }: { success: boolean }) {
     </>
   );
 }
-function Step3Component() {
+function Step3Component({ success }: { success: boolean }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!success) router.push("?step=1", undefined, { shallow: true });
+  }, []);
+
   return (
     <>
       <div className={styles.congrats_msg}>
