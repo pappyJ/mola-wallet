@@ -11,10 +11,8 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  generateWalletUsingKeyStore,
-  storeWalletKey,
-} from "../../../utils/wallet";
+import { generateWalletUsingKeyStore, storeWalletKey } from "utils/wallet";
+import Notification, { useNotification } from "components/notification";
 
 const steps = [
   { title: "Create Password" },
@@ -28,9 +26,9 @@ const steps = [
 ];
 
 const CreateWithKeystorePage: NextPageX = () => {
-  const [step] = useStep(steps);
   const [success, setSuccess] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [step] = useStep(steps);
 
   return (
     <div className={styles.main}>
@@ -65,27 +63,47 @@ const CreateWithKeystorePage: NextPageX = () => {
 
 function Step1Component({
   setSuccess,
-  setPassword
+  setPassword,
 }: {
   setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
-
-  setPassword: React.Dispatch<React.SetStateAction<any>>;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [notification, pushNotification] = useNotification();
+
+  function clearPasswords() {
+    passwordRef.current!.value = "";
+    confirmPasswordRef.current!.value = "";
+    passwordRef.current?.focus();
+  }
 
   function handleFormSubmit(e: any) {
     e.preventDefault();
-    if (passwordRef.current!.value.length <= 0) {
-      alert("please, input a password");
+    if (passwordRef.current!.value.length <= 3) {
+      pushNotification({
+        element: (
+          <p style={{ textAlign: "center" }}>
+            Password length should be greater than 3
+          </p>
+        ),
+        type: "info",
+      });
+      clearPasswords();
       return;
     }
+
     if (passwordRef.current?.value !== confirmPasswordRef.current?.value) {
-      alert("Passwords does not match");
+      pushNotification({
+        element: <p style={{ textAlign: "center" }}>Password does not match</p>,
+        type: "error",
+      });
+      clearPasswords();
       return;
     }
-    setPassword(passwordRef.current!.value)
+
+    setPassword(passwordRef.current!.value);
     setSuccess(true);
     router.push("?step=2", undefined, { shallow: true });
   }
@@ -95,34 +113,51 @@ function Step1Component({
   }, []);
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <div className={keystore_styles.input_container}>
-        <div className={keystore_styles.input_box}>
-          <input type="password" required autoFocus={true} ref={passwordRef} />
+    <>
+      <form onSubmit={handleFormSubmit}>
+        <div className={keystore_styles.input_container}>
+          <div className={keystore_styles.input_box}>
+            <input
+              type="password"
+              required
+              autoFocus={true}
+              ref={passwordRef}
+            />
+          </div>
+          <label>Create Password</label>
         </div>
-        <label>Create Password</label>
-      </div>
 
-      <div className={keystore_styles.input_container}>
-        <div className={keystore_styles.input_box}>
-          <input type="password" required ref={confirmPasswordRef} />
+        <div className={keystore_styles.input_container}>
+          <div className={keystore_styles.input_box}>
+            <input type="password" required ref={confirmPasswordRef} />
+          </div>
+          <label>Confirm Password</label>
         </div>
-        <label>Confirm Password</label>
-      </div>
 
-      <div
-        className={styles.next_button_container}
-        style={{ marginTop: "3.2rem" }}
-      >
-        <button type="submit" className={styles.next_button}>
-          Create Wallet
-        </button>
-      </div>
-    </form>
+        <div
+          className={styles.next_button_container}
+          style={{ marginTop: "3.2rem" }}
+        >
+          <button type="submit" className={styles.next_button}>
+            Create Wallet
+          </button>
+        </div>
+      </form>
+      <Notification
+        notification={notification}
+        pushNotification={pushNotification}
+      />
+    </>
   );
 }
 
-function Step2Component({ success, password }: { success: boolean; password: string; }) {
+function Step2Component({
+  success,
+  password,
+}: {
+  success: boolean;
+  password: string;
+}) {
   const router = useRouter();
 
   useEffect(() => {
@@ -192,7 +227,6 @@ function Step2Component({ success, password }: { success: boolean; password: str
             className={styles.next_button}
             style={{ width: "70%" }}
             onClick={async () => {
-
               const keyFile = await generateWalletUsingKeyStore(password);
 
               storeWalletKey(
@@ -208,6 +242,7 @@ function Step2Component({ success, password }: { success: boolean; password: str
     </>
   );
 }
+
 function Step3Component({ success }: { success: boolean }) {
   const router = useRouter();
 

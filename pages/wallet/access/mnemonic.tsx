@@ -3,7 +3,7 @@ import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.c
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { accessWalletUsingMnemonic } from "utils/wallet";
 
 import { NextPageX } from "types/next";
@@ -21,8 +21,11 @@ const CreateWithMnemonic: NextPageX = () => {
     const mnemonicInputs: string[] = [];
     for (let i = 1; i <= 12; i++) {
       mnemonicInputs.push(
-        (document.getElementById(`mnemonic_input_${i}`) as HTMLInputElement)
-          .value
+        (
+          document.getElementById(`mnemonic_input_${i}`) as HTMLInputElement
+        ).value
+          .trim()
+          .toLowerCase()
       );
     }
     return mnemonicInputs;
@@ -34,21 +37,14 @@ const CreateWithMnemonic: NextPageX = () => {
     const mnemonicArray = getMemonicInputValues();
 
     try {
-
-
-      const wallet = await accessWalletUsingMnemonic(mnemonicArray.join(' '));
+      const wallet = await accessWalletUsingMnemonic(mnemonicArray.join(" "));
 
       alert(wallet.address);
 
       router.push("/wallet");
-
-      
     } catch (error) {
-
-      alert("Could not decrypt, awwn poor kid")
-      
+      alert("Could not decrypt, awwn poor kid");
     }
-
   }
 
   return (
@@ -75,6 +71,7 @@ const CreateWithMnemonic: NextPageX = () => {
                   type="text"
                   spellCheck={false}
                   id={`mnemonic_input_${i + 1}`}
+                  autoComplete="off"
                 />
                 <span className={mnemonic_styles.counter}>{i + 1}</span>
               </span>

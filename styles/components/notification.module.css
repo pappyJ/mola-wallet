@@ -1,0 +1,54 @@
+.notification_container {
+  width: 100%;
+  transition: bottom 400ms cubic-bezier(0.27, 3, 0.82, -1.5);
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 100%;
+  left: 0;
+}
+.notification_box {
+  max-width: 480px;
+  width: 100%;
+  padding: 1.6rem 2rem;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 0 5px #aaa;
+}
+.notification_box.info {
+  box-shadow: 0 0 25px #ddd;
+  border: 1px solid #ccc;
+}
+.notification_box.success {
+  border: 1px solid rgb(75, 238, 170);
+  box-shadow: 0 0 25px rgb(208, 238, 220);
+}
+.notification_box.error {
+  border: 1px solid rgb(255, 128, 93);
+  box-shadow: 0 0 25px rgb(255, 227, 218);
+}
+.button_container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.6rem;
+}
+.button_container button {
+  padding: 0.5rem 2rem;
+  border: none;
+  outline: none;
+  border: none;
+  outline: none;
+  border-radius: 0.5rem;
+  color: white;
+  background-color: rgb(0, 94, 182);
+  box-shadow: 0 0 8px rgba(4, 67, 202, 0.2);
+}
+.button_container button.success {
+  background-color: rgb(0, 182, 136);
+  box-shadow: 0 0 8px rgb(4, 202, 153, 0.2);
+}
+.button_container button.error {
+  background-color: rgb(202, 50, 4);
+  box-shadow: 0 0 8px rgba(202, 60, 4, 0.2);
+}
