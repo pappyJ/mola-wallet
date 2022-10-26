@@ -6,7 +6,7 @@ type Notification = {
   type?: "info" | "success" | "error";
   timeout?: number;
 } | null;
-export type PushNotification = (notification: Notification) => void;
+type PushNotification = (notification: Notification) => void;
 type args = {
   notification: Notification;
   pushNotification: PushNotification;
@@ -38,13 +38,7 @@ export default function Notification({ notification, pushNotification }: args) {
 
   return (
     <div ref={notificationRef} className={styles.notification_container}>
-      <div
-        className={`${styles.notification_box}  ${
-          notificationTypeToStyleMap[
-            notification?.type || prevNotification?.type || "info"
-          ]
-        }`}
-      >
+      <div className={`${styles.notification_box} `}>
         {notification?.element || prevNotification?.element}
         <div className={styles.button_container}>
           <button
@@ -63,46 +57,26 @@ export default function Notification({ notification, pushNotification }: args) {
   );
 }
 
-let tt: any;
+let tt: NodeJS.Timeout;
 
 export function useNotification(): [Notification, PushNotification] {
   const [notification, setNotification] = useState<Notification>(null);
-  const [nextNotifications, setNextNotifications] = useState<Notification[]>(
-    []
-  );
 
   function pushNotification(notification: Notification) {
-    if (notification === null) {
-      clearTimeout(tt);
-      setNotification(null);
-    } else
-      setNextNotifications((prev) => {
-        return [...prev, notification];
-      });
-  }
-
-  function moveToNextNotification() {
-    if (nextNotifications.length) {
-      setNotification(nextNotifications[0]);
-      setNextNotifications((prev) => prev.slice(1));
+    clearTimeout(tt);
+    setNotification(null);
+    if (notification) {
+      tt = setTimeout(() => setNotification(notification), 500);
     }
   }
 
   useEffect(() => {
-    if (nextNotifications.length && notification === null)
-      moveToNextNotification();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nextNotifications]);
-
-  useEffect(() => {
     if (notification) {
-      //@ts-ignore
       tt = setTimeout(
         () => pushNotification(null),
         notification.timeout || 5000
       );
-    } else setTimeout(() => moveToNextNotification(), 500);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
   }, [notification]);
 
   return [notification, pushNotification];

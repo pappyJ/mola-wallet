@@ -81,24 +81,52 @@ function Step1Component({
 
   function handleFormSubmit(e: any) {
     e.preventDefault();
-    if (passwordRef.current!.value.length <= 3) {
+    if (passwordRef.current!.value.length < 6) {
       pushNotification({
         element: (
           <p style={{ textAlign: "center" }}>
-            Password length should be greater than 3
+            The password should not be less than 6 characters.
           </p>
         ),
-        type: "info",
+        type: "error",
       });
+      clearPasswords();
+      return;
+    }
+
+    if (!/\d+/.test(passwordRef.current!.value)) {
+      pushNotification({
+        element: (
+          <p style={{ textAlign: "center" }}>
+            The password should contain numbers
+          </p>
+        ),
+      });
+
+      clearPasswords();
+      return;
+    }
+
+    if (!/\W+/.test(passwordRef.current!.value)) {
+      pushNotification({
+        element: (
+          <p style={{ textAlign: "center" }}>
+            The password should contain special characters
+          </p>
+        ),
+      });
+
       clearPasswords();
       return;
     }
 
     if (passwordRef.current?.value !== confirmPasswordRef.current?.value) {
       pushNotification({
-        element: <p style={{ textAlign: "center" }}>Password does not match</p>,
-        type: "error",
+        element: (
+          <p style={{ textAlign: "center" }}>The passwords do not match</p>
+        ),
       });
+
       clearPasswords();
       return;
     }
