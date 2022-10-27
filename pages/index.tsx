@@ -17,8 +17,8 @@ const Home: NextPageX = () => {
             Digital Marketplace For Collectibles, Event Tickets, Membership
             Passes And More.
           </p>
-          <Link href="/wallet/create">
-            <a className={styles.action_primary}>Create new wallet</a>
+          <Link href="/onboarding">
+            <a className={styles.action_primary}>Create/import wallet</a>
           </Link>
           <Link href="/wallet/access">
             <a className={styles.action_secondary}>Access wallet</a>

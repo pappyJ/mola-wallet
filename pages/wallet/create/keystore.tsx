@@ -79,8 +79,6 @@ function Step1Component({
     passwordRef.current?.focus();
   }
 
-  function validatePassword() {}
-
   function handleFormSubmit(e: any) {
     e.preventDefault();
     if (passwordRef.current!.value.length < 6) {
