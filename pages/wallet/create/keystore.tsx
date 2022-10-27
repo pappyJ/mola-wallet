@@ -79,6 +79,8 @@ function Step1Component({
     passwordRef.current?.focus();
   }
 
+  function validatePassword() {}
+
   function handleFormSubmit(e: any) {
     e.preventDefault();
     if (passwordRef.current!.value.length < 6) {
@@ -101,6 +103,7 @@ function Step1Component({
             The password should contain numbers
           </p>
         ),
+        type: "error",
       });
 
       clearPasswords();
@@ -114,6 +117,7 @@ function Step1Component({
             The password should contain special characters
           </p>
         ),
+        type: "error",
       });
 
       clearPasswords();
@@ -125,6 +129,7 @@ function Step1Component({
         element: (
           <p style={{ textAlign: "center" }}>The passwords do not match</p>
         ),
+        type: "error",
       });
 
       clearPasswords();

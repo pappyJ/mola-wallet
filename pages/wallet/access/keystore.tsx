@@ -5,7 +5,6 @@ import { CloseIconInBigCircle } from "components/icons";
 import Steps, { useStep } from "components/step";
 import { EncryptedKeystoreV3Json } from "web3-core";
 
-
 import styles from "styles/pages/wallet/create_access/index.module.css";
 import keystore_styles from "styles/pages/wallet/create_access/keystore.module.css";
 
@@ -13,6 +12,7 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { decryptWallet } from "utils/wallet";
+import Notification, { useNotification } from "components/notification";
 
 const steps = [
   {
@@ -28,7 +28,9 @@ const steps = [
 const CreateWithKeystorePage: NextPageX = () => {
   const [step] = useStep(steps);
   const [success, setSuccess] = useState(false);
-  const [passwordedWalletFile, setPasswordedWalletFile] = useState({} as EncryptedKeystoreV3Json);
+  const [passwordedWalletFile, setPasswordedWalletFile] = useState(
+    {} as EncryptedKeystoreV3Json
+  );
 
   return (
     <div className={styles.main}>
@@ -48,9 +50,15 @@ const CreateWithKeystorePage: NextPageX = () => {
         </div>
 
         {step == 1 ? (
-          <Step1Component setSuccess={setSuccess} setPasswordedWalletFile={setPasswordedWalletFile}/>
+          <Step1Component
+            setSuccess={setSuccess}
+            setPasswordedWalletFile={setPasswordedWalletFile}
+          />
         ) : step == 2 ? (
-          <Step2Component success={success} passwordedWalletFile={passwordedWalletFile} />
+          <Step2Component
+            success={success}
+            passwordedWalletFile={passwordedWalletFile}
+          />
         ) : (
           <></>
         )}
@@ -61,22 +69,24 @@ const CreateWithKeystorePage: NextPageX = () => {
 
 function Step1Component({
   setSuccess,
-  setPasswordedWalletFile
+  setPasswordedWalletFile,
 }: {
   setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 
-  setPasswordedWalletFile: React.Dispatch<React.SetStateAction<EncryptedKeystoreV3Json>>
+  setPasswordedWalletFile: React.Dispatch<
+    React.SetStateAction<EncryptedKeystoreV3Json>
+  >;
 }) {
   const router = useRouter();
   const uploadInputRef = useRef<HTMLInputElement>(null);
 
   async function afterUploadHandler() {
     const walletFile = await getFile();
+    const encryptedWallet = JSON.parse(
+      JSON.stringify(walletFile)
+    ) as EncryptedKeystoreV3Json;
 
-    const encryptedWallet = JSON.parse(JSON.stringify(walletFile)) as EncryptedKeystoreV3Json;
-
-    setPasswordedWalletFile(encryptedWallet);    
-
+    setPasswordedWalletFile(encryptedWallet);
     setSuccess(true);
 
     router.push("?step=2", undefined, { shallow: true });
@@ -84,8 +94,7 @@ function Step1Component({
 
   async function getFile() {
     const walletKeys = await uploadInputRef.current?.files?.[0].text();
-
-    return Buffer.from(walletKeys!, 'base64').toString();
+    return Buffer.from(walletKeys!, "base64").toString();
   }
 
   function selectFile() {
@@ -113,9 +122,16 @@ function Step1Component({
   );
 }
 
-function Step2Component({ success, passwordedWalletFile }: { success: boolean, passwordedWalletFile: EncryptedKeystoreV3Json }) {
+function Step2Component({
+  success,
+  passwordedWalletFile,
+}: {
+  success: boolean;
+  passwordedWalletFile: EncryptedKeystoreV3Json;
+}) {
   const router = useRouter();
   const passwordRef = useRef<HTMLInputElement>(null);
+  const [notification, pushNotification] = useNotification();
 
   useEffect(() => {
     if (!success) router.replace("?step=1");
@@ -125,40 +141,54 @@ function Step2Component({ success, passwordedWalletFile }: { success: boolean, p
     e.preventDefault();
 
     try {
-
-      let wallet = decryptWallet(passwordedWalletFile, `${passwordRef.current?.value}`);
+      let wallet = decryptWallet(
+        passwordedWalletFile,
+        `${passwordRef.current?.value}`
+      );
 
       alert(wallet.address);
 
       router.push("/wallet");
-
-      
     } catch (error) {
-
-      alert("Could not decrypt, awwn poor kid")
-      
+      pushNotification({
+        element: (
+          <p style={{ textAlign: "center" }}>
+            Could not decrypt. Use correct password.
+          </p>
+        ),
+        type: "error",
+      });
     }
-
-
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={keystore_styles.input_container}>
-        <div className={keystore_styles.input_box}>
-          <input type="password" required autoFocus={true} ref={passwordRef} />
+    <>
+      <form onSubmit={handleSubmit}>
+        <div className={keystore_styles.input_container}>
+          <div className={keystore_styles.input_box}>
+            <input
+              type="password"
+              required
+              autoFocus={true}
+              ref={passwordRef}
+            />
+          </div>
+          <label>Enter Password</label>
         </div>
-        <label>Enter Password</label>
-      </div>
-      <div
-        className={styles.next_button_container}
-        style={{ marginTop: "4rem" }}
-      >
-        <button type="submit" className={styles.next_button}>
-          Access wallet
-        </button>
-      </div>
-    </form>
+        <div
+          className={styles.next_button_container}
+          style={{ marginTop: "4rem" }}
+        >
+          <button type="submit" className={styles.next_button}>
+            Access wallet
+          </button>
+        </div>
+      </form>
+      <Notification
+        notification={notification}
+        pushNotification={pushNotification}
+      />
+    </>
   );
 }
 

@@ -14,6 +14,7 @@ import {
   CloseIconInCircle,
   ReloadIcon,
 } from "components/icons";
+import Notification, { useNotification } from "components/notification";
 
 const steps = [
   { title: "Write down these words" },
@@ -115,24 +116,27 @@ function Step2Component({
   const [words, setWords] = useState<string[]>(
     JSON.parse(JSON.stringify(_words)).sort()
   );
-  const [selectedWords, setSelectedWords] = useState(new Array(12).fill(""));
+  const [selectedWords, setSelectedWords] = useState(
+    new Array(12).fill("").map((e, i) => [e, i])
+  );
   const router = useRouter();
+  const [notification, pushNotification] = useNotification();
 
   function addToSelectedWords(e: string, i: number) {
     setSelectedWords((prev) => {
       let done = false;
       return prev.map((ee) => {
-        if (ee == "" && e != "" && !done) {
+        if (ee[0] == "" && e != "" && !done) {
           done = true;
           removeFromWords(i);
-          return e;
+          return [e, i];
         } else return ee;
       });
     });
   }
 
   function clearSelectedWords() {
-    setSelectedWords(new Array(12).fill(""));
+    setSelectedWords(new Array(12).fill("").map((e, i) => [e, i]));
     setWords(JSON.parse(JSON.stringify(_words)).sort());
   }
 
@@ -144,13 +148,36 @@ function Step2Component({
     });
   }
 
+  function removeFromSelectedWords(i: number) {
+    const $selectedWords = JSON.parse(JSON.stringify(selectedWords));
+    if ($selectedWords[i][0] == "") return;
+
+    setWords((prev) => {
+      let tt = prev.slice();
+      tt[$selectedWords[i][1]] = $selectedWords[i][0];
+      return tt;
+    });
+    setSelectedWords((prev) => {
+      let t = prev.slice();
+      t[i][0] = "";
+      return t;
+    });
+  }
+
   function validateSelectedAndContinue(ev: MouseEvent) {
     ev.preventDefault();
-    if (selectedWords.every((e, i) => e === _words[i])) {
+    if (selectedWords.every((e, i) => e[0] === _words[i])) {
       setSuccess(true);
       router.replace("?step=3", undefined, { shallow: true });
     } else {
-      alert("The order of words are incorrect");
+      pushNotification({
+        element: (
+          <p style={{ textAlign: "center" }}>
+            The order of words are incorrect
+          </p>
+        ),
+        type: "error",
+      });
       clearSelectedWords();
     }
   }
@@ -171,17 +198,20 @@ function Step2Component({
       </div>
       <div className={mnemonic_styles.words_container}>
         {selectedWords.map((e, i) => (
-          <span
+          <button
             key={i}
             className={`${mnemonic_styles.word_box} ${
-              e !== "" && e !== _words[i] ? mnemonic_styles.error : ""
+              e[0] !== "" && e[0] !== _words[i] ? mnemonic_styles.error : ""
             }`}
+            onClick={() => {
+              removeFromSelectedWords(i);
+            }}
           >
             <span key={i} className={mnemonic_styles.counter}>
               {i + 1}
             </span>
-            {e}
-          </span>
+            {e[0]}
+          </button>
         ))}
       </div>
       <h3 className={styles.center_text}>
@@ -215,6 +245,10 @@ function Step2Component({
           </a>
         </Link>
       </div>
+      <Notification
+        notification={notification}
+        pushNotification={pushNotification}
+      />
     </>
   );
 }

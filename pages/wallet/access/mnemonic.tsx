@@ -10,12 +10,14 @@ import { NextPageX } from "types/next";
 import Layout from "components/layouts";
 import Steps, { useStep } from "components/step";
 import { CloseIconInBigCircle } from "components/icons";
+import Notification, { useNotification } from "components/notification";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 
 const CreateWithMnemonic: NextPageX = () => {
   const [step] = useStep(steps);
   const router = useRouter();
+  const [notification, pushNotification] = useNotification();
 
   function getMemonicInputValues(): string[] {
     const mnemonicInputs: string[] = [];
@@ -34,6 +36,15 @@ const CreateWithMnemonic: NextPageX = () => {
   async function handleSubmit(e: any) {
     e.preventDefault();
 
+    if (getMemonicInputValues().some((e) => !e.length)) {
+      pushNotification({
+        element: (
+          <p style={{ textAlign: "center" }}>Enter all mnemonic phrase</p>
+        ),
+      });
+      return;
+    }
+
     const mnemonicArray = getMemonicInputValues();
 
     try {
@@ -43,7 +54,13 @@ const CreateWithMnemonic: NextPageX = () => {
 
       router.push("/wallet");
     } catch (error) {
-      alert("Could not decrypt, awwn poor kid");
+      pushNotification({
+        element: (
+          <p style={{ textAlign: "center" }}>
+            Could not decrypt, awwn poor kid
+          </p>
+        ),
+      });
     }
   }
 
@@ -85,6 +102,10 @@ const CreateWithMnemonic: NextPageX = () => {
           </div>
         </form>
       </div>
+      <Notification
+        notification={notification}
+        pushNotification={pushNotification}
+      />
     </div>
   );
 };

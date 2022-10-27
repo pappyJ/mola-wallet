@@ -38,7 +38,7 @@ export default function Notification({ notification, pushNotification }: args) {
 
   return (
     <div ref={notificationRef} className={styles.notification_container}>
-      <div className={`${styles.notification_box} `}>
+      <div className={styles.notification_box}>
         {notification?.element || prevNotification?.element}
         <div className={styles.button_container}>
           <button

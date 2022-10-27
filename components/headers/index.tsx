@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "styles/components/headers/index.module.css";
 
-export default function MoblieMainNav() {
+export default function Header() {
   return (
     <header className={styles.main}>
       <div className={styles.padder}>
@@ -23,7 +23,7 @@ export default function MoblieMainNav() {
           ))}
         </div>
         <div className={styles.right}>
-          <Link href="#">
+          <Link href="/">
             <a className={styles.button}>Mola Product</a>
           </Link>
         </div>
@@ -33,7 +33,7 @@ export default function MoblieMainNav() {
 }
 
 const links = [
-  { title: "Mola Digital", href: "#" },
-  { title: "Mola Digital", href: "#" },
-  { title: "Mola Digital", href: "#" },
+  { title: "Mola Digital", href: "/" },
+  { title: "Mola Digital", href: "/" },
+  { title: "Mola Digital", href: "/" },
 ];
