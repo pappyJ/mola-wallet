@@ -17,8 +17,9 @@ body {
   min-height: 100vh;
   background-image: url("/bg.png");
   background-color: white;
-  background-position: center;
-  background-size: cover;
+  background-position: top center;
+  background-size: 100% auto;
+  background-repeat: repeat-y;
 }
 
 a {

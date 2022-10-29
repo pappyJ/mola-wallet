@@ -2,7 +2,13 @@ import { NextPageX } from "types/next";
 import styles from "styles/pages/Home.module.css";
 import Head from "next/head";
 import Layout from "components/layouts";
-import Link from "next/link";
+import {
+  Hero,
+  SectionA,
+  SectionB,
+  SectionC,
+  SectionD,
+} from "page_components/home";
 
 const Home: NextPageX = () => {
   return (
@@ -10,21 +16,11 @@ const Home: NextPageX = () => {
       <Head>
         <title>Mola Wallet</title>
       </Head>
-      <div className={styles.padder}>
-        <div className={styles.hero}>
-          <h1>Mola Digital</h1>
-          <p>
-            Digital Marketplace For Collectibles, Event Tickets, Membership
-            Passes And More.
-          </p>
-          <Link href="/onboarding">
-            <a className={styles.action_primary}>Create/import wallet</a>
-          </Link>
-          <Link href="/wallet/access">
-            <a className={styles.action_secondary}>Access wallet</a>
-          </Link>
-        </div>
-      </div>
+      <Hero />
+      <SectionA />
+      <SectionB />
+      <SectionC />
+      <SectionD />
     </div>
   );
 };
