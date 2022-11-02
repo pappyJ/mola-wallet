@@ -1,0 +1,87 @@
+.main {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: relative;
+}
+
+.left {
+  flex: 0 0 28rem;
+  height: 100vh;
+
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  background-color: #00244e;
+  color: white;
+  overflow: auto;
+}
+.left::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+.left::-webkit-scrollbar-thumb {
+  border: 4px solid #f5f5f5;
+}
+.left::-webkit-scrollbar-thumb:hover {
+  border: 3px solid #f5f5f5;
+}
+
+.right {
+  flex: 1 1 100%;
+  padding: 0.8rem;
+}
+
+.left h1 a {
+  padding: 4rem 0 1.6rem 3.2rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+}
+.left .logo_image_container {
+  display: flex;
+  width: 3.2rem;
+  height: 3.2rem;
+  position: relative;
+  margin-right: 1.6rem;
+}
+
+.left > nav {
+  padding: 2.4rem 0 0 3.2rem;
+}
+.left > nav ul {
+  width: 100%;
+}
+.left > nav li {
+  list-style: none;
+  padding: 1rem 0 1rem 2.4rem;
+  width: 100%;
+  margin: 2.4rem 0;
+  color: #c7cee0;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+.left > nav li.active {
+  background-color: #f5f5f5;
+  color: #00244e;
+  font-weight: 600;
+}
+.left > nav li a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.left > nav li .icon {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 1.6rem;
+  flex: 0 0 2rem;
+}
+.left > nav ul li .text {
+  flex: 0 1 100%;
+  font-size: 1.6rem;
+  line-height: 1.5rem;
+}
