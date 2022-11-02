@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 
-export const ProviderContext = React.createContext(null);
+export const ProviderContext = React.createContext<
+  [any, React.Dispatch<React.SetStateAction<any>>]
+>([null, () => {}]);
 
 export function ProviderContextComponent({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [provider, setProvider] = useState();
+
   return (
-    <ProviderContext.Provider value={null}>{children}</ProviderContext.Provider>
+    <ProviderContext.Provider value={[provider, setProvider]}>
+      {children}
+    </ProviderContext.Provider>
   );
 }
