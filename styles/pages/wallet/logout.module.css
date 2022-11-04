@@ -1,0 +1,37 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.container {
+  max-width: 42rem;
+}
+
+.heading {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.button_container {
+  display: flex;
+  justify-content: center;
+}
+.button_container button {
+  padding: 0.8rem 4rem;
+  margin: 0 1rem;
+  border: none;
+
+  background-color: white;
+  color: #00244e;
+
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+.button_container button.primary {
+  background-color: #00244e;
+  color: white;
+  font-weight: 500;
+}

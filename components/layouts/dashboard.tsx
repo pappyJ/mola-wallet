@@ -19,7 +19,7 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!address) router.push("/wallet/access");
+    if (!address) router.replace("/wallet/access");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
@@ -61,14 +61,14 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
         </nav>
       </div>
       <div className={styles.right}>
-        {children}
+        <div className={styles.section}>{children}</div>
         <footer>
           <div className={styles.padder}>
-            <div className={styles.left}>
+            <div>
               © 2022 MyEtherWallet. All rights reserved. Pricing taken from
               CoinGecko
             </div>
-            <div className={styles.right}>
+            <div>
               <Link href="#">
                 <a>Help center</a>
               </Link>
