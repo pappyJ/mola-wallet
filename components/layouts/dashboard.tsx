@@ -11,10 +11,17 @@ import {
   UserIcon,
 } from "components/icons";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import { ReactNode, useContext, useEffect } from "react";
+import { AddressContext } from "context/address";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
+  const [address] = useContext(AddressContext);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!address) router.push("/wallet/access");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
 
   return (
     <div className={styles.main}>

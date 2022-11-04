@@ -13,8 +13,14 @@ import {
   SendIcon,
 } from "components/icons";
 import Image from "next/image";
+import { useContext, useEffect } from "react";
+import { AddressContext } from "context/address";
+import { useRouter } from "next/router";
 
 const WalletPage: NextPageX = () => {
+  const [address] = useContext(AddressContext);
+  const router = useRouter();
+
   return (
     <main className={styles.main}>
       <div className={styles.header}>
@@ -61,7 +67,7 @@ const WalletPage: NextPageX = () => {
                   <CaretDownSolidSmall />
                 </span>
               </div>
-              <p className={styles.wallet_id}>432ygh2u2h....23k</p>
+              <p className={styles.wallet_id}>{address}</p>
             </div>
             <div className={styles.right}>
               <button className={styles.icon_box}>

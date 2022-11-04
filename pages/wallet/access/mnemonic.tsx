@@ -3,7 +3,7 @@ import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.c
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import { accessWalletUsingMnemonic } from "utils/wallet";
 
 import { NextPageX } from "types/next";
@@ -11,6 +11,7 @@ import Layout from "components/layouts";
 import Steps, { useStep } from "components/step";
 import { CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
+import { AddressContext } from "context/address";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 
@@ -18,6 +19,7 @@ const CreateWithMnemonic: NextPageX = () => {
   const [step] = useStep(steps);
   const router = useRouter();
   const [notification, pushNotification] = useNotification();
+  const [, setAddress] = useContext(AddressContext);
 
   function getMemonicInputValues(): string[] {
     const mnemonicInputs: string[] = [];
@@ -50,8 +52,7 @@ const CreateWithMnemonic: NextPageX = () => {
     try {
       const wallet = await accessWalletUsingMnemonic(mnemonicArray.join(" "));
 
-      alert(wallet.address);
-
+      setAddress(wallet.address);
       router.push("/wallet");
     } catch (error) {
       pushNotification({

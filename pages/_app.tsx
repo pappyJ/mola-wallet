@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppPropsX } from "types/next";
 import Head from "next/head";
 import { ProviderContextComponent } from "context/web3";
+import { AddressContextComponent } from "context/address";
 
 function MyApp({ Component, pageProps }: AppPropsX) {
   let GivenLayout = Component.Layout;
@@ -17,9 +18,11 @@ function MyApp({ Component, pageProps }: AppPropsX) {
         <title>Mola Wallet</title>
       </Head>
       <ProviderContextComponent>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <AddressContextComponent>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AddressContextComponent>
       </ProviderContextComponent>
     </>
   );

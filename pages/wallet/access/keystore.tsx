@@ -9,10 +9,12 @@ import styles from "styles/pages/wallet/create_access/index.module.css";
 import keystore_styles from "styles/pages/wallet/create_access/keystore.module.css";
 
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { decryptWallet } from "utils/wallet";
 import Notification, { useNotification } from "components/notification";
+
+import { AddressContext } from "context/address";
 
 const steps = [
   {
@@ -132,6 +134,7 @@ function Step2Component({
   const router = useRouter();
   const passwordRef = useRef<HTMLInputElement>(null);
   const [notification, pushNotification] = useNotification();
+  const [, setAddress] = useContext(AddressContext);
 
   useEffect(() => {
     if (!success) router.replace("?step=1");
@@ -146,8 +149,7 @@ function Step2Component({
         `${passwordRef.current?.value}`
       );
 
-      alert(wallet.address);
-
+      setAddress(wallet.address);
       router.push("/wallet");
     } catch (error) {
       pushNotification({
