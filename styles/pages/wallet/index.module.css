@@ -1,0 +1,280 @@
+.main {
+  padding: 1.6rem 1.6rem;
+  max-width: 102.4rem;
+  margin: 0 auto;
+}
+
+.header {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem 4rem;
+  display: flex;
+  margin-bottom: 1.6rem;
+}
+.header * {
+  font-size: 1.5rem;
+}
+.header .left {
+  flex: 1 1 50%;
+}
+.header .right {
+  display: flex;
+  align-items: center;
+}
+.header a {
+  color: #1e89dd;
+}
+
+.network_selector {
+  border-radius: 2rem;
+  height: 3.6rem;
+  padding: 0 1rem;
+
+  background-color: #f5f5f5;
+  color: #00244e;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+
+  margin: 0 3rem;
+}
+
+.network_selector .ethereum_icon_box {
+  background-color: white;
+  border-radius: 50%;
+  padding: 0.25rem;
+
+  width: 2.4rem;
+  height: 2.4rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-right: 1rem;
+}
+.network_selector .caret_down_box {
+  width: 1.2rem;
+  height: 1.2rem;
+
+  display: flex;
+  margin-left: 2rem;
+
+  background-color: transparent;
+  color: #00244e;
+
+  position: relative;
+  top: 2px;
+  border: none;
+}
+
+.notification_icon_box {
+  width: 3.6rem;
+  height: 3.6rem;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.notification_icon_box .icon {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  color: #00244e;
+}
+
+.card_section {
+  width: 100%;
+  min-height: 30rem;
+  display: flex;
+  margin-bottom: 1.6rem;
+}
+.card_section > * {
+  flex: 0 1 50%;
+  border-radius: 1rem;
+
+  background-image: url("/card_bg.png");
+  background-position: -5rem 10rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  padding: 3rem 4rem;
+}
+.card_section .balance_section {
+  margin-right: 0.8rem;
+  background-color: #00244e;
+}
+.card_section .buy_with_card_section {
+  margin-left: 0.8rem;
+  background-color: white;
+}
+
+.card_section .md_text {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+.balance_section .md_text {
+  color: white;
+}
+.buy_with_card_section .md_text {
+  font-size: 2rem;
+  color: #00244e;
+}
+
+.balance_section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.balance_section .top {
+  display: flex;
+  align-items: center;
+}
+.balance_section .top .left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 50%;
+}
+.balance_section .top .left .top {
+  display: flex;
+  align-items: center;
+}
+.balance_section .top .right {
+  display: flex;
+}
+.balance_section .top .right .icon_box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 3.6rem;
+  height: 3.6rem;
+  padding: 1rem;
+  margin: 0 0.4rem;
+
+  border-radius: 50%;
+  background-color: rgba(138, 161, 188, 0.349);
+  color: white;
+  border: none;
+}
+.balance_section .caret_down_box {
+  width: 1.2rem;
+  height: 1.2rem;
+
+  display: flex;
+  margin-left: 1.5rem;
+
+  background-color: transparent;
+  color: white;
+
+  position: relative;
+  top: 2px;
+  border: none;
+}
+.balance_section .wallet_id {
+  margin-top: 0.8rem;
+  color: #ddd;
+  font-size: 1.5rem;
+}
+
+.balance_section .center {
+  margin: 1.6rem 0;
+}
+.balance_section .center > * {
+  font-size: 2rem;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  line-height: 3.6rem;
+  font-family: monospace;
+}
+
+.balance_section .bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+.balance_section .bottom a {
+  background-color: white;
+  color: #00244e;
+  border: 1px solid white;
+
+  padding: 0.8rem 2rem;
+  margin: 0 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+}
+.balance_section .bottom a.secondary {
+  color: white;
+  background-color: transparent;
+}
+.balance_section .bottom a .icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  margin-right: 1rem;
+}
+
+.buy_with_card_section {
+  text-transform: capitalize;
+}
+.buy_with_card_section a.buy_eth {
+  font-size: 1.8rem;
+
+  background-color: #00244e;
+  color: white;
+
+  border-radius: 0.5rem;
+
+  display: inline-block;
+  padding: 1.2rem 2.4rem;
+  margin: 2rem 0;
+}
+.buy_with_card_section .cards_img_container {
+  color: #333;
+  font-size: 1.5rem;
+  margin: 1rem 0 2rem;
+
+  display: flex;
+  align-items: center;
+}
+.buy_with_card_section .cards_img_container span {
+  position: relative;
+  display: flex;
+  margin-left: 1rem;
+}
+.buy_with_card_section .cards_img_container .visa_img {
+  width: 4.5rem;
+  height: 1.7rem;
+}
+.buy_with_card_section .cards_img_container .mastercard_img {
+  width: 2.8rem;
+  height: 1.7rem;
+}
+.buy_with_card_section .tip {
+  color: #b4b4b4;
+  font-size: 1.7rem;
+  word-spacing: 0.2rem;
+}
+
+.bottom_section {
+  width: 100%;
+  display: flex;
+}
+.bottom_section .token_value_table {
+  background-color: white;
+  flex: 1 1 50%;
+  padding: 1.6rem 0;
+  margin-right: 0.8rem;
+  border-radius: 0.5rem;
+}
+.bottom_section .right {
+  flex: 0 0 20rem;
+  margin-left: 0.8rem;
+}
