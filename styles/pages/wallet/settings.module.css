@@ -1,0 +1,93 @@
+.main {
+  padding: 1.6rem 1.6rem;
+  max-width: 102.4rem;
+  margin: 0 auto;
+}
+
+.main > header {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.2rem 4rem;
+  margin-bottom: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.main > header > h2 {
+  font-weight: 600;
+  font-size: 2.2rem;
+  color: #00244e;
+}
+
+.notification_icon_box {
+  width: 3.6rem;
+  height: 3.6rem;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.notification_icon_box .icon {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+
+  color: #00244e;
+}
+
+.container {
+  background-color: white;
+  padding: 3rem;
+  border-radius: 0.5rem;
+}
+.container .section {
+  padding: 1.6rem 3.2rem;
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.12);
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+}
+.container .section h6 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 1.6rem;
+}
+.container .section .center {
+  display: flex;
+  justify-content: space-between;
+  color: #333;
+  margin: 1rem 0;
+}
+.container .section .center p {
+  flex: 0 1 48rem;
+  font-size: 1.5rem;
+  margin-right: 1.6rem;
+}
+.container .section .center .caret_down_icon {
+  display: flex;
+  width: 4rem;
+  height: 4rem;
+
+  padding: 1rem;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+.container .section .btn {
+  background-color: #00244e;
+  color: white;
+
+  border-radius: 0.5rem;
+  padding: 0 3.2rem;
+  height: 4rem;
+
+  letter-spacing: 0.05rem;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+
+  display: flex;
+  align-items: center;
+}
