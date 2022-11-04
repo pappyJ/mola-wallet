@@ -1,0 +1,57 @@
+.main {
+  background-color: #00244e;
+}
+.padder {
+  padding: 6.4rem;
+  max-width: 128rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sections {
+  margin: 0 2rem;
+  max-width: 36rem;
+  color: white;
+}
+.sections h3 {
+  color: white;
+  font-size: 2.8rem;
+  font-weight: 600;
+  word-spacing: 0.3rem;
+  letter-spacing: 0.08rem;
+  margin: 1rem 0 3rem;
+}
+.sections h4 {
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  word-spacing: 0.2rem;
+  margin: 1rem 0;
+}
+.sections p {
+  font-size: 1.5rem;
+  margin: 2rem 0;
+  display: flex;
+}
+.sections a {
+  margin: 1.5rem 0;
+  display: flex;
+  font-size: 1.5rem;
+}
+.sections .icon_box {
+  border: 1px solid white;
+  border-radius: 50%;
+
+  color: white;
+
+  padding: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
