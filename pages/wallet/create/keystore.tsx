@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { generateWalletUsingKeyStore, storeWalletKey } from "utils/wallet";
 import Notification, { useNotification } from "components/notification";
+import { Container } from "page_components/wallet/create-access";
 
 const steps = [
   { title: "Create Password" },
@@ -31,33 +32,31 @@ const CreateWithKeystorePage: NextPageX = () => {
   const [step] = useStep(steps);
 
   return (
-    <div className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.close_icon_container}>
-          <Link href="/wallet/create">
-            <a className={styles.close_icon}>
-              <CloseIconInBigCircle />
-            </a>
-          </Link>
-        </div>
-
-        <h1 style={{ paddingTop: 0 }}>Create wallet with Keystore File</h1>
-
-        <div className={styles.step_container}>
-          <Steps steps={steps} step={step} />
-        </div>
-
-        {step == 1 ? (
-          <Step1Component setSuccess={setSuccess} setPassword={setPassword} />
-        ) : step == 2 ? (
-          <Step2Component success={success} password={password} />
-        ) : step == 3 ? (
-          <Step3Component success={success} />
-        ) : (
-          <></>
-        )}
+    <Container>
+      <div className={styles.close_icon_container}>
+        <Link href="/wallet/create">
+          <a className={styles.close_icon}>
+            <CloseIconInBigCircle />
+          </a>
+        </Link>
       </div>
-    </div>
+
+      <h1 style={{ paddingTop: 0 }}>Create wallet with Keystore File</h1>
+
+      <div className={styles.step_container}>
+        <Steps steps={steps} step={step} />
+      </div>
+
+      {step == 1 ? (
+        <Step1Component setSuccess={setSuccess} setPassword={setPassword} />
+      ) : step == 2 ? (
+        <Step2Component success={success} password={password} />
+      ) : step == 3 ? (
+        <Step3Component success={success} />
+      ) : (
+        <></>
+      )}
+    </Container>
   );
 };
 

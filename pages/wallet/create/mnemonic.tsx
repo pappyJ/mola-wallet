@@ -15,6 +15,7 @@ import {
   ReloadIcon,
 } from "components/icons";
 import Notification, { useNotification } from "components/notification";
+import { Container } from "page_components/wallet/create-access";
 
 const steps = [
   { title: "Write down these words" },
@@ -39,35 +40,33 @@ const CreateWithMnemonic: NextPageX = () => {
   useEffect(generateAndSetWords, []);
 
   return (
-    <div className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.close_icon_container}>
-          <Link href="/wallet/create">
-            <a className={styles.close_icon}>
-              <CloseIconInBigCircle />
-            </a>
-          </Link>
-        </div>
-        <h1 style={{ paddingTop: 0 }}>Create wallet with Mnemonic Phrase</h1>
-
-        <div className={styles.step_container}>
-          <Steps steps={steps} step={step} />
-        </div>
-
-        {step == 1 ? (
-          <Step1Component
-            words={words}
-            generateAndSetWords={generateAndSetWords}
-          />
-        ) : step == 2 ? (
-          <Step2Component words={words} setSuccess={setSuccess} />
-        ) : step == 3 ? (
-          <Step3Component success={success} setSuccess={setSuccess} />
-        ) : (
-          <></>
-        )}
+    <Container>
+      <div className={styles.close_icon_container}>
+        <Link href="/wallet/create">
+          <a className={styles.close_icon}>
+            <CloseIconInBigCircle />
+          </a>
+        </Link>
       </div>
-    </div>
+      <h1 style={{ paddingTop: 0 }}>Create wallet with Mnemonic Phrase</h1>
+
+      <div className={styles.step_container}>
+        <Steps steps={steps} step={step} />
+      </div>
+
+      {step == 1 ? (
+        <Step1Component
+          words={words}
+          generateAndSetWords={generateAndSetWords}
+        />
+      ) : step == 2 ? (
+        <Step2Component words={words} setSuccess={setSuccess} />
+      ) : step == 3 ? (
+        <Step3Component success={success} setSuccess={setSuccess} />
+      ) : (
+        <></>
+      )}
+    </Container>
   );
 };
 

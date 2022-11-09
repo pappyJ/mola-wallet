@@ -9,6 +9,7 @@ import keystore_styles from "styles/pages/wallet/create_access/keystore.module.c
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { Container } from "page_components/wallet/create-access";
 
 const CreateWithKeystorePage: NextPageX = () => {
   const [success, setSuccess] = useState(false);
@@ -22,49 +23,47 @@ const CreateWithKeystorePage: NextPageX = () => {
   }
 
   return (
-    <div className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.close_icon_container}>
-          <Link href="/wallet/import">
-            <a className={styles.close_icon}>
-              <CloseIconInBigCircle />
-            </a>
-          </Link>
+    <Container>
+      <div className={styles.close_icon_container}>
+        <Link href="/wallet/import">
+          <a className={styles.close_icon}>
+            <CloseIconInBigCircle />
+          </a>
+        </Link>
+      </div>
+
+      <h1 style={{ paddingTop: 0 }}>Import wallet with keystore file</h1>
+
+      <form onSubmit={handleFormSubmit}>
+        <div className={keystore_styles.input_container}>
+          <div className={keystore_styles.input_box}>
+            <input
+              type="password"
+              required
+              autoFocus={true}
+              ref={passwordRef}
+            />
+          </div>
+          <label>Create Password</label>
         </div>
 
-        <h1 style={{ paddingTop: 0 }}>Import wallet with keystore file</h1>
-
-        <form onSubmit={handleFormSubmit}>
-          <div className={keystore_styles.input_container}>
-            <div className={keystore_styles.input_box}>
-              <input
-                type="password"
-                required
-                autoFocus={true}
-                ref={passwordRef}
-              />
-            </div>
-            <label>Create Password</label>
+        <div className={keystore_styles.input_container}>
+          <div className={keystore_styles.input_box}>
+            <input type="password" required ref={confirmPasswordRef} />
           </div>
+          <label>Confirm Password</label>
+        </div>
 
-          <div className={keystore_styles.input_container}>
-            <div className={keystore_styles.input_box}>
-              <input type="password" required ref={confirmPasswordRef} />
-            </div>
-            <label>Confirm Password</label>
-          </div>
-
-          <div
-            className={styles.next_button_container}
-            style={{ marginTop: "3.2rem" }}
-          >
-            <button type="submit" className={styles.next_button}>
-              Import Wallet
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div
+          className={styles.next_button_container}
+          style={{ marginTop: "3.2rem" }}
+        >
+          <button type="submit" className={styles.next_button}>
+            Import Wallet
+          </button>
+        </div>
+      </form>
+    </Container>
   );
 };
 

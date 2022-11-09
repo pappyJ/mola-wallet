@@ -12,6 +12,7 @@ import Steps, { useStep } from "components/step";
 import { CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
 import { AddressContext } from "context/address";
+import { Container } from "page_components/wallet/create-access";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 
@@ -66,48 +67,46 @@ const CreateWithMnemonic: NextPageX = () => {
   }
 
   return (
-    <div className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.close_icon_container}>
-          <Link href="/wallet/access">
-            <a className={styles.close_icon}>
-              <CloseIconInBigCircle />
-            </a>
-          </Link>
-        </div>
-        <h1 style={{ paddingTop: 0 }}>Access wallet with Mnemonic Phrase</h1>
-
-        <div className={styles.step_container}>
-          <Steps steps={steps} step={step} />
-        </div>
-
-        <form onSubmit={async (e) => await handleSubmit(e)}>
-          <div className={mnemonic_styles.words_container}>
-            {new Array(12).fill("").map((e, i) => (
-              <span key={i} className={mnemonic_styles.word_box}>
-                <input
-                  type="text"
-                  spellCheck={false}
-                  id={`mnemonic_input_${i + 1}`}
-                  autoComplete="off"
-                />
-                <span className={mnemonic_styles.counter}>{i + 1}</span>
-              </span>
-            ))}
-          </div>
-
-          <div className={styles.next_button_container}>
-            <button type="submit" className={styles.next_button}>
-              Access wallet
-            </button>
-          </div>
-        </form>
+    <Container>
+      <div className={styles.close_icon_container}>
+        <Link href="/wallet/access">
+          <a className={styles.close_icon}>
+            <CloseIconInBigCircle />
+          </a>
+        </Link>
       </div>
+      <h1 style={{ paddingTop: 0 }}>Access wallet with Mnemonic Phrase</h1>
+
+      <div className={styles.step_container}>
+        <Steps steps={steps} step={step} />
+      </div>
+
+      <form onSubmit={async (e) => await handleSubmit(e)}>
+        <div className={mnemonic_styles.words_container}>
+          {new Array(12).fill("").map((e, i) => (
+            <span key={i} className={mnemonic_styles.word_box}>
+              <input
+                type="text"
+                spellCheck={false}
+                id={`mnemonic_input_${i + 1}`}
+                autoComplete="off"
+              />
+              <span className={mnemonic_styles.counter}>{i + 1}</span>
+            </span>
+          ))}
+        </div>
+
+        <div className={styles.next_button_container}>
+          <button type="submit" className={styles.next_button}>
+            Access wallet
+          </button>
+        </div>
+      </form>
       <Notification
         notification={notification}
         pushNotification={pushNotification}
       />
-    </div>
+    </Container>
   );
 };
 

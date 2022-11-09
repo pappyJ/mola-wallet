@@ -15,6 +15,7 @@ import { decryptWallet } from "utils/wallet";
 import Notification, { useNotification } from "components/notification";
 
 import { AddressContext } from "context/address";
+import { Container } from "page_components/wallet/create-access";
 
 const steps = [
   {
@@ -35,37 +36,35 @@ const CreateWithKeystorePage: NextPageX = () => {
   );
 
   return (
-    <div className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.close_icon_container}>
-          <Link href="/wallet/access">
-            <a className={styles.close_icon}>
-              <CloseIconInBigCircle />
-            </a>
-          </Link>
-        </div>
-
-        <h1 style={{ paddingTop: 0 }}>Access wallet with keystore file</h1>
-
-        <div className={styles.step_container}>
-          <Steps steps={steps} step={step} />
-        </div>
-
-        {step == 1 ? (
-          <Step1Component
-            setSuccess={setSuccess}
-            setPasswordedWalletFile={setPasswordedWalletFile}
-          />
-        ) : step == 2 ? (
-          <Step2Component
-            success={success}
-            passwordedWalletFile={passwordedWalletFile}
-          />
-        ) : (
-          <></>
-        )}
+    <Container>
+      <div className={styles.close_icon_container}>
+        <Link href="/wallet/access">
+          <a className={styles.close_icon}>
+            <CloseIconInBigCircle />
+          </a>
+        </Link>
       </div>
-    </div>
+
+      <h1 style={{ paddingTop: 0 }}>Access wallet with keystore file</h1>
+
+      <div className={styles.step_container}>
+        <Steps steps={steps} step={step} />
+      </div>
+
+      {step == 1 ? (
+        <Step1Component
+          setSuccess={setSuccess}
+          setPasswordedWalletFile={setPasswordedWalletFile}
+        />
+      ) : step == 2 ? (
+        <Step2Component
+          success={success}
+          passwordedWalletFile={passwordedWalletFile}
+        />
+      ) : (
+        <></>
+      )}
+    </Container>
   );
 };
 
