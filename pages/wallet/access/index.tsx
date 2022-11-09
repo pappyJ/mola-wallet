@@ -2,12 +2,11 @@ import styles from "styles/pages/wallet/create_access/index.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { NextPageX } from "types/next";
-import Layout from "components/layouts";
-import { Container } from "page_components/wallet/create-access";
+import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 
 const CreateWalletPage: NextPageX = () => {
   return (
-    <Container>
+    <>
       <h1>Access Wallet</h1>
       <Link href="/wallet/access/keystore">
         <a className={styles.option}>
@@ -46,9 +45,28 @@ const CreateWalletPage: NextPageX = () => {
           </div>
         </a>
       </Link>
-    </Container>
+      <Link href="/wallet/access/private_key">
+        <a className={styles.option}>
+          <h2>Private Key</h2>
+          <div className={styles.description}>
+            <p>
+              Use your private key online to makes your wallet more vulnurable
+              to loss of funds
+            </p>
+            <span className={styles.image_container}>
+              <Image
+                width="100%"
+                height="100%"
+                src="/icon_private_key.svg"
+                alt="key store icon"
+              />
+            </span>
+          </div>
+        </a>
+      </Link>
+    </>
   );
 };
 
-CreateWalletPage.Layout = Layout;
+CreateWalletPage.Layout = WalletCreateAccessLayout;
 export default CreateWalletPage;

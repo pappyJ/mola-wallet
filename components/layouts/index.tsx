@@ -1,9 +1,9 @@
 import Header from "components/headers";
 import Footer from "components/footers";
 import React from "react";
-import { NextPageX } from "types/next";
+import { NextPageXLayout } from "types/next";
 
-const Layout: NextPageX["Layout"] = ({ children }) => {
+const Layout: NextPageXLayout = ({ children }) => {
   return (
     <>
       <Header />

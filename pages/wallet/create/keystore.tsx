@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { generateWalletUsingKeyStore, storeWalletKey } from "utils/wallet";
 import Notification, { useNotification } from "components/notification";
 import { Container } from "page_components/wallet/create-access";
+import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 
 const steps = [
   { title: "Create Password" },
@@ -32,7 +33,7 @@ const CreateWithKeystorePage: NextPageX = () => {
   const [step] = useStep(steps);
 
   return (
-    <Container>
+    <>
       <div className={styles.close_icon_container}>
         <Link href="/wallet/create">
           <a className={styles.close_icon}>
@@ -56,7 +57,7 @@ const CreateWithKeystorePage: NextPageX = () => {
       ) : (
         <></>
       )}
-    </Container>
+    </>
   );
 };
 
@@ -297,5 +298,5 @@ function Step3Component({ success }: { success: boolean }) {
   );
 }
 
-CreateWithKeystorePage.Layout = Layout;
+CreateWithKeystorePage.Layout = WalletCreateAccessLayout;
 export default CreateWithKeystorePage;

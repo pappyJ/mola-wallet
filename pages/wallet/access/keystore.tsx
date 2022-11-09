@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Layout from "components/layouts";
 import { NextPageX } from "types/next";
 import { CloseIconInBigCircle } from "components/icons";
 import Steps, { useStep } from "components/step";
@@ -15,7 +14,7 @@ import { decryptWallet } from "utils/wallet";
 import Notification, { useNotification } from "components/notification";
 
 import { AddressContext } from "context/address";
-import { Container } from "page_components/wallet/create-access";
+import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 
 const steps = [
   {
@@ -36,7 +35,7 @@ const CreateWithKeystorePage: NextPageX = () => {
   );
 
   return (
-    <Container>
+    <>
       <div className={styles.close_icon_container}>
         <Link href="/wallet/access">
           <a className={styles.close_icon}>
@@ -64,7 +63,7 @@ const CreateWithKeystorePage: NextPageX = () => {
       ) : (
         <></>
       )}
-    </Container>
+    </>
   );
 };
 
@@ -193,5 +192,5 @@ function Step2Component({
   );
 }
 
-CreateWithKeystorePage.Layout = Layout;
+CreateWithKeystorePage.Layout = WalletCreateAccessLayout;
 export default CreateWithKeystorePage;

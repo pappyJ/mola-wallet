@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import styles from "styles/pages/wallet/create_access/index.module.css";
 import Image from "next/image";
 
-export function Container({ children }: { children: ReactNode }) {
+export function Container({ children }: { children?: ReactNode }) {
   return (
     <div className={styles.main}>
       <div className={styles.container}>

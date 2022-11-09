@@ -1,13 +1,12 @@
-import Layout from "components/layouts";
 import { NextPageX } from "types/next";
 import styles from "styles/pages/wallet/create_access/index.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { Container } from "page_components/wallet/create-access";
+import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 
 const WalletImport: NextPageX = () => {
   return (
-    <Container>
+    <>
       <h1>Import Wallet</h1>
       <Link href="/wallet/import/keystore">
         <a className={styles.option}>
@@ -45,9 +44,9 @@ const WalletImport: NextPageX = () => {
           </div>
         </a>
       </Link>
-    </Container>
+    </>
   );
 };
 
-WalletImport.Layout = Layout;
+WalletImport.Layout = WalletCreateAccessLayout;
 export default WalletImport;

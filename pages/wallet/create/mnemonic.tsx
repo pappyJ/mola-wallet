@@ -3,11 +3,10 @@ import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.c
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { MouseEvent, useEffect, useLayoutEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import { createMnemonic } from "utils/wallet";
 
 import { NextPageX } from "types/next";
-import Layout from "components/layouts";
 import Steps, { useStep } from "components/step";
 import {
   CloseIconInBigCircle,
@@ -16,6 +15,7 @@ import {
 } from "components/icons";
 import Notification, { useNotification } from "components/notification";
 import { Container } from "page_components/wallet/create-access";
+import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 
 const steps = [
   { title: "Write down these words" },
@@ -40,7 +40,7 @@ const CreateWithMnemonic: NextPageX = () => {
   useEffect(generateAndSetWords, []);
 
   return (
-    <Container>
+    <>
       <div className={styles.close_icon_container}>
         <Link href="/wallet/create">
           <a className={styles.close_icon}>
@@ -66,7 +66,7 @@ const CreateWithMnemonic: NextPageX = () => {
       ) : (
         <></>
       )}
-    </Container>
+    </>
   );
 };
 
@@ -283,5 +283,5 @@ function Step3Component({
   );
 }
 
-CreateWithMnemonic.Layout = Layout;
+CreateWithMnemonic.Layout = WalletCreateAccessLayout;
 export default CreateWithMnemonic;

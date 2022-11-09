@@ -7,12 +7,11 @@ import React, { useContext } from "react";
 import { accessWalletUsingMnemonic } from "utils/wallet";
 
 import { NextPageX } from "types/next";
-import Layout from "components/layouts";
 import Steps, { useStep } from "components/step";
 import { CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
 import { AddressContext } from "context/address";
-import { Container } from "page_components/wallet/create-access";
+import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 
@@ -59,7 +58,7 @@ const CreateWithMnemonic: NextPageX = () => {
       pushNotification({
         element: (
           <p style={{ textAlign: "center" }}>
-            Could not decrypt, awwn poor kid
+            Could not decrypt, enter correct mnemonic
           </p>
         ),
       });
@@ -67,7 +66,7 @@ const CreateWithMnemonic: NextPageX = () => {
   }
 
   return (
-    <Container>
+    <>
       <div className={styles.close_icon_container}>
         <Link href="/wallet/access">
           <a className={styles.close_icon}>
@@ -106,9 +105,9 @@ const CreateWithMnemonic: NextPageX = () => {
         notification={notification}
         pushNotification={pushNotification}
       />
-    </Container>
+    </>
   );
 };
 
-CreateWithMnemonic.Layout = Layout;
+CreateWithMnemonic.Layout = WalletCreateAccessLayout;
 export default CreateWithMnemonic;
