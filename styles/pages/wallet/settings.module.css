@@ -49,6 +49,7 @@
   border-radius: 0.5rem;
   margin-bottom: 2rem;
 }
+
 .container .section h6 {
   font-size: 2rem;
   font-weight: 600;
@@ -78,6 +79,7 @@
 }
 .container .section .btn {
   background-color: #00244e;
+  border: 1px solid #00244e;
   color: white;
 
   border-radius: 0.5rem;
@@ -90,4 +92,107 @@
 
   display: flex;
   align-items: center;
+}
+
+.priorities_container {
+  width: 100%;
+}
+.priorities_container .priorities_box {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  padding: 1.4rem 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 1rem;
+
+  margin: 1.6rem 0;
+}
+.priorities_box .icon_box {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 3.2rem;
+  display: inline-flex;
+}
+.priorities_box .text {
+  width: 100%;
+}
+.priorities_box .time_box {
+  width: 10rem;
+  color: #1e89dd;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+}
+.priorities_box .time_box .clock_icon_box {
+  display: inline-flex;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-right: 1rem;
+}
+
+.expandable_section .left {
+  width: 100%;
+}
+.expandable_section .right {
+  width: 5rem;
+  display: flex;
+  align-items: center;
+}
+.expandable_section .right .caret_down_icon {
+  display: flex;
+  width: 4rem;
+  height: 4rem;
+
+  padding: 1rem;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  transition: all 200ms linear;
+}
+.expandable_section .right .caret_down_icon.active {
+  transform: rotate(180deg);
+}
+.expandable_section .expandable {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 300ms;
+}
+.expandable_section .expandable.active {
+  max-height: 50rem;
+}
+
+.import_file {
+  display: flex;
+  margin: 1rem 0;
+  align-items: center;
+}
+.upload_btn {
+  background-color: white;
+  color: #1e89dd;
+  border: none;
+  outline: none;
+  margin-right: 2.4rem;
+
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+
+  border-radius: 0.5rem;
+  border-bottom: 3px solid #00244e;
+
+  height: 7rem;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.upload_btn .icon {
+  width: 2rem;
+  height: 2.4rem;
+  display: inline-flex;
+  margin-right: 1rem;
 }
