@@ -101,12 +101,21 @@
   display: flex;
   align-items: center;
 
-  width: 100%;
+  width: calc(100% - 0.6rem);
   padding: 1.4rem 2rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 1rem;
 
-  margin: 1.6rem 0;
+  margin: 1.6rem 0.3rem;
+  background-color: transparent;
+  outline: 2px solid transparent;
+  text-align: left;
+
+  transition: all 300ms;
+}
+.priorities_box:focus {
+  outline: 2px solid #1e89dd;
+  color: #1e89dd;
 }
 .priorities_box .icon_box {
   width: 2rem;
@@ -116,6 +125,12 @@
 }
 .priorities_box .text {
   width: 100%;
+  transition: all 300ms;
+  font-weight: 600;
+  color: #555;
+}
+.priorities_box:focus .text {
+  color: #1e89dd;
 }
 .priorities_box .time_box {
   width: 10rem;
@@ -161,6 +176,7 @@
 }
 .expandable_section .expandable.active {
   max-height: 50rem;
+  transition: all 800ms;
 }
 
 .import_file {

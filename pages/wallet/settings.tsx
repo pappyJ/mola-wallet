@@ -11,7 +11,7 @@ import {
   UpIcon,
 } from "components/icons";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 
 const Page: NextPageX = () => {
   return (
@@ -90,7 +90,7 @@ function Priorities() {
     <div className={styles.priorities_container}>
       {priorities.map((e, i) => {
         return (
-          <div className={styles.priorities_box} key={i}>
+          <button className={styles.priorities_box} key={i}>
             <span className={styles.icon_box} style={{ color: "#1E89DD" }}>
               <e.icon />
             </span>
@@ -101,7 +101,7 @@ function Priorities() {
               </span>
               <span className={styles.time}>{e.time}</span>
             </span>
-          </div>
+          </button>
         );
       })}
     </div>
@@ -109,9 +109,15 @@ function Priorities() {
 }
 
 function ImportFile() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   return (
     <div className={styles.import_file}>
-      <button className={styles.upload_btn}>
+      <input ref={fileInputRef} type="file" hidden />
+      <button
+        className={styles.upload_btn}
+        onClick={() => fileInputRef.current?.click()}
+      >
         <span className={styles.icon}>
           <AttachmentIcon />
         </span>
