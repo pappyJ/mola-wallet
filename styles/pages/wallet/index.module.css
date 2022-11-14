@@ -154,7 +154,7 @@
   width: 3.6rem;
   height: 3.6rem;
   padding: 1rem;
-  margin: 0 0.4rem;
+  margin: 0 0.8rem;
 
   border-radius: 50%;
   background-color: rgba(138, 161, 188, 0.349);
@@ -178,7 +178,9 @@
 .balance_section .wallet_id {
   margin-top: 0.8rem;
   color: #ddd;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-family: monospace;
+  display: flex;
 }
 
 .balance_section .center {
@@ -203,7 +205,7 @@
   border: 1px solid white;
 
   padding: 0.8rem 2rem;
-  margin: 0 0.5rem;
+  margin-left: 2rem;
   border-radius: 0.5rem;
   font-weight: 600;
   font-size: 1.6rem;

@@ -8,9 +8,10 @@ import {
   CopyIcon,
   ScanIcon,
   SendIcon,
+  TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AddressContext } from "context/address";
 import { ProviderContext } from "context/web3";
 import { useRouter } from "next/router";
@@ -19,7 +20,9 @@ import WalletHeader from "page_components/wallet/header";
 const WalletPage: NextPageX = () => {
   const [address] = useContext(AddressContext);
   const [provider] = useContext(ProviderContext);
+  const [copied, setCopied] = useState(false);
   const router = useRouter();
+  const copyRef = useRef<HTMLTextAreaElement>(null);
 
   const walletBalance = async () => await provider?.eth.getBalance(address);
   const [balance, setBalance] = useState();
@@ -27,8 +30,28 @@ const WalletPage: NextPageX = () => {
   (async () => {
     let j = await walletBalance();
 
-    setBalance(provider.utils.fromWei(j , 'ether'));
-  })()
+    setBalance(provider?.utils?.fromWei(j, "ether"));
+  })();
+
+  function shorten(address: string | null) {
+    if (!address) return "";
+    if (address.length < 11) return address;
+
+    let a = address.toString().slice(0, 7);
+    let b = address.toString().slice(-4);
+
+    return `${a}...${b}`;
+  }
+
+  function copyAddress() {
+    copyRef.current?.select();
+    document.execCommand("copy");
+    setCopied(true);
+  }
+
+  useEffect(() => {
+    if (copied) setTimeout(() => setCopied(false), 2000);
+  }, [copied]);
 
   return (
     <main className={styles.main}>
@@ -43,14 +66,26 @@ const WalletPage: NextPageX = () => {
                   <CaretDownSolidSmall />
                 </span>
               </div>
-              <p className={styles.wallet_id}>{address}</p>
+              <Link href="#address">
+                <a className={styles.wallet_id}>{shorten(address)}</a>
+              </Link>
             </div>
             <div className={styles.right}>
               <button className={styles.icon_box}>
                 <ScanIcon />
               </button>
-              <button className={styles.icon_box}>
-                <CopyIcon />
+              <button
+                className={styles.icon_box}
+                onClick={copyAddress}
+                style={{ color: copied ? "#90f3ac" : "" }}
+              >
+                <textarea
+                  ref={copyRef}
+                  style={{ width: 0, height: 0, opacity: 0 }}
+                >
+                  {address}
+                </textarea>
+                {!copied ? <CopyIcon /> : <TickHeavyIcon />}
               </button>
             </div>
           </div>
