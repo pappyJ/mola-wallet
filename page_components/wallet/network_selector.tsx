@@ -17,14 +17,18 @@ export default function NetworkSelector() {
   }
 
   return (
-    <div className={styles.network_selector}>
-      <div className={styles.ethereum_icon_box}>{networkLogoMap[network]}</div>
-      {network}
+    <div>
       <button
-        className={styles.caret_down_box}
+        className={styles.network_selector}
         onClick={() => setModalActive(true)}
       >
-        <CaretDownOutline />
+        <div className={styles.ethereum_icon_box}>
+          {networkLogoMap[network]}
+        </div>
+        {network}
+        <span className={styles.caret_down_box}>
+          <CaretDownOutline />
+        </span>
       </button>
       <div
         className={`${styles.network_modal} ${
