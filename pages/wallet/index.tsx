@@ -1,4 +1,4 @@
-import DashBoardLayout from "components/layouts/dashboard";
+import DashBoardLayout from "page_components/wallet/layout";
 import { NextPageX } from "types/next";
 import styles from "styles/pages/wallet/index.module.css";
 import Link from "next/link";
@@ -79,9 +79,11 @@ const WalletPage: NextPageX = () => {
                 onClick={copyAddress}
                 style={{ color: copied ? "#90f3ac" : "" }}
               >
-                <textarea ref={copyRef} className={styles.hidden_textarea}>
-                  {address}
-                </textarea>
+                <textarea
+                  ref={copyRef}
+                  className={styles.hidden_textarea}
+                  value={address || ""}
+                />
                 {!copied ? <CopyIcon /> : <TickHeavyIcon />}
               </button>
             </div>

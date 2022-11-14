@@ -11,7 +11,7 @@ import Steps, { useStep } from "components/step";
 import { CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
 import { AddressContext } from "context/address";
-import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
+import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 

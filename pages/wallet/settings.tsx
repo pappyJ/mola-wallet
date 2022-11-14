@@ -1,5 +1,5 @@
 import { NextPageX } from "types/next";
-import DashboardLayout from "components/layouts/dashboard";
+import DashboardLayout from "page_components/wallet/layout";
 import styles from "styles/pages/wallet/settings.module.css";
 import {
   AttachmentIcon,

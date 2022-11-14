@@ -8,7 +8,7 @@ import keystore_styles from "styles/pages/wallet/create_access/keystore.module.c
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
+import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const CreateWithKeystorePage: NextPageX = () => {
   const [success, setSuccess] = useState(false);

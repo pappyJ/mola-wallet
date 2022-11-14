@@ -1,5 +1,5 @@
 import { NextPageX } from "types/next";
-import DashboardLayout from "components/layouts/dashboard";
+import DashboardLayout from "page_components/wallet/layout";
 import WalletHeader from "page_components/wallet/header";
 import styles from "styles/pages/wallet/d_apps.module.css";
 import Image from "next/image";

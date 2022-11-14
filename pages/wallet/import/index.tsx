@@ -2,7 +2,7 @@ import { NextPageX } from "types/next";
 import styles from "styles/pages/wallet/create_access/index.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
+import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const WalletImport: NextPageX = () => {
   return (

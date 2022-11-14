@@ -1,5 +1,5 @@
 import { NextPageX } from "types/next";
-import DashboardLayout from "components/layouts/dashboard";
+import DashboardLayout from "page_components/wallet/layout";
 
 const Page: NextPageX = () => {
   return <></>;

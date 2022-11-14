@@ -16,7 +16,7 @@ import Notification, { useNotification } from "components/notification";
 
 import { AddressContext } from "context/address";
 import { ProviderContext } from "context/web3";
-import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
+import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const steps = [
   {
