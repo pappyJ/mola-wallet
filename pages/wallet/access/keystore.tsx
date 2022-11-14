@@ -10,10 +10,12 @@ import keystore_styles from "styles/pages/wallet/create_access/keystore.module.c
 import Link from "next/link";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useRouter } from "next/router";
-import { decryptWallet } from "utils/wallet";
+import { decryptWallet, getWeb3Connection } from "utils/wallet";
+import { NETWORKS } from "utils/Irpc";
 import Notification, { useNotification } from "components/notification";
 
 import { AddressContext } from "context/address";
+import { ProviderContext } from "context/web3";
 import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 
 const steps = [
@@ -133,6 +135,7 @@ function Step2Component({
   const passwordRef = useRef<HTMLInputElement>(null);
   const [notification, pushNotification] = useNotification();
   const [, setAddress] = useContext(AddressContext);
+  const [, setProvider] = useContext(ProviderContext);
 
   useEffect(() => {
     if (!success) router.replace("?step=1");
@@ -146,7 +149,7 @@ function Step2Component({
         passwordedWalletFile,
         `${passwordRef.current?.value}`
       );
-
+      setProvider(getWeb3Connection(NETWORKS.ETHEREUM));
       setAddress(wallet.address);
       router.push("/wallet");
     } catch (error) {
