@@ -281,3 +281,11 @@
   flex: 0 0 20rem;
   margin-left: 0.8rem;
 }
+
+.hidden_textarea {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  /* resize: none; */
+  z-index: -1;
+}

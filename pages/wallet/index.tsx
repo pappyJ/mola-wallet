@@ -79,10 +79,7 @@ const WalletPage: NextPageX = () => {
                 onClick={copyAddress}
                 style={{ color: copied ? "#90f3ac" : "" }}
               >
-                <textarea
-                  ref={copyRef}
-                  style={{ width: 0, height: 0, opacity: 0 }}
-                >
+                <textarea ref={copyRef} className={styles.hidden_textarea}>
                   {address}
                 </textarea>
                 {!copied ? <CopyIcon /> : <TickHeavyIcon />}
