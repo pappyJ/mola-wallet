@@ -7,14 +7,12 @@ const ConfirmTestPage: NextPageX = () => {
 
   function activateConfirm1() {
     activateConfirm({
-      QuestionComponent: <p>Confirm 1</p>,
+      QuestionComponent: "Confirm 1",
       affirmText: "Enter",
       negateText: "Cancel",
       onAffirm: () => console.log("1", true),
       onNegate: () => console.log("1", false),
     });
-
-    setTimeout(activateConfirm2, 500);
   }
 
   function activateConfirm2() {

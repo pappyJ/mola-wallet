@@ -12,18 +12,14 @@ import {
 } from "components/icons";
 import Link from "next/link";
 import { ReactNode, useRef, useState } from "react";
+import WalletHeader from "page_components/wallet/header";
 
 const Page: NextPageX = () => {
   return (
     <div className={styles.main}>
-      <header>
+      <WalletHeader>
         <h2>Settings</h2>
-        <div className={styles.notification_icon_box}>
-          <span className={styles.icon}>
-            <NotificationSolidIcon />
-          </span>
-        </div>
-      </header>
+      </WalletHeader>
       <div className={styles.container}>
         <ExpandableSection hiddenComponent={<Priorities />}>
           <h6>Default transaction priority</h6>

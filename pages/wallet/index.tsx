@@ -4,11 +4,8 @@ import styles from "styles/pages/wallet/index.module.css";
 import Link from "next/link";
 import {
   CardIcon,
-  CaretDownOutline,
   CaretDownSolidSmall,
   CopyIcon,
-  EtherumIcon,
-  NotificationSolidIcon,
   ScanIcon,
   SendIcon,
 } from "components/icons";
@@ -16,6 +13,7 @@ import Image from "next/image";
 import { useContext, useEffect } from "react";
 import { AddressContext } from "context/address";
 import { useRouter } from "next/router";
+import WalletHeader from "page_components/wallet/header";
 
 const WalletPage: NextPageX = () => {
   const [address] = useContext(AddressContext);
@@ -23,40 +21,7 @@ const WalletPage: NextPageX = () => {
 
   return (
     <main className={styles.main}>
-      <div className={styles.header}>
-        <div className={styles.left}>
-          <p>
-            You can now{" "}
-            <Link href="#">
-              <a>buy crypto</a>
-            </Link>{" "}
-            with low fees
-          </p>
-          <p>
-            Enjoy 0.9% fee when you select &apos;Bank account&apos; as payment
-            method.{" "}
-            <Link href="#">
-              <a> Buy crypto now.</a>
-            </Link>
-          </p>
-        </div>
-        <div className={styles.right}>
-          <div className={styles.network_selector}>
-            <div className={styles.ethereum_icon_box}>
-              <EtherumIcon />
-            </div>
-            Ethereum
-            <button className={styles.caret_down_box}>
-              <CaretDownOutline />
-            </button>
-          </div>
-          <div className={styles.notification_icon_box}>
-            <span className={styles.icon}>
-              <NotificationSolidIcon />
-            </span>
-          </div>
-        </div>
-      </div>
+      <WalletHeader />
       <div className={styles.card_section}>
         <div className={styles.balance_section}>
           <div className={styles.top}>
