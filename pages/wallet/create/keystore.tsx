@@ -13,8 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { generateWalletUsingKeyStore, storeWalletKey } from "utils/wallet";
 import Notification, { useNotification } from "components/notification";
-import { Container } from "page_components/wallet/create-access";
-import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
+import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const steps = [
   { title: "Create Password" },

@@ -1,61 +1,55 @@
-import DashBoardLayout from "components/layouts/dashboard";
+import DashBoardLayout from "page_components/wallet/layout";
 import { NextPageX } from "types/next";
 import styles from "styles/pages/wallet/index.module.css";
 import Link from "next/link";
 import {
   CardIcon,
-  CaretDownOutline,
   CaretDownSolidSmall,
   CopyIcon,
-  EtherumIcon,
-  NotificationSolidIcon,
   ScanIcon,
   SendIcon,
+  TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
+import WalletHeader from "page_components/wallet/header";
+
+
 
 const WalletPage: NextPageX = () => {
   const [account] = useContext(AccountContext);
+  const [provider] = useContext(ProviderContext);
+  const [copied, setCopied] = useState(false);
+  const copyRef = useRef<HTMLTextAreaElement>(null);
+
+  const [balance, setBalance] = useState();
+
+  function shorten(address: string | null) {
+    if (!account.address) return "";
+
+    if (account.address.length < 11) return address;
+
+    let a = account.address.toString().slice(0, 7);
+    let b = account.address.toString().slice(-4);
+
+    return `${a}...${b}`;
+  }
+
+  function copyAddress() {
+    copyRef.current?.select();
+    document.execCommand("copy");
+    setCopied(true);
+  }
+
+  useEffect(() => {
+    if (copied) setTimeout(() => setCopied(false), 2000);
+  }, [copied]);
 
   return (
     <main className={styles.main}>
-      <div className={styles.header}>
-        <div className={styles.left}>
-          <p>
-            You can now{" "}
-            <Link href="#">
-              <a>buy crypto</a>
-            </Link>{" "}
-            with low fees
-          </p>
-          <p>
-            Enjoy 0.9% fee when you select &apos;Bank account&apos; as payment
-            method.{" "}
-            <Link href="#">
-              <a> Buy crypto now.</a>
-            </Link>
-          </p>
-        </div>
-        <div className={styles.right}>
-          <div className={styles.network_selector}>
-            <div className={styles.ethereum_icon_box}>
-              <EtherumIcon />
-            </div>
-            Ethereum
-            <button className={styles.caret_down_box}>
-              <CaretDownOutline />
-            </button>
-          </div>
-          <div className={styles.notification_icon_box}>
-            <span className={styles.icon}>
-              <NotificationSolidIcon />
-            </span>
-          </div>
-        </div>
-      </div>
+      <WalletHeader />
       <div className={styles.card_section}>
         <div className={styles.balance_section}>
           <div className={styles.top}>
@@ -66,14 +60,25 @@ const WalletPage: NextPageX = () => {
                   <CaretDownSolidSmall />
                 </span>
               </div>
-              <p className={styles.wallet_id}>{account.address}</p>
+              <Link href="#address">
+                <a className={styles.wallet_id}>{shorten(account.address)}</a>
+              </Link>
             </div>
             <div className={styles.right}>
               <button className={styles.icon_box}>
                 <ScanIcon />
               </button>
-              <button className={styles.icon_box}>
-                <CopyIcon />
+              <button
+                className={styles.icon_box}
+                onClick={copyAddress}
+                style={{ color: copied ? "#90f3ac" : "" }}
+              >
+                <textarea
+                  ref={copyRef}
+                  className={styles.hidden_textarea}
+                  value={account.address || ""}
+                />
+                {!copied ? <CopyIcon /> : <TickHeavyIcon />}
               </button>
             </div>
           </div>
@@ -128,4 +133,5 @@ const WalletPage: NextPageX = () => {
 };
 
 WalletPage.Layout = DashBoardLayout;
+
 export default WalletPage;

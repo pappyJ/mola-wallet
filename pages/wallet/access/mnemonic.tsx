@@ -16,9 +16,9 @@ import { CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
-import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
 import { IAccount } from "utils/interfaces/IAccount";
 import { NETWORKS } from "utils/interfaces/Irpc";
+import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 

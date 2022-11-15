@@ -1,6 +1,6 @@
-import { Container } from "page_components/wallet/create-access";
+import Container from "page_components/wallet/create_access_container";
 import { ReactNode } from "react";
-import Layout from ".";
+import Layout from "../../components/layouts";
 import { NextPageXLayout } from "types/next";
 
 const WalletCreateAccessLayout: NextPageXLayout = ({

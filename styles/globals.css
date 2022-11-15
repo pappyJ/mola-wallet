@@ -41,7 +41,6 @@ input {
 }
 input:focus {
   outline: initial;
-  border: initial;
 }
 
 * {

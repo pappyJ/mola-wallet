@@ -1,0 +1,67 @@
+.main {
+  padding: 1.6rem 1.6rem;
+  max-width: 102.4rem;
+  margin: 0 auto;
+}
+
+.hero {
+  background: url("/dapps_bg.png"), #00244e;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  color: white;
+  font-size: 4.8rem;
+  padding: 6.4rem 4.8rem;
+}
+
+.dapps {
+  background-color: white;
+  padding: 3rem 4rem;
+}
+.dapps h3 {
+  font-size: 2.4rem;
+  font-weight: 400;
+  margin-bottom: 3rem;
+}
+
+.dapps_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.dapps_list {
+  display: flex;
+  align-items: center;
+  background-color: #e9f5fe;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+.dapps_list .left {
+  margin-right: 2rem;
+  width: 100%;
+}
+.dapps_list h6 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.dapps p {
+  margin-bottom: 1rem;
+}
+.dapps .hashtag {
+  margin: 0;
+  color: #8aa1bc;
+}
+
+.dapps_list .img {
+  width: 6.4rem;
+  height: 6.4rem;
+
+  position: relative;
+}

@@ -25,50 +25,6 @@
   color: #1e89dd;
 }
 
-.network_selector {
-  border-radius: 2rem;
-  height: 3.6rem;
-  padding: 0 1rem;
-
-  background-color: #f5f5f5;
-  color: #00244e;
-  font-weight: 600;
-
-  display: flex;
-  align-items: center;
-
-  margin: 0 3rem;
-}
-
-.network_selector .ethereum_icon_box {
-  background-color: white;
-  border-radius: 50%;
-  padding: 0.25rem;
-
-  width: 2.4rem;
-  height: 2.4rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin-right: 1rem;
-}
-.network_selector .caret_down_box {
-  width: 1.2rem;
-  height: 1.2rem;
-
-  display: flex;
-  margin-left: 2rem;
-
-  background-color: transparent;
-  color: #00244e;
-
-  position: relative;
-  top: 2px;
-  border: none;
-}
-
 .notification_icon_box {
   width: 3.6rem;
   height: 3.6rem;
@@ -154,7 +110,7 @@
   width: 3.6rem;
   height: 3.6rem;
   padding: 1rem;
-  margin: 0 0.4rem;
+  margin: 0 0.8rem;
 
   border-radius: 50%;
   background-color: rgba(138, 161, 188, 0.349);
@@ -178,7 +134,9 @@
 .balance_section .wallet_id {
   margin-top: 0.8rem;
   color: #ddd;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-family: monospace;
+  display: flex;
 }
 
 .balance_section .center {
@@ -203,7 +161,7 @@
   border: 1px solid white;
 
   padding: 0.8rem 2rem;
-  margin: 0 0.5rem;
+  margin-left: 2rem;
   border-radius: 0.5rem;
   font-weight: 600;
   font-size: 1.6rem;
@@ -278,4 +236,12 @@
 .bottom_section .right {
   flex: 0 0 20rem;
   margin-left: 0.8rem;
+}
+
+.hidden_textarea {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  /* resize: none; */
+  z-index: -1;
 }
