@@ -12,16 +12,16 @@ import {
 } from "components/icons";
 import { useRouter } from "next/router";
 import { ReactNode, useContext, useEffect } from "react";
-import { AddressContext } from "context/address";
+import { AccountContext } from "context/account";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
-  const [address] = useContext(AddressContext);
+  const [address] = useContext(AccountContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!address) router.replace("/wallet/access");
+    if (!address.address) router.replace("/wallet/access");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
+  }, [address.address]);
 
   return (
     <div className={styles.main}>

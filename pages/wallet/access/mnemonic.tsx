@@ -4,14 +4,21 @@ import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.c
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
-import { accessWalletUsingMnemonic } from "utils/wallet";
+import { 
+  accessWalletUsingMnemonic ,
+  getWeb3Connection,
+  getWalletBalanceEth,
+} from "utils/wallet";
 
 import { NextPageX } from "types/next";
 import Steps, { useStep } from "components/step";
 import { CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
-import { AddressContext } from "context/address";
+import { AccountContext } from "context/account";
+import { ProviderContext } from "context/web3";
 import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
+import { IAccount } from "utils/interfaces/IAccount";
+import { NETWORKS } from "utils/interfaces/Irpc";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 
@@ -19,7 +26,8 @@ const CreateWithMnemonic: NextPageX = () => {
   const [step] = useStep(steps);
   const router = useRouter();
   const [notification, pushNotification] = useNotification();
-  const [, setAddress] = useContext(AddressContext);
+  const [, setAccount] = useContext(AccountContext);
+  const [, setProvider] = useContext(ProviderContext);
 
   function getMemonicInputValues(): string[] {
     const mnemonicInputs: string[] = [];
@@ -52,7 +60,18 @@ const CreateWithMnemonic: NextPageX = () => {
     try {
       const wallet = await accessWalletUsingMnemonic(mnemonicArray.join(" "));
 
-      setAddress(wallet.address);
+      let provider = getWeb3Connection(NETWORKS.ETHEREUM);
+
+      let balance = await getWalletBalanceEth(provider, wallet.address);
+      setAccount((prev: IAccount) => ({
+        ...prev,
+
+        address: wallet.address,
+
+        balance,
+      }));
+
+      setProvider(provider);
       router.push("/wallet");
     } catch (error) {
       pushNotification({

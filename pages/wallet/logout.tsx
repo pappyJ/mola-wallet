@@ -3,7 +3,7 @@ import DashboardLayout from "components/layouts/dashboard";
 import styles from "styles/pages/wallet/logout.module.css";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { AddressContext } from "context/address";
+import { AddressContext } from "context/account";
 
 const Page: NextPageX = () => {
   const router = useRouter();

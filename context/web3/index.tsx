@@ -1,15 +1,16 @@
 import React, { useState } from "react";
+import Web3 from "web3";
 
 export const ProviderContext = React.createContext<
-  [any, React.Dispatch<React.SetStateAction<any>>]
->([null, () => {}]);
+  [Web3, React.Dispatch<React.SetStateAction<any>>]
+>([new Web3, () => {}]);
 
 export function ProviderContextComponent({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [provider, setProvider] = useState();
+  const [provider, setProvider] = useState({} as Web3);
 
   return (
     <ProviderContext.Provider value={[provider, setProvider]}>

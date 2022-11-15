@@ -3,8 +3,9 @@ import { hdkey } from "ethereumjs-wallet";
 import { generateMnemonic, mnemonicToSeedSync } from "bip39";
 import saveFile from "js-file-download";
 import PROVIDERS from "./config";
-import { NETWORKS } from "./Irpc";
+import { NETWORKS } from "./interfaces/Irpc";
 import { EncryptedKeystoreV3Json } from "web3-core";
+import { primaryFixedValue } from 'constants/digits'
 
 let web3: Web3;
 
@@ -58,6 +59,12 @@ export const generateWalletUsingKeyStore = async (password: string) => {
   return Buffer.from(JSON.stringify(encryptedWallet)).toString("base64");
 };
 
+export const generateWalletUsingPKey = async (pKey: string) => {
+  const createdWallet = web3.eth.accounts.wallet.add(pKey);
+
+  return createdWallet;
+};
+
 export const storeWalletKey = (
   element: string | ArrayBuffer | ArrayBufferView | Blob,
   name: string
@@ -69,12 +76,15 @@ export const decryptWallet = (
   encryptedWallet: EncryptedKeystoreV3Json,
   walletPassword: string
 ) => {
-
   const wallet = web3.eth.accounts.decrypt(encryptedWallet, walletPassword);
 
-  const createdWallet = web3.eth.accounts.wallet.add(
-    wallet.privateKey
-  );
+  const createdWallet = web3.eth.accounts.wallet.add(wallet.privateKey);
 
   return createdWallet;
 };
+
+export const getWalletBalanceEth = async (
+  provider: Web3,
+  address: string
+): Promise<string> =>
+  Number(provider.utils.fromWei(await provider.eth.getBalance(address), "ether")).toFixed(primaryFixedValue);

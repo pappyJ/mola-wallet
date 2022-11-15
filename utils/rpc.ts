@@ -1,4 +1,4 @@
-import { NETWORKS } from './Irpc';
+import { NETWORKS } from './interfaces/IRpc';
 
 export default  {
 

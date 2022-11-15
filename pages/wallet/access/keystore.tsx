@@ -10,13 +10,18 @@ import keystore_styles from "styles/pages/wallet/create_access/keystore.module.c
 import Link from "next/link";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useRouter } from "next/router";
-import { decryptWallet, getWeb3Connection } from "utils/wallet";
-import { NETWORKS } from "utils/Irpc";
+import {
+  decryptWallet,
+  getWeb3Connection,
+  getWalletBalanceEth,
+} from "utils/wallet";
+import { NETWORKS } from "utils/interfaces/Irpc";
 import Notification, { useNotification } from "components/notification";
 
-import { AddressContext } from "context/address";
+import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import WalletCreateAccessLayout from "components/layouts/wallet_create_access";
+import { IAccount } from "utils/interfaces/IAccount";
 
 const steps = [
   {
@@ -134,14 +139,17 @@ function Step2Component({
   const router = useRouter();
   const passwordRef = useRef<HTMLInputElement>(null);
   const [notification, pushNotification] = useNotification();
-  const [, setAddress] = useContext(AddressContext);
+  const [account, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
 
   useEffect(() => {
     if (!success) router.replace("?step=1");
   }, []);
 
-  function handleSubmit(e: any) {
+  useEffect(() => {
+  }, [account]);
+
+  async function handleSubmit(e: any) {
     e.preventDefault();
 
     try {
@@ -149,8 +157,18 @@ function Step2Component({
         passwordedWalletFile,
         `${passwordRef.current?.value}`
       );
-      setProvider(getWeb3Connection(NETWORKS.ETHEREUM));
-      setAddress(wallet.address);
+      let provider = getWeb3Connection(NETWORKS.ETHEREUM);
+      let balance = await getWalletBalanceEth(provider, wallet.address);
+      setAccount((prev: IAccount) => ({
+        ...prev,
+
+        address: wallet.address,
+
+        balance,
+      }));
+
+      setProvider(provider);
+
       router.push("/wallet");
     } catch (error) {
       pushNotification({
@@ -166,7 +184,7 @@ function Step2Component({
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={async (e) => await handleSubmit(e)}>
         <div className={keystore_styles.input_container}>
           <div className={keystore_styles.input_box}>
             <input

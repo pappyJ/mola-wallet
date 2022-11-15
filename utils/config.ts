@@ -1,4 +1,4 @@
-import { NETWORKS, IProvider } from './Irpc';
+import { NETWORKS, IProvider } from './interfaces/Irpc';
 import GLOBAL_RPCS from './rpc'
 
 

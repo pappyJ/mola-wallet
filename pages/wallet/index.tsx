@@ -14,23 +14,11 @@ import {
 } from "components/icons";
 import Image from "next/image";
 import { useContext, useState } from "react";
-import { AddressContext } from "context/address";
+import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
-import { useRouter } from "next/router";
 
 const WalletPage: NextPageX = () => {
-  const [address] = useContext(AddressContext);
-  const [provider] = useContext(ProviderContext);
-  const router = useRouter();
-
-  const walletBalance = async () => await provider?.eth.getBalance(address);
-  const [balance, setBalance] = useState();
-
-  (async () => {
-    let j = await walletBalance();
-
-    setBalance(provider.utils.fromWei(j , 'ether'));
-  })()
+  const [account] = useContext(AccountContext);
 
   return (
     <main className={styles.main}>
@@ -78,7 +66,7 @@ const WalletPage: NextPageX = () => {
                   <CaretDownSolidSmall />
                 </span>
               </div>
-              <p className={styles.wallet_id}>{address}</p>
+              <p className={styles.wallet_id}>{account.address}</p>
             </div>
             <div className={styles.right}>
               <button className={styles.icon_box}>
@@ -91,7 +79,7 @@ const WalletPage: NextPageX = () => {
           </div>
           <div className={styles.center}>
             <div className={styles.fiat_balance}>$ 0.0</div>
-            <div className={styles.crypto_balance}>{balance} ETH</div>
+            <div className={styles.crypto_balance}>{account.balance} ETH</div>
           </div>
           <div className={styles.bottom}>
             <Link href="#">
