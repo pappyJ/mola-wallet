@@ -36,7 +36,7 @@ export default function WalletHeader({ children }: { children?: ReactNode }) {
             <NotificationSolidIcon />
           </span>
         </div>
-      </div>{" "}
+      </div>
     </div>
   );
 }

@@ -15,11 +15,11 @@ import {
   getWeb3Connection,
   getWalletBalanceEth,
 } from "utils/wallet";
-import { NETWORKS } from "utils/interfaces/Irpc";
+import { NETWORKS } from "interfaces/IRpc";
 import Notification, { useNotification } from "components/notification";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
-import { IAccount } from "utils/interfaces/IAccount";
+import { IAccount } from "interfaces/IAccount";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const steps = [

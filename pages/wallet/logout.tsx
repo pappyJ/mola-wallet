@@ -4,10 +4,12 @@ import styles from "styles/pages/wallet/logout.module.css";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { AccountContext } from "context/account";
+import { ProviderContext } from "context/web3/index";
 
 const Page: NextPageX = () => {
   const router = useRouter();
   const [, setAccount] = useContext(AccountContext);
+  const [, setProvider] = useContext(ProviderContext);
 
   return (
     <div className={styles.main}>
@@ -16,11 +18,12 @@ const Page: NextPageX = () => {
         <div className={styles.button_container}>
           <button onClick={() => router.back()}>No</button>
           <button
-            onClick={() =>
+            onClick={() => {
+              setProvider(null);
               setAccount((prev) => {
                 return { ...prev, address: "" };
-              })
-            }
+              });
+            }}
             className={styles.primary}
           >
             Yes

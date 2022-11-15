@@ -14,8 +14,8 @@ import {
   generateWalletUsingPKey,
   getWalletBalanceEth
 } from "utils/wallet";
-import { NETWORKS } from "utils/interfaces/Irpc";
-import { IAccount } from "utils/interfaces/IAccount";
+import { NETWORKS } from "interfaces/IRpc";
+import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
 
 const PrivateKeyPage: NextPageX = () => {
