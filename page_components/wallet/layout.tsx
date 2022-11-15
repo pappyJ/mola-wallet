@@ -20,9 +20,9 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!account.address) router.replace("/wallet/access");
+    if (!account?.address) router.replace("/wallet/access");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account.address]);
+  }, [account?.address]);
 
   return (
     <WalletContext>

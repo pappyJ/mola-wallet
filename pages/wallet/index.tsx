@@ -14,17 +14,16 @@ import Image from "next/image";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
+import { NetworkContext } from "page_components/wallet/context";
 import WalletHeader from "page_components/wallet/header";
 
 
 
 const WalletPage: NextPageX = () => {
   const [account] = useContext(AccountContext);
-  const [provider] = useContext(ProviderContext);
+  const [currentNetwork] = useContext(NetworkContext);
   const [copied, setCopied] = useState(false);
   const copyRef = useRef<HTMLTextAreaElement>(null);
-
-  const [balance, setBalance] = useState();
 
   function shorten(address: string | null) {
     if (!account.address) return "";
@@ -60,8 +59,8 @@ const WalletPage: NextPageX = () => {
                   <CaretDownSolidSmall />
                 </span>
               </div>
-              <Link href="#address">
-                <a className={styles.wallet_id}>{shorten(account.address)}</a>
+              <Link href={`${currentNetwork.blockExplorer}/address/${account.address}`}>
+                <a target="_blank" className={styles.wallet_id}>{shorten(account.address)}</a>
               </Link>
             </div>
             <div className={styles.right}>
@@ -84,7 +83,7 @@ const WalletPage: NextPageX = () => {
           </div>
           <div className={styles.center}>
             <div className={styles.fiat_balance}>$ 0.0</div>
-            <div className={styles.crypto_balance}>{account.balance} ETH</div>
+            <div className={styles.crypto_balance}>{account.balance} {currentNetwork.nativeCurrency.symbol}</div>
           </div>
           <div className={styles.bottom}>
             <Link href="#">

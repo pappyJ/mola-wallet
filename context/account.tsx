@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IAccount } from "utils/interfaces/IAccount"
+import { IAccount } from "interfaces/IAccount"
 
 export const AccountContext = React.createContext<
   [IAccount, React.Dispatch<React.SetStateAction<any>>]

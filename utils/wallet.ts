@@ -3,7 +3,7 @@ import { hdkey } from "ethereumjs-wallet";
 import { generateMnemonic, mnemonicToSeedSync } from "bip39";
 import saveFile from "js-file-download";
 import PROVIDERS from "./config";
-import { NETWORKS } from "./interfaces/Irpc";
+import { NETWORKS } from "interfaces/IRpc";
 import { EncryptedKeystoreV3Json } from "web3-core";
 import { primaryFixedValue } from 'constants/digits'
 
@@ -27,7 +27,7 @@ export const createMnemonic = () => {
 };
 
 export const accessWalletUsingMnemonic = async (mnemonics: string) => {
-  const wallet_hdpath = process.env.WALLET_PATH;
+  const wallet_hdpath = process.env.NEXT_PUBLIC_WALLET_PATH;
 
   const seed = mnemonicToSeedSync(mnemonics);
 
