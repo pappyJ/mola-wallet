@@ -15,13 +15,13 @@
   text-transform: capitalize;
 }
 
-.network_selector .ethereum_icon_box {
+.network_icon_box {
   background-color: white;
   border-radius: 50%;
-  padding: 0.25rem;
 
   width: 2.4rem;
   height: 2.4rem;
+  flex-shrink: 0;
 
   display: flex;
   justify-content: center;
@@ -92,7 +92,125 @@
 .network_modal .toolbar {
   padding: 1rem;
   margin: 1rem 0;
+  width: 100%;
 
   display: flex;
   flex-direction: space-between;
+}
+
+.search_container {
+  position: relative;
+  background-color: #f9fbfe;
+  border-radius: 2rem;
+  height: 3.6rem;
+  padding: 0 2.4rem;
+  display: flex;
+  align-items: center;
+  margin-right: 2rem;
+  width: 100%;
+}
+.search_container .icon {
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  color: #00244e;
+  margin-right: 1.6rem;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.search {
+  border: none;
+  outline: none;
+  display: inline-flex;
+  width: 100%;
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+  background-color: transparent;
+  color: #333;
+}
+
+.search::placeholder {
+  color: #bfbfbf;
+}
+
+.toolbar .btns_container {
+  margin-left: 2rem;
+  display: flex;
+}
+.btns_container button {
+  min-width: 6rem;
+  height: 3.6rem;
+  padding: 0 1.6rem;
+  border: none;
+  color: #333;
+  background-color: #f7f8fa;
+  transition: all 200ms;
+  text-transform: capitalize;
+}
+.btns_container button:first-child {
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+}
+.btns_container button:nth-child(3) {
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+.btns_container button:nth-child(2) {
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+.btns_container button.active {
+  background-color: #badefb;
+  color: #000;
+  z-index: 1;
+}
+
+.select_container {
+  border: 1px solid #e9f5fe;
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin: 3rem 0;
+}
+.select_container tr {
+  border: 1px solid #e9f5fe;
+  height: 4.8rem;
+}
+.select_container .selection {
+  width: 100%;
+  height: 4.8rem;
+  border: none;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  padding: 0 3rem;
+}
+.selection .text {
+  width: 100%;
+  margin: 0 1rem;
+}
+.selection .indicator {
+  display: inline-flex;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid #8c8c8c;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.selection .indicator.active {
+  border: 1px solid #2189dc;
+}
+.selection .indicator span {
+  display: inline-flex;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+}
+.selection .indicator.active span {
+  background-color: #2189dc;
 }

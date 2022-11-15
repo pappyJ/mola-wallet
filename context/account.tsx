@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { IAccount } from "utils/interfaces/IAccount"
+import { IAccount } from "utils/interfaces/IAccount";
 
 export const AccountContext = React.createContext<
-  [IAccount, React.Dispatch<React.SetStateAction<any>>]
+  [IAccount, React.Dispatch<React.SetStateAction<IAccount>>]
 >([{} as IAccount, () => {}]);
 
 export function AcoountContextComponent({
@@ -13,8 +13,8 @@ export function AcoountContextComponent({
   const defaultAccount = {
     balance: 0,
 
-    address: '',
-  }
+    address: "",
+  };
   const [account, setAccount] = useState<IAccount>(defaultAccount as IAccount);
 
   return (

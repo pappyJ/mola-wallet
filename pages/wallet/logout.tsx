@@ -3,11 +3,11 @@ import DashboardLayout from "page_components/wallet/layout";
 import styles from "styles/pages/wallet/logout.module.css";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { AddressContext } from "context/account";
+import { AccountContext } from "context/account";
 
 const Page: NextPageX = () => {
   const router = useRouter();
-  const [, setAddress] = useContext(AddressContext);
+  const [, setAccount] = useContext(AccountContext);
 
   return (
     <div className={styles.main}>
@@ -15,7 +15,14 @@ const Page: NextPageX = () => {
         <p className={styles.heading}>Are you sure you want to logout</p>
         <div className={styles.button_container}>
           <button onClick={() => router.back()}>No</button>
-          <button onClick={() => setAddress(null)} className={styles.primary}>
+          <button
+            onClick={() =>
+              setAccount((prev) => {
+                return { ...prev, address: "" };
+              })
+            }
+            className={styles.primary}
+          >
             Yes
           </button>
         </div>

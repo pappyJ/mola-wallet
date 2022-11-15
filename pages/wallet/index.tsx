@@ -16,8 +16,6 @@ import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import WalletHeader from "page_components/wallet/header";
 
-
-
 const WalletPage: NextPageX = () => {
   const [account] = useContext(AccountContext);
   const [provider] = useContext(ProviderContext);
@@ -71,7 +69,10 @@ const WalletPage: NextPageX = () => {
               <button
                 className={styles.icon_box}
                 onClick={copyAddress}
-                style={{ color: copied ? "#90f3ac" : "" }}
+                style={{
+                  color: copied ? "#90f3ac" : "",
+                  cursor: copied ? "default" : "pointer",
+                }}
               >
                 <textarea
                   ref={copyRef}
