@@ -149,9 +149,3 @@ export default function NetworkSelector() {
     </>
   );
 }
-
-const networks = [
-  { name: "ethereum", displayName: "ETH" },
-  { name: "binance", displayName: "BNB" },
-  { name: "wbtc", displayName: "WBTC" },
-];
