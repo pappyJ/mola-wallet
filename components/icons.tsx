@@ -479,6 +479,26 @@ export function MenuIcon() {
   );
 }
 
+export function MessageIcon() {
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 22 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.25 10.76C1.25 12.36 2.373 13.754 3.957 13.987C5.044 14.147 6.142 14.27 7.25 14.356V19L11.326 14.924C11.6024 14.6493 11.9735 14.4909 12.363 14.481C14.2644 14.4284 16.161 14.2634 18.043 13.987C19.627 13.754 20.75 12.361 20.75 10.759V4.741C20.75 3.139 19.627 1.746 18.043 1.513C15.711 1.17072 13.357 0.99926 11 1C8.608 1 6.256 1.175 3.957 1.513C2.373 1.746 1.25 3.14 1.25 4.741V10.759V10.76Z"
+        stroke="currentcolor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function LogoutIcon() {
   return (
     <svg

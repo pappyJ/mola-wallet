@@ -17,6 +17,7 @@ import { ProviderContext } from "context/web3";
 import { getWeb3Connection, getWalletBalanceEth } from "utils/wallet";
 import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
+
 export default function NetworkSelector() {
   const [notification, pushNotification] = useNotification();
   const [network, setNetwork] = useContext(NetworkContext);

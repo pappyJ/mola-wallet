@@ -6,6 +6,7 @@ import {
   DashboardIcon,
   LogoutIcon,
   MenuIcon2,
+  MessageIcon,
   NotificationIcon,
   SettingsIcon,
   UserIcon,
@@ -87,12 +88,7 @@ const links = [
   { text: "Dashboard", href: "/wallet", icon: DashboardIcon },
   { text: "Nft Manager", href: "/wallet/nft", icon: UserIcon },
   { text: "DApps", href: "/wallet/d_apps", icon: MenuIcon2 },
-  { text: "Contracts", href: "/wallet/contracts", icon: CodeIcon },
-  {
-    text: "Notifications",
-    href: "/wallet/notifications",
-    icon: NotificationIcon,
-  },
+  { text: "Message", href: "/wallet/message", icon: MessageIcon },
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
   { text: "Log out", href: "/wallet/logout", icon: LogoutIcon },
 ];

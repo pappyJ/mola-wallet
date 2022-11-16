@@ -31,7 +31,7 @@ export default function Notification({ notification, pushNotification }: args) {
         "bottom 400ms cubic-bezier(0.27, 3, 0.82, -1.5)";
       setPrevNotification(notification);
     } else {
-      notificationRef.current!.style.bottom = "100%";
+      notificationRef.current!.style.bottom = "calc(100% + 15px)";
       notificationRef.current!.style.transition = "bottom 300ms ease-in";
     }
   }, [notification]);

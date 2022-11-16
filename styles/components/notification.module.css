@@ -15,19 +15,19 @@
   background-color: white;
   border-radius: 1rem;
   border: 1px solid #ccc;
-  box-shadow: 0 0 25px #ddd;
+  box-shadow: 0 0 1.5rem #ddd;
 }
 .notification_box.info {
-  box-shadow: 0 0 25px #ddd;
+  box-shadow: 0 0 1.5rem #ddd;
   border: 1px solid #ccc;
 }
 .notification_box.success {
   border: 1px solid rgb(75, 238, 170);
-  box-shadow: 0 0 25px rgb(208, 238, 220);
+  box-shadow: 0 0 1.5rem rgb(208, 238, 220);
 }
 .notification_box.error {
   border: 1px solid rgb(255, 128, 93);
-  box-shadow: 0 0 25px rgb(255, 227, 218);
+  box-shadow: 0 0 1.5rem rgb(255, 227, 218);
 }
 .button_container {
   display: flex;
