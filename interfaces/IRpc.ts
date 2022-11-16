@@ -1,5 +1,5 @@
 
-export enum NETWORKS { ETHEREUM = "ETHEREUM" , POLYGON = "POLYGON" , BINANCE = "BINANCE"};
+export enum NETWORKS { ETHEREUM = "ETHEREUM" , POLYGON = "POLYGON" , BINANCE = "BINANCE", GOERLI = "GOERLI", T_BINANCE = "T_BINANCE", MUMBAI = "MUMBAI",};
 
 export interface IProvider {
     getSupportedNetworks: () =>  NETWORKS[];

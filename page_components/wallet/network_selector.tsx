@@ -9,7 +9,7 @@ import styles from "styles/pages/wallet/network_selector.module.css";
 import { useContext, useState } from "react";
 import { NetworkContext } from "./context";
 import { NETWORKS } from "interfaces/IRpc";
-import NET_CONFIG from "constants/networksConfig";
+import NET_CONFIG from "config/networksLive";
 import INET_CONFIG from "interfaces/INetwok";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";

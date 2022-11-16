@@ -8,7 +8,7 @@ import {
 
 import { NETWORKS } from "interfaces/IRpc";
 import INETWORK_CONFIG from "interfaces/INetwok";
-import NETWORK_CONFIG from "constants/networksConfig";
+import NETWORK_CONFIG from "config/networksLive";
 
 export const NetworkContext = createContext<
   [INETWORK_CONFIG, Dispatch<SetStateAction<INETWORK_CONFIG>>]
