@@ -9,10 +9,10 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useContext } from "react";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
-import { 
+import {
   getWeb3Connection,
   generateWalletUsingPKey,
-  getWalletBalanceEth
+  getWalletBalanceEth,
 } from "utils/wallet";
 import { NETWORKS } from "interfaces/IRpc";
 import { IAccount } from "interfaces/IAccount";
@@ -26,8 +26,7 @@ const PrivateKeyPage: NextPageX = () => {
   const [, setProvider] = useContext(ProviderContext);
   const [notification, pushNotification] = useNotification();
 
-  useEffect(() => {
-  }, [account]);
+  useEffect(() => {}, [account]);
   async function handleFormSubmit(e: any, privateKey: string) {
     e.preventDefault();
 
@@ -42,21 +41,15 @@ const PrivateKeyPage: NextPageX = () => {
 
         address: wallet.address,
 
-        balance,
+        balance: Number(balance),
       }));
 
       setProvider(provider);
 
       router.push("/wallet");
-
     } catch (error: any) {
-      
       pushNotification({
-        element: (
-          <p style={{ textAlign: "center" }}>
-            {error?.message}
-          </p>
-        ),
+        element: <p style={{ textAlign: "center" }}>{error?.message}</p>,
         type: "error",
       });
     }
@@ -82,7 +75,11 @@ const PrivateKeyPage: NextPageX = () => {
         <Steps steps={steps} step={step} />
       </div>
 
-      <form onSubmit={ async (e) => await handleFormSubmit(e, privateKeyRef.current!.value)}>
+      <form
+        onSubmit={async (e) =>
+          await handleFormSubmit(e, privateKeyRef.current!.value)
+        }
+      >
         <div className={keystore_styles.input_container}>
           <div className={keystore_styles.input_box}>
             <input

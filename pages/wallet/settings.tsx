@@ -6,7 +6,6 @@ import {
   CaretDownOutline,
   ClockIcon,
   DoubleIcon,
-  NotificationSolidIcon,
   TickHeavyIcon,
   UpIcon,
 } from "components/icons";
@@ -58,9 +57,7 @@ const Page: NextPageX = () => {
           <h6>Contact Address</h6>
           <div className={styles.center}>
             <p>You can add up to 10 contact addresses</p>
-            <Link href="#">
-              <a className={styles.btn}>Add Address</a>
-            </Link>
+            <button className={styles.btn}>Add Address</button>
           </div>
         </Section>
 
