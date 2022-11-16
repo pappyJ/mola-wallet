@@ -2,12 +2,10 @@ import styles from "styles/components/layouts/dashboard.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  CodeIcon,
   DashboardIcon,
   LogoutIcon,
   MenuIcon2,
   MessageIcon,
-  NotificationIcon,
   SettingsIcon,
   UserIcon,
 } from "components/icons";
@@ -68,7 +66,7 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
           <footer>
             <div className={styles.padder}>
               <div>
-                © 2022 MyEtherWallet. All rights reserved. Pricing taken from
+                © 2022 MolaWallet. All rights reserved. Pricing taken from
                 CoinGecko
               </div>
               <div>
