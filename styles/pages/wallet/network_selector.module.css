@@ -78,6 +78,8 @@
   width: 100%;
   max-height: 95%;
   overflow-y: auto;
+
+  position: relative;
 }
 .network_modal .container h4 {
   padding: 2rem;
@@ -88,6 +90,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.network_modal .container .close_btn {
+  width: 4rem;
+  height: 4rem;
+  flex-shrink: 0;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  border: none;
+  background-color: transparent;
 }
 .network_modal .toolbar {
   padding: 1rem;

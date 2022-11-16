@@ -1,6 +1,7 @@
 import {
   BNBIcon,
   CaretDownOutline,
+  CloseIconInBigCircle,
   EthereumIcon,
   SearchIcon,
   WBTCIcon,
@@ -57,6 +58,10 @@ export default function NetworkSelector() {
     setModalActive(false);
   }
 
+  function handleSearch(e: any) {
+    e.preventDefault();
+  }
+
   return (
     <>
       <div>
@@ -79,10 +84,16 @@ export default function NetworkSelector() {
         >
           <div className={`${styles.container} c-scroll`}>
             <h4>Select Network</h4>
+            <button
+              className={styles.close_btn}
+              onClick={() => setModalActive(false)}
+            >
+              <CloseIconInBigCircle />
+            </button>
 
             <div className={styles.toolbar}>
-              <form className={styles.search_container}>
-                <button className={styles.icon}>
+              <form className={styles.search_container} onSubmit={handleSearch}>
+                <button className={styles.icon} type="submit">
                   <SearchIcon />
                 </button>
                 <input
@@ -128,29 +139,6 @@ export default function NetworkSelector() {
                 </tr>
               ))}
             </table>
-            {/* 
-            <table className={styles.select_container}>
-              {networks.map((e, i) => (
-                <tr key={i}>
-                  <button
-                    className={styles.selection}
-                    onClick={() => chooseNetwork(e.name)}
-                  >
-                    <span className={styles.network_icon_box}>
-                      {networkLogoMap[e.name]}
-                    </span>
-                    <span className={styles.text}>{e.displayName}</span>
-                    <span
-                      className={`${styles.indicator} ${
-                        network == e.name ? styles.active : ""
-                      }`}
-                    >
-                      <span></span>
-                    </span>
-                  </button>
-                </tr>
-              ))}
-            </table> */}
           </div>
         </div>
       </div>
