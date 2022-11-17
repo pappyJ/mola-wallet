@@ -18,6 +18,8 @@ export function AcoountContextComponent({
     fiat: 'USD',
 
     address: "",
+
+    privateKey: '',
   };
   const [account, setAccount] = useState<IAccount>(defaultAccount as IAccount);
 

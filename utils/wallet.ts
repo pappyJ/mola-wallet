@@ -6,6 +6,7 @@ import PROVIDERS from "./config";
 import { NETWORKS } from "interfaces/IRpc";
 import { EncryptedKeystoreV3Json } from "web3-core";
 import { primaryFixedValue } from 'constants/digits'
+import { WALLET_PATH } from 'constants/networks'
 
 let web3: Web3;
 
@@ -27,7 +28,7 @@ export const createMnemonic = () => {
 };
 
 export const accessWalletUsingMnemonic = async (mnemonics: string) => {
-  const wallet_hdpath = process.env.NEXT_PUBLIC_WALLET_PATH;
+  const wallet_hdpath = WALLET_PATH;
 
   const seed = mnemonicToSeedSync(mnemonics);
 

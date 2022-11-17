@@ -10,9 +10,11 @@ import {
   TickHeavyIcon,
   UpIcon,
 } from "components/icons";
-import Link from "next/link";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { engineName } from 'constants/digits';
+import { ReactNode, useContext, useRef, useState } from "react";
 import WalletHeader from "page_components/wallet/header";
+import { AccountContext } from "context/account";
+import Notification, { useNotification } from "components/notification";
 
 const Page: NextPageX = () => {
   const [addressModalActive, setAddressModalActive] = useState(false);
@@ -87,7 +89,7 @@ const priorities = [
   { icon: UpIcon, text: "High Priority", time: "5 Min" },
   { icon: DoubleIcon, text: "Highest Priority", time: "2 Min" },
 ];
-
+// account.gasPriority === priority.hige 
 function Priorities() {
   return (
     <div className={styles.priorities_container}>
@@ -246,13 +248,20 @@ function AddressModal({
 }
 
 function ExportBtn() {
+  const [account] = useContext(AccountContext);
+  const [notification, pushNotification] = useNotification();
+
+
+  const { privateKey, ...configData} = account;
   function download() {
     const link = document.createElement("a");
+
     const date = new Date().toUTCString();
+
     link.download = `Mola Wallet Configuration ${date}`;
 
     //add downloadable configuration object here
-    const content = { test_configuration: true, date: date };
+    const content = {...configData, engine: engineName, date };
 
     let blob = new Blob([JSON.stringify(content, null, 2)], {
       type: "application/json",
@@ -262,11 +271,26 @@ function ExportBtn() {
     link.click();
 
     URL.revokeObjectURL(link.href);
+
+    pushNotification({
+      element: (
+        <p style={{ textAlign: "center" }}>
+          Configuration Exported Successfully.
+        </p>
+      ),
+      type: "success",
+    });
   }
 
   return (
+    <>
     <button onClick={download} className={styles.btn}>
       EXPORT
     </button>
+    <Notification
+        notification={notification}
+        pushNotification={pushNotification}
+      />
+    </>
   );
 }
