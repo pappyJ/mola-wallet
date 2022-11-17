@@ -172,7 +172,9 @@ function Step2Component({
 
         balance: balance,
 
-        balanceFiat
+        balanceFiat,
+
+        privateKey: wallet.privateKey,
       }));
 
       setProvider(provider);

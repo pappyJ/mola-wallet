@@ -3,4 +3,5 @@ export interface IAccount {
   balance: number;
   balanceFiat: number;
   fiat: string;
+  privateKey: string;
 }
