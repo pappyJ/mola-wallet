@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IAccount } from "interfaces/IAccount";
 
 export const AccountContext = React.createContext<
@@ -15,13 +15,17 @@ export function AcoountContextComponent({
 
     balanceFiat: 0,
 
-    fiat: 'USD',
+    fiat: "USD",
 
     address: "",
 
-    privateKey: '',
+    privateKey: "",
   };
   const [account, setAccount] = useState<IAccount>(defaultAccount as IAccount);
+
+  useEffect(() => {
+    console.log(account);
+  }, [account]);
 
   return (
     <AccountContext.Provider value={[account, setAccount]}>

@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/router";
 import { ReactNode, useContext, useEffect } from "react";
 import { AccountContext } from "context/account";
-import WalletContext from "./context";
+import WalletContext, { MessageContextComponent } from "./context";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const [account] = useContext(AccountContext);
@@ -43,21 +43,50 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
           </h1>
           <nav>
             <ul>
-              {links.map((e, i) => (
-                <li
-                  key={i}
-                  className={router.pathname == e.href ? styles.active : ""}
-                >
-                  <Link href={e.href}>
-                    <a>
-                      <span className={styles.icon}>
-                        <e.icon />
-                      </span>
-                      <span className={styles.text}>{e.text}</span>
-                    </a>
-                  </Link>
-                </li>
-              ))}
+              {links.map((e, i) =>
+                e.child ? (
+                  <li key={i} className={styles.li}>
+                    <Link href={e.href}>
+                      <a className={styles.anchor}>
+                        <span className={styles.icon}>
+                          <e.icon />
+                        </span>
+                        <span className={styles.text}>{e.text}</span>
+                      </a>
+                    </Link>
+                    {e.child.map((e, i) => (
+                      <li
+                        key={i}
+                        className={`${styles.li2} ${
+                          router.pathname == e.href ? styles.active : ""
+                        }`}
+                      >
+                        <Link href={e.href}>
+                          <a className={styles.anchor}>
+                            <span className={styles.text}>{e.text}</span>
+                          </a>
+                        </Link>
+                      </li>
+                    ))}
+                  </li>
+                ) : (
+                  <li
+                    key={i}
+                    className={`${styles.li} ${
+                      router.pathname == e.href ? styles.active : ""
+                    }`}
+                  >
+                    <Link href={e.href}>
+                      <a className={styles.anchor}>
+                        <span className={styles.icon}>
+                          <e.icon />
+                        </span>
+                        <span className={styles.text}>{e.text}</span>
+                      </a>
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </nav>
         </div>
@@ -86,7 +115,29 @@ const links = [
   { text: "Dashboard", href: "/wallet", icon: DashboardIcon },
   { text: "Nft Manager", href: "/wallet/nft", icon: UserIcon },
   { text: "DApps", href: "/wallet/d_apps", icon: MenuIcon2 },
-  { text: "Message", href: "/wallet/message", icon: MessageIcon },
+  {
+    text: "Message",
+    href: "/wallet/message/sign",
+    icon: MessageIcon,
+    child: [
+      {
+        text: "Sign Message",
+        href: "/wallet/message/sign",
+      },
+      {
+        text: "Verify Message",
+        href: "/wallet/message/verify",
+      },
+    ],
+  },
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
   { text: "Log out", href: "/wallet/logout", icon: LogoutIcon },
 ];
+
+export function DashboardMessageLayout({ children }: { children: ReactNode }) {
+  return (
+    <DashBoardLayout>
+      <MessageContextComponent>{children}</MessageContextComponent>
+    </DashBoardLayout>
+  );
+}

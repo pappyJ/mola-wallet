@@ -10,8 +10,8 @@ import {
   TickHeavyIcon,
   UpIcon,
 } from "components/icons";
-import { engineName } from 'constants/digits';
-import { ReactNode, useContext, useRef, useState } from "react";
+import { engineName } from "constants/digits";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import WalletHeader from "page_components/wallet/header";
 import { AccountContext } from "context/account";
 import Notification, { useNotification } from "components/notification";
@@ -89,7 +89,7 @@ const priorities = [
   { icon: UpIcon, text: "High Priority", time: "5 Min" },
   { icon: DoubleIcon, text: "Highest Priority", time: "2 Min" },
 ];
-// account.gasPriority === priority.hige 
+// account.gasPriority === priority.hige
 function Priorities() {
   return (
     <div className={styles.priorities_container}>
@@ -109,51 +109,6 @@ function Priorities() {
           </button>
         );
       })}
-    </div>
-  );
-}
-
-function ImportFile() {
-  const [file, setFile] = useState<File>();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  function shorten(data: string | null) {
-    if (!data) return "";
-
-    if (data.length < 35) return data;
-
-    let a = data.toString().slice(0, 15);
-    let b = data.toString().slice(-15);
-
-    return `${a}...${b}`;
-  }
-
-  return (
-    <div className={styles.import_file}>
-      <input
-        ref={fileInputRef}
-        type="file"
-        hidden
-        onChange={() => {
-          setFile(fileInputRef.current?.files?.[0]);
-        }}
-      />
-      <button
-        className={styles.upload_btn}
-        onClick={() => fileInputRef.current?.click()}
-        title={file?.name || "Upload file"}
-      >
-        <span className={styles.icon}>
-          <AttachmentIcon />
-        </span>
-        {shorten(file?.name || "Upload file")}
-      </button>
-      <button
-        className={styles.btn}
-        onClick={() => fileInputRef.current?.click()}
-      >
-        Import
-      </button>
     </div>
   );
 }
@@ -251,8 +206,7 @@ function ExportBtn() {
   const [account] = useContext(AccountContext);
   const [notification, pushNotification] = useNotification();
 
-
-  const { privateKey, ...configData} = account;
+  const { privateKey, ...configData } = account;
   function download() {
     const link = document.createElement("a");
 
@@ -261,7 +215,7 @@ function ExportBtn() {
     link.download = `Mola Wallet Configuration ${date}`;
 
     //add downloadable configuration object here
-    const content = {...configData, engine: engineName, date };
+    const content = { ...configData, engine: engineName, date };
 
     let blob = new Blob([JSON.stringify(content, null, 2)], {
       type: "application/json",
@@ -284,13 +238,128 @@ function ExportBtn() {
 
   return (
     <>
-    <button onClick={download} className={styles.btn}>
-      EXPORT
-    </button>
-    <Notification
+      <button onClick={download} className={styles.btn}>
+        EXPORT
+      </button>
+      <Notification
         notification={notification}
         pushNotification={pushNotification}
       />
     </>
+  );
+}
+
+function ImportFile() {
+  const [file, setFile] = useState<File>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [notification, pushNotification] = useNotification();
+  const [imported, setImported] = useState(false);
+  const [, setAccount] = useContext(AccountContext);
+
+  function shorten(data: string | null) {
+    if (!data) return "";
+
+    if (data.length < 35) return data;
+
+    let a = data.toString().slice(0, 15);
+    let b = data.toString().slice(-15);
+
+    return `${a}...${b}`;
+  }
+
+  function importFile() {
+    if (validateAndExecFile(fileInputRef.current?.files?.item(0))) {
+      setFile(fileInputRef.current?.files?.[0]);
+      setImported(true);
+    }
+  }
+
+  function validateAndExecFile(file: File | null | undefined): boolean {
+    if (!file) return false;
+
+    if (file.type != "application/json") {
+      pushNotification({
+        element: "Only JSON files supported",
+        type: "error",
+      });
+      return false;
+    }
+
+    let readable = true;
+    const reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = function (evt) {
+      try {
+        const { engine, date, ...config } = JSON.parse(
+          evt.target?.result as string
+        );
+        if (engine != engineName) throw new Error();
+
+        setAccount((prev) => {
+          return { ...prev, ...config };
+        });
+      } catch (error) {
+        pushNotification({
+          element: "Error reading file",
+          type: "error",
+        });
+        readable = false;
+      }
+    };
+    reader.onerror = function () {
+      pushNotification({
+        element: "Error reading file",
+        type: "error",
+      });
+      readable = false;
+    };
+
+    if (!readable) return false;
+
+    return true;
+  }
+
+  useEffect(() => {
+    if (imported) {
+      pushNotification({
+        element: "New configurations imported",
+        type: "success",
+      });
+      setImported(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imported]);
+
+  return (
+    <div className={styles.import_file}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        hidden
+        onChange={importFile}
+        accept="application/json"
+      />
+      <button
+        className={styles.upload_btn}
+        onClick={() => fileInputRef.current?.click()}
+        title={file?.name || "Upload file"}
+      >
+        <span className={styles.icon}>
+          <AttachmentIcon />
+        </span>
+        {shorten(file?.name || "Upload file")}
+      </button>
+      <button
+        className={styles.btn}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        Import
+      </button>
+      <Notification
+        notification={notification}
+        pushNotification={pushNotification}
+      />
+    </div>
   );
 }
