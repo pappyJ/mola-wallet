@@ -1,4 +1,6 @@
 export interface IAccount {
-    address: string;
-    balance: number;
+  address: string;
+  balance: number;
+  balanceFiat: number;
+  fiat: string;
 }

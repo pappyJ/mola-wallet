@@ -17,6 +17,9 @@ import {
 import { NETWORKS } from "interfaces/IRpc";
 import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
+import { primaryFixedValue } from 'constants/digits'
+import { getCoinUSD } from 'utils/priceFeed';
+import NET_CONFIG from "config/allNet";
 
 const PrivateKeyPage: NextPageX = () => {
   const [step] = useStep(steps);
@@ -32,17 +35,22 @@ const PrivateKeyPage: NextPageX = () => {
     e.preventDefault();
 
     try {
-      let wallet = await generateWalletUsingPKey(privateKey);
+      const wallet = await generateWalletUsingPKey(privateKey);
 
-      let provider = getWeb3Connection(NETWORKS.ETHEREUM);
+      const provider = getWeb3Connection(NETWORKS.ETHEREUM);
+      
+      const balance = Number(await getWalletBalanceEth(provider, wallet.address));
 
-      let balance = await getWalletBalanceEth(provider, wallet.address);
+      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+
       setAccount((prev: IAccount) => ({
         ...prev,
 
         address: wallet.address,
 
-        balance,
+        balance: balance,
+
+        balanceFiat
       }));
 
       setProvider(provider);

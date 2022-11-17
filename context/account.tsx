@@ -13,6 +13,10 @@ export function AcoountContextComponent({
   const defaultAccount = {
     balance: 0,
 
+    balanceFiat: 0,
+
+    fiat: 'USD',
+
     address: "",
   };
   const [account, setAccount] = useState<IAccount>(defaultAccount as IAccount);

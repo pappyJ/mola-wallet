@@ -1,5 +1,5 @@
 import { NETWORKS } from "interfaces/IRpc";
-import * as NET_CONST from 'constants/networks'
+import * as NET_CONST from "constants/networks";
 
 const networksConfig = {
   [NETWORKS.GOERLI]: {
@@ -7,9 +7,9 @@ const networksConfig = {
 
     chainName: NET_CONST.GOERLI_NAME,
     nativeCurrency: {
-      name: NETWORKS.GOERLI,
+      name: NETWORKS.GOERLI!,
       symbol: NET_CONST.GOERLI_SYMBOL,
-      decimals:NET_CONST.GOERLI_SYMBOL,
+      decimals: NET_CONST.GOERLI_DECIMAL,
     },
     rpcUrls: NET_CONST.GOERLI_RPC,
     blockExplorer: NET_CONST.GOERLI_EXPLORER,
@@ -29,7 +29,7 @@ const networksConfig = {
     rpcUrls: NET_CONST.T_BSC_RPC,
     blockExplorer: NET_CONST.T_BSC_EXPLORER,
 
-    test: true
+    test: true,
   },
 
   [NETWORKS.MUMBAI]: {
@@ -43,9 +43,9 @@ const networksConfig = {
     },
     rpcUrls: NET_CONST.MUMBAI_RPC,
     blockExplorer: NET_CONST.MUMBAI_EXPLORER,
-  },
 
-  test: true,
+    test: true,
+  },
 };
 
 export default networksConfig;

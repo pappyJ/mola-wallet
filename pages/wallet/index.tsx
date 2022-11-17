@@ -13,7 +13,6 @@ import {
 import Image from "next/image";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AccountContext } from "context/account";
-import { ProviderContext } from "context/web3";
 import { NetworkContext } from "page_components/wallet/context";
 import WalletHeader from "page_components/wallet/header";
 
@@ -88,7 +87,7 @@ const WalletPage: NextPageX = () => {
             </div>
           </div>
           <div className={styles.center}>
-            <div className={styles.fiat_balance}>$ 0.0</div>
+            <div className={styles.fiat_balance}>$ {account.balanceFiat}</div>
             <div className={styles.crypto_balance}>
               {account.balance} {currentNetwork.nativeCurrency.symbol}
             </div>

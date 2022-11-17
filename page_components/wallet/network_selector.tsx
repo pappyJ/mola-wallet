@@ -10,13 +10,15 @@ import styles from "styles/pages/wallet/network_selector.module.css";
 import { useContext, useState } from "react";
 import { NetworkContext } from "./context";
 import { NETWORKS } from "interfaces/IRpc";
-import NET_CONFIG from "config/networksLive";
+import NET_CONFIG from "config/allNet";
 import INET_CONFIG from "interfaces/INetwok";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import { getWeb3Connection, getWalletBalanceEth } from "utils/wallet";
 import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
+import { primaryFixedValue } from 'constants/digits'
+import { getCoinUSD } from 'utils/priceFeed';
 export default function NetworkSelector() {
   const [notification, pushNotification] = useNotification();
   const [network, setNetwork] = useContext(NetworkContext);
@@ -29,13 +31,26 @@ export default function NetworkSelector() {
     [NETWORKS.ETHEREUM]: <EthereumIcon />,
     [NETWORKS.BINANCE]: <BNBIcon />,
     [NETWORKS.POLYGON]: <WBTCIcon />,
+    [NETWORKS.GOERLI]: <EthereumIcon />,
+    [NETWORKS.T_BINANCE]: <BNBIcon />,
+    [NETWORKS.MUMBAI]: <WBTCIcon />,
   };
 
   async function chooseNetwork(network: INET_CONFIG) {
     try {
-      let provider = getWeb3Connection(network.chainName as NETWORKS);
+      const provider = getWeb3Connection(network.chainName as NETWORKS);
 
-      let balance = await getWalletBalanceEth(provider, account.address);
+      const balance = Number(await getWalletBalanceEth(provider, account.address));
+
+      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG[network.chainName as NETWORKS].nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+
+      setAccount((prev: IAccount) => ({
+        ...prev,
+
+        balance: balance,
+
+        balanceFiat
+      }));
 
       setNetwork(network);
       setAccount((prev: IAccount) => ({
@@ -126,7 +141,7 @@ export default function NetworkSelector() {
                       {networkLogoMap[e.chainName]}
                     </span>
                     <span className={styles.text}>
-                      {e.nativeCurrency.symbol}
+                      {e.nativeCurrency.name}
                     </span>
                     <span
                       className={`${styles.indicator} ${

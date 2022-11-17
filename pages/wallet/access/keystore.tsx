@@ -21,6 +21,9 @@ import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import { IAccount } from "interfaces/IAccount";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
+import { getCoinUSD } from 'utils/priceFeed';
+import NET_CONFIG from "config/allNet";
+import { primaryFixedValue } from 'constants/digits'
 
 const steps = [
   {
@@ -93,6 +96,7 @@ function Step1Component({
     ) as EncryptedKeystoreV3Json;
 
     setPasswordedWalletFile(encryptedWallet);
+    
     setSuccess(true);
 
     router.push("?step=2", undefined, { shallow: true });
@@ -152,24 +156,31 @@ function Step2Component({
     e.preventDefault();
 
     try {
-      let wallet = decryptWallet(
+      const wallet = decryptWallet(
         passwordedWalletFile,
         `${passwordRef.current?.value}`
       );
-      let provider = getWeb3Connection(NETWORKS.ETHEREUM);
-      let balance = await getWalletBalanceEth(provider, wallet.address);
+      const provider = getWeb3Connection(NETWORKS.ETHEREUM);
+      
+      const balance = Number(await getWalletBalanceEth(provider, wallet.address));
+
+      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+
       setAccount((prev: IAccount) => ({
         ...prev,
 
         address: wallet.address,
 
-        balance,
+        balance: balance,
+
+        balanceFiat
       }));
 
       setProvider(provider);
 
       router.push("/wallet");
     } catch (error) {
+      console.log(error);
       pushNotification({
         element: (
           <p style={{ textAlign: "center" }}>
