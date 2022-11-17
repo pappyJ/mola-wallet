@@ -149,8 +149,7 @@ function Step2Component({
     if (!success) router.replace("?step=1");
   }, []);
 
-  useEffect(() => {
-  }, [account]);
+  useEffect(() => {}, [account]);
 
   async function handleSubmit(e: any) {
     e.preventDefault();

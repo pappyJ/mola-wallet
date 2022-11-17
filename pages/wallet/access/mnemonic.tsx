@@ -4,8 +4,8 @@ import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.c
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
-import { 
-  accessWalletUsingMnemonic ,
+import {
+  accessWalletUsingMnemonic,
   getWeb3Connection,
   getWalletBalanceEth,
 } from "utils/wallet";

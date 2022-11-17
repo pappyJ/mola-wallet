@@ -2,11 +2,10 @@ import styles from "styles/components/layouts/dashboard.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  CodeIcon,
   DashboardIcon,
   LogoutIcon,
   MenuIcon2,
-  NotificationIcon,
+  MessageIcon,
   SettingsIcon,
   UserIcon,
 } from "components/icons";
@@ -67,7 +66,7 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
           <footer>
             <div className={styles.padder}>
               <div>
-                © 2022 MyEtherWallet. All rights reserved. Pricing taken from
+                © 2022 MolaWallet. All rights reserved. Pricing taken from
                 CoinGecko
               </div>
               <div>
@@ -87,12 +86,7 @@ const links = [
   { text: "Dashboard", href: "/wallet", icon: DashboardIcon },
   { text: "Nft Manager", href: "/wallet/nft", icon: UserIcon },
   { text: "DApps", href: "/wallet/d_apps", icon: MenuIcon2 },
-  { text: "Contracts", href: "/wallet/contracts", icon: CodeIcon },
-  {
-    text: "Notifications",
-    href: "/wallet/notifications",
-    icon: NotificationIcon,
-  },
+  { text: "Message", href: "/wallet/message", icon: MessageIcon },
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
   { text: "Log out", href: "/wallet/logout", icon: LogoutIcon },
 ];

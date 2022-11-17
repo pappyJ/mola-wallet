@@ -56,13 +56,14 @@ const WalletPage: NextPageX = () => {
                   <CaretDownSolidSmall />
                 </span>
               </div>
-              <Link
+              <a
                 href={`${currentNetwork.blockExplorer}/address/${account.address}`}
+                target="_blank"
+                className={styles.wallet_id}
+                rel="noreferrer"
               >
-                <a target="_blank" className={styles.wallet_id}>
-                  {shorten(account.address)}
-                </a>
-              </Link>
+                {shorten(account.address)}
+              </a>
             </div>
             <div className={styles.right}>
               <button className={styles.icon_box}>

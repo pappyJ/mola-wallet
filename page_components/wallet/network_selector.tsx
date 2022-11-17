@@ -19,6 +19,7 @@ import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
 import { primaryFixedValue } from 'constants/digits'
 import { getCoinUSD } from 'utils/priceFeed';
+
 export default function NetworkSelector() {
   const [notification, pushNotification] = useNotification();
   const [network, setNetwork] = useContext(NetworkContext);
@@ -164,9 +165,3 @@ export default function NetworkSelector() {
     </>
   );
 }
-
-const networks = [
-  { name: "ethereum", displayName: "ETH" },
-  { name: "binance", displayName: "BNB" },
-  { name: "wbtc", displayName: "WBTC" },
-];
