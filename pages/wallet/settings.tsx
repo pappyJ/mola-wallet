@@ -203,6 +203,9 @@ function AddressModal({
       };
     });
 
+    e.target.nickname.value = "";
+    e.target.address.value = "";
+
     setAddressModalActive(false);
   }
 
@@ -437,7 +440,7 @@ function AddressList() {
         <th></th>
       </tr>
       {account.addressList?.map((e, i) => (
-        <tr key={e.address}>
+        <tr key={`${e.address}${e.nickname}${i}${Date.now()}`}>
           <td>{i + 1}</td>
           <td>{shorten(e.nickname, 10, 5, 20)}</td>
           <td>
@@ -522,8 +525,24 @@ function EditAddressModal({ editActive, setEditAcitve, editAddress }: any) {
       };
     });
 
+    e.target.nickname.value = "";
+    e.target.address.value = "";
+
     setEditAcitve(false);
   }
+
+  function removeAddress() {
+    setAccount((prev) => {
+      return {
+        ...prev,
+        addressList:
+          prev.addressList?.filter((e) => e.address !== editAddress) || [],
+      };
+    });
+
+    setEditAcitve(false);
+  }
+
   return (
     <div
       className={`${styles.add_address_modal} ${
@@ -565,6 +584,18 @@ function EditAddressModal({ editActive, setEditAcitve, editAddress }: any) {
         <div className={styles.btn_container}>
           <button className={styles.btn} type="submit">
             Confirm and Edit
+          </button>
+          <button
+            className={styles.btn}
+            type="button"
+            style={{
+              marginTop: "2rem",
+              color: "#00244e",
+              backgroundColor: "white",
+            }}
+            onClick={removeAddress}
+          >
+            Remove
           </button>
         </div>
       </form>
