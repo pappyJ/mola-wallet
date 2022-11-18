@@ -15,10 +15,16 @@ const Page: NextPageX = () => {
   function _verifyMessage(e: any) {
     e.preventDefault();
 
-    if (!Object.keys(message).length)
-      return pushNotification({ element: "No message signed", type: "error" });
+    try {
+      const message = JSON.parse(e.target[0].value)
 
-    alert(provider.eth.accounts.recover(message));
+      if (!Object.keys(message).length)
+        return pushNotification({ element: "No message signed", type: "error" });
+
+      alert(provider.eth.accounts.recover(message));
+    } catch (error) {
+      pushNotification({ element: "Invalid Wallet Message Format Please Check Input", type: "error" })
+    }
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

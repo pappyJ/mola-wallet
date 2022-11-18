@@ -57,7 +57,7 @@ const Page: NextPageX = () => {
             <div className={styles.input_container}>
               <textarea
                 placeholder="message"
-                value={message.messageHash}
+                value={JSON.stringify(message, null, "\t")}
                 readOnly
                 className="c-scroll"
               />

@@ -66,7 +66,7 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
           <div className={styles.padder}>
             <div>
               © 2022 MyEtherWallet. All rights reserved. Pricing taken from
-              CoinGecko
+              Dexscreener
             </div>
             <div>
               <Link href="#">

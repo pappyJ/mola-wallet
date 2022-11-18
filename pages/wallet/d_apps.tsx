@@ -37,31 +37,31 @@ export default Page;
 
 const dapps = [
   {
-    title: "ETH Block",
+    title: "Mola Block",
     desc: "Mint stunning QR art- piece base on your favourite block",
     hashtag: "#NFT",
     img: "/eth_block.png",
   },
   {
-    title: "Aave V2",
+    title: "Mola TV",
     desc: "Earn on deposit and borrow assets",
     hashtag: "#DeFi",
     img: "/aave_v2.png",
   },
   {
-    title: "ENS Manager",
+    title: "Mola Vault",
     desc: "Migrate or register ens dormain / subdormain",
     hashtag: "#Property",
     img: "/ens_manager.png",
   },
   {
-    title: "Stake on ETH2",
+    title: "Mola Subsscribe",
     desc: "Stake your ETH on ethereum 2.0 and watch your reward grow",
     hashtag: "#DeFi",
     img: "/stake_eth.png",
   },
   {
-    title: "Stake Wise",
+    title: "Stake Mola",
     desc: "Stake any amount of ETH and begin earing reward",
     hashtag: "#DeFi",
     img: "/stake_wise.png",
