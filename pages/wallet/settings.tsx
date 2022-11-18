@@ -6,6 +6,7 @@ import {
   CaretDownOutline,
   ClockIcon,
   CloseIconInBigCircle,
+  CopyIcon,
   DoubleIcon,
   TickHeavyIcon,
   UpIcon,
@@ -15,6 +16,8 @@ import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import WalletHeader from "page_components/wallet/header";
 import { AccountContext } from "context/account";
 import Notification, { useNotification } from "components/notification";
+import { shorten } from "utils/string";
+import blockies from "ethereum-blockies";
 
 const Page: NextPageX = () => {
   const [addressModalActive, setAddressModalActive] = useState(false);
@@ -60,6 +63,11 @@ const Page: NextPageX = () => {
           <h6>Contact Address</h6>
           <div className={styles.center}>
             <p>You can add up to 10 contact addresses</p>
+          </div>
+
+          <AddressList />
+
+          <div className={styles.address_btn_container}>
             <button
               className={styles.btn}
               onClick={() => setAddressModalActive(true)}
@@ -67,6 +75,7 @@ const Page: NextPageX = () => {
               Add Address
             </button>
           </div>
+
           <AddressModal
             addressModalActive={addressModalActive}
             setAddressModalActive={setAddressModalActive}
@@ -85,18 +94,42 @@ Page.Layout = DashboardLayout;
 export default Page;
 
 const priorities = [
-  { icon: TickHeavyIcon, text: "Normal Priority", time: "15 Min" },
-  { icon: UpIcon, text: "High Priority", time: "5 Min" },
-  { icon: DoubleIcon, text: "Highest Priority", time: "2 Min" },
+  {
+    icon: TickHeavyIcon,
+    text: "Normal Priority",
+    time: "15 Min",
+    id: "normal",
+  },
+  { icon: UpIcon, text: "High Priority", time: "5 Min", id: "high" },
+  { icon: DoubleIcon, text: "Highest Priority", time: "2 Min", id: "highest" },
 ];
-// account.gasPriority === priority.hige
+
 function Priorities() {
+  const [account, setAccount] = useContext(AccountContext);
+
+  function updateGasPriority(gasPriority: string) {
+    setAccount((prev) => {
+      return { ...prev, gasPriority };
+    });
+  }
+
+  useEffect(() => {
+    if (!account.gasPriority) updateGasPriority("normal");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account]);
+
   return (
     <div className={styles.priorities_container}>
       {priorities.map((e, i) => {
         return (
-          <button className={styles.priorities_box} key={i}>
-            <span className={styles.icon_box} style={{ color: "#1E89DD" }}>
+          <button
+            className={`${styles.priorities_box} ${
+              account.gasPriority == e.id ? styles.active : ""
+            }`}
+            onClick={() => updateGasPriority(e.id)}
+            key={i}
+          >
+            <span className={styles.icon_box}>
               <e.icon />
             </span>
             <span className={styles.text}>{e.text}</span>
@@ -154,8 +187,22 @@ function AddressModal({
   addressModalActive: boolean;
   setAddressModalActive: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  function confirmAndAddAdress(e: any) {
+  const [, setAccount] = useContext(AccountContext);
+
+  function confirmAndAdd(e: any) {
     e.preventDefault();
+    let {
+      nickname: { value: nickname },
+      address: { value: address },
+    } = e.target;
+
+    setAccount((prev) => {
+      return {
+        ...prev,
+        addressList: [...(prev.addressList || []), { nickname, address }],
+      };
+    });
+
     setAddressModalActive(false);
   }
 
@@ -167,7 +214,8 @@ function AddressModal({
     >
       <form
         className={`${styles.container} c-scroll`}
-        onSubmit={confirmAndAddAdress}
+        onSubmit={confirmAndAdd}
+        autoComplete="off"
       >
         <h4>Add a contact address</h4>
         <button
@@ -181,13 +229,13 @@ function AddressModal({
         <div style={{ margin: "2rem 0 6rem" }}>
           <div className={styles.input_container}>
             <div className={styles.input_box}>
-              <input required placeholder="Enter your address" />
+              <input required name="address" placeholder="Enter your address" />
             </div>
           </div>
 
           <div className={styles.input_container}>
             <div className={styles.input_box}>
-              <input required placeholder="Nickname" />
+              <input required name="nickname" placeholder="Nickname" />
             </div>
           </div>
         </div>
@@ -360,6 +408,166 @@ function ImportFile() {
         notification={notification}
         pushNotification={pushNotification}
       />
+    </div>
+  );
+}
+
+function AddressList() {
+  const [account] = useContext(AccountContext);
+  const [editActive, setEditActive] = useState(false);
+  const [editAddress, setEditAddress] = useState<string>();
+
+  function activateEdit(address: string) {
+    setEditActive(true);
+    setEditAddress(address);
+  }
+
+  if (!account.addressList?.length) return <></>;
+  return (
+    <table className={styles.address_list}>
+      <EditAddressModal
+        editActive={editActive}
+        setEditAcitve={setEditActive}
+        editAddress={editAddress}
+      />
+      <tr className={styles.list_header}>
+        <th>#</th>
+        <th style={{ width: "25%" }}>Nickname</th>
+        <th style={{ width: "75%" }}>Address</th>
+        <th></th>
+      </tr>
+      {account.addressList?.map((e, i) => (
+        <tr key={e.address}>
+          <td>{i + 1}</td>
+          <td>{shorten(e.nickname, 10, 5, 20)}</td>
+          <td>
+            <Address address={e.address} />
+          </td>
+          <td>
+            <button
+              className={styles.edit_btn}
+              onClick={() => activateEdit(e.address)}
+            >
+              Edit
+            </button>
+          </td>
+        </tr>
+      ))}
+    </table>
+  );
+}
+
+function Address({ address }: { address: string }) {
+  const [copied, setCopied] = useState(false);
+  const copyRef = useRef<HTMLTextAreaElement>(null);
+  const imageDivRef = useRef<HTMLDivElement>(null);
+
+  function copyAddress() {
+    copyRef.current?.select();
+    document.execCommand("copy");
+    setCopied(true);
+  }
+
+  useEffect(() => {
+    if (copied) setTimeout(() => setCopied(false), 2000);
+  }, [copied]);
+
+  useEffect(() => {
+    imageDivRef.current?.lastChild &&
+      imageDivRef.current.removeChild(imageDivRef.current.lastChild);
+    imageDivRef.current?.appendChild(
+      blockies.create({ seed: address, size: 10, scale: 3 })
+    );
+  }, [address]);
+
+  return (
+    <div className={styles.address}>
+      <div ref={imageDivRef} className={styles.blockies_img}></div>
+      <a>{shorten(address, 15, 20, 40)}</a>
+      <button
+        className={styles.icon_box}
+        onClick={copyAddress}
+        type="button"
+        style={{ cursor: copied ? "default" : "pointer" }}
+      >
+        <textarea
+          ref={copyRef}
+          className={styles.hidden_textarea}
+          value={address || ""}
+          onChange={() => {}}
+        />
+        {!copied ? <CopyIcon /> : <TickHeavyIcon />}
+      </button>
+    </div>
+  );
+}
+
+function EditAddressModal({ editActive, setEditAcitve, editAddress }: any) {
+  const [, setAccount] = useContext(AccountContext);
+
+  function confirmAndEdit(e: any) {
+    e.preventDefault();
+    let {
+      nickname: { value: nickname },
+      address: { value: address },
+    } = e.target;
+
+    setAccount((prev) => {
+      return {
+        ...prev,
+        addressList:
+          prev.addressList?.map((e) =>
+            e.address === editAddress ? { nickname, address } : e
+          ) || [],
+      };
+    });
+
+    setEditAcitve(false);
+  }
+  return (
+    <div
+      className={`${styles.add_address_modal} ${
+        editActive ? styles.active : ""
+      }`}
+    >
+      <form
+        className={`${styles.container} c-scroll`}
+        autoComplete="off"
+        onSubmit={confirmAndEdit}
+      >
+        <h4>Edit Address</h4>
+        <button
+          className={styles.close_btn}
+          type="button"
+          onClick={() => setEditAcitve(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
+        <div className={styles.input_container}>
+          <Address address={editAddress} />
+        </div>
+
+        <div style={{ margin: "2rem 0 6rem" }}>
+          <div className={styles.input_container}>
+            <div className={styles.input_box}>
+              <input required name="address" placeholder="Enter New address" />
+            </div>
+          </div>
+
+          <div className={styles.input_container}>
+            <div className={styles.input_box}>
+              <input required name="nickname" placeholder="Nickname" />
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.btn_container}>
+          <button className={styles.btn} type="submit">
+            Confirm and Edit
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

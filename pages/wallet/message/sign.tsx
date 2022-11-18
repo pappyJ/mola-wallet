@@ -58,6 +58,7 @@ const Page: NextPageX = () => {
               <textarea
                 placeholder="message"
                 value={message.messageHash}
+                readOnly
                 className="c-scroll"
               />
             </div>

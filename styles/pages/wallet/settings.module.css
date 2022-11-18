@@ -104,6 +104,11 @@
 
   transition: all 300ms;
 }
+.priorities_box.active {
+  outline: 2px solid #1e89dd;
+  color: #1e89dd;
+  background-color: #f0f8ff;
+}
 .priorities_box:focus {
   outline: 2px solid #1e89dd;
   color: #1e89dd;
@@ -113,6 +118,7 @@
   height: 2rem;
   margin-right: 3.2rem;
   display: inline-flex;
+  color: #1e89dd;
 }
 .priorities_box .text {
   width: 100%;
@@ -120,9 +126,11 @@
   font-weight: 600;
   color: #555;
 }
-.priorities_box:focus .text {
+.priorities_box:focus .text,
+.priorities_box.active .text {
   color: #1e89dd;
 }
+
 .priorities_box .time_box {
   width: 10rem;
   color: #1e89dd;
@@ -268,6 +276,11 @@
   justify-content: center;
   margin: 2rem 0;
 }
+.address_btn_container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
 
 .input_container {
   display: flex;
@@ -302,4 +315,82 @@
 .input_container .input_box input:focus {
   color: #00244e;
   outline: 2px solid #016abb;
+}
+
+.address_list {
+  border: none;
+  border-radius: 1.2rem;
+  width: 100%;
+  margin: 3rem 0;
+  border-collapse: collapse;
+  outline: 1px solid #bfbfbf;
+}
+.address_list td {
+  background-color: #f9fcff;
+  border: none;
+}
+.address_list tr:not(:last-child) td {
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.address_list th {
+  color: #858ca0;
+  font-weight: 400;
+  font-size: 1.8rem;
+  border: none;
+  text-align: left;
+}
+
+.address_list th,
+.address_list td {
+  padding: 1.2rem 2rem 1rem 3rem;
+}
+.address_list th {
+  height: 6rem;
+}
+
+.address_list .edit_btn {
+  background-color: transparent;
+  border: none;
+  color: #1e89dd;
+}
+
+.address_list .address {
+  display: flex;
+  align-items: center;
+}
+
+.address_list .address a {
+  flex: 1 1;
+}
+
+.address_list .icon_box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 3.6rem;
+  height: 3.6rem;
+  padding: 1rem;
+  margin: 0 0.8rem;
+
+  border-radius: 50%;
+  color: #1e89dd;
+  border: none;
+  background-color: transparent;
+}
+.address_list .hidden_textarea {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  /* resize: none; */
+  z-index: -1;
+}
+
+.address_list .blockies_img {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 30px;
+  height: 30px;
+  margin-right: 1.6rem;
 }
