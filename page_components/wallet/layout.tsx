@@ -2,6 +2,7 @@ import styles from "styles/components/layouts/dashboard.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  CaretDownOutline,
   DashboardIcon,
   LogoutIcon,
   MenuIcon2,
@@ -12,7 +13,7 @@ import {
 import { useRouter } from "next/router";
 import { ReactNode, useContext, useEffect } from "react";
 import { AccountContext } from "context/account";
-import WalletContext, { MessageContextComponent } from "./context";
+import WalletContext from "./context";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const [account] = useContext(AccountContext);
@@ -45,13 +46,23 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
             <ul>
               {links.map((e, i) =>
                 e.child ? (
-                  <li key={i} className={styles.li}>
+                  <li
+                    key={i}
+                    className={`${styles.li} ${
+                      e.child.some((e) => router.pathname == e.href)
+                        ? styles.open
+                        : ""
+                    }`}
+                  >
                     <Link href={e.href}>
                       <a className={styles.anchor}>
                         <span className={styles.icon}>
                           <e.icon />
                         </span>
                         <span className={styles.text}>{e.text}</span>
+                        <span className={styles.drop_icon}>
+                          <CaretDownOutline />
+                        </span>
                       </a>
                     </Link>
                     {e.child.map((e, i) => (
@@ -133,11 +144,3 @@ const links = [
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
   { text: "Log out", href: "/wallet/logout", icon: LogoutIcon },
 ];
-
-export function DashboardMessageLayout({ children }: { children: ReactNode }) {
-  return (
-    <DashBoardLayout>
-      <MessageContextComponent>{children}</MessageContextComponent>
-    </DashBoardLayout>
-  );
-}

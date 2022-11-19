@@ -1,34 +1,36 @@
 import { NextPageX } from "types/next";
-import { DashboardMessageLayout } from "page_components/wallet/layout";
+import DashboardLayout from "page_components/wallet/layout";
 import WalletHeader from "page_components/wallet/header";
 import styles from "styles/pages/wallet/message.module.css";
 import { ProviderContext } from "context/web3";
-import React, { useCallback, useContext } from "react";
-import { MessageContext } from "page_components/wallet/context";
+import React, { useCallback, useContext, useState } from "react";
 import Notification, { useNotification } from "components/notification";
+import { SignatureObject } from "web3-core";
 
 const Page: NextPageX = () => {
   const [provider] = useContext(ProviderContext);
-  const [message] = useContext(MessageContext);
   const [notifcation, pushNotification] = useNotification();
 
-  function _verifyMessage(e: any) {
+  function verifyMessage(e: any) {
     e.preventDefault();
 
     try {
-      const message = JSON.parse(e.target[0].value)
+      const message = JSON.parse(e.target[0].value);
 
       if (!Object.keys(message).length)
-        return pushNotification({ element: "No message signed", type: "error" });
+        return pushNotification({
+          element: "No message signed",
+          type: "info",
+        });
 
       alert(provider.eth.accounts.recover(message));
     } catch (error) {
-      pushNotification({ element: "Invalid Wallet Message Format Please Check Input", type: "error" })
+      pushNotification({
+        element: "Invalid Wallet Message Format Please Check Input",
+        type: "info",
+      });
     }
   }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const verifyMessage = useCallback(_verifyMessage, [message]);
 
   return (
     <div className={styles.main}>
@@ -53,5 +55,5 @@ const Page: NextPageX = () => {
   );
 };
 
-Page.Layout = DashboardMessageLayout;
+Page.Layout = DashboardLayout;
 export default Page;

@@ -1,17 +1,18 @@
 import { NextPageX } from "types/next";
-import { DashboardMessageLayout } from "page_components/wallet/layout";
+import DashboardLayout from "page_components/wallet/layout";
 import WalletHeader from "page_components/wallet/header";
 import styles from "styles/pages/wallet/message.module.css";
 import { ProviderContext } from "context/web3";
 import { AccountContext } from "context/account";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { SignatureObject } from "web3-core";
-import { MessageContext } from "page_components/wallet/context";
 
 const Page: NextPageX = () => {
   const [provider] = useContext(ProviderContext);
   const [account] = useContext(AccountContext);
-  const [message, setMessage] = useContext(MessageContext);
+  const [message, setMessage] = useState<SignatureObject>(
+    {} as SignatureObject
+  );
   const [signed, setSigned] = useState(false);
 
   function signMessage(e: any) {
@@ -72,5 +73,5 @@ const Page: NextPageX = () => {
   );
 };
 
-Page.Layout = DashboardMessageLayout;
+Page.Layout = DashboardLayout;
 export default Page;
