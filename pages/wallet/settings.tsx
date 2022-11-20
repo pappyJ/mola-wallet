@@ -617,7 +617,7 @@ function SelectCurrency() {
   }
 
   return (
-    <div className={styles.select_currency}>
+    <div className={`${styles.select_currency} ${open ? styles.active : ""}`}>
       <button
         className={styles.selected}
         onClick={() => setOpen((prev) => !prev)}
@@ -638,9 +638,7 @@ function SelectCurrency() {
           <CaretDownOutline />
         </span>
       </button>
-      <div
-        className={`${styles.options_container} ${open ? styles.active : ""}`}
-      >
+      <div className={`${styles.options_container} c-scroll`}>
         {currencies.map((e, i) => (
           <button key={i} onClick={() => setCurrency(e.name)}>
             <span className={styles.img}>

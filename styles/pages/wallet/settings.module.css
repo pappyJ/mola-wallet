@@ -454,6 +454,11 @@
   border: none !important;
   background-color: transparent !important;
   color: black !important;
+
+  transition: all 200ms;
+}
+.select_currency.active .selected .icon_box {
+  transform: rotate(-180deg);
 }
 
 .select_currency button:not(.selected):hover,
@@ -464,12 +469,14 @@
 
 .select_currency .options_container {
   max-height: 0;
-  overflow: hidden;
+  overflow: auto;
   transition: all 500ms;
+  border: 0px solid #eee;
 }
-.select_currency .options_container.active {
-  max-height: 100rem;
+.select_currency.active .options_container {
+  max-height: 50rem;
   transition: all 1000ms;
+  border-top: 1px solid #eee;
 }
 
 .select_currency .selected {
