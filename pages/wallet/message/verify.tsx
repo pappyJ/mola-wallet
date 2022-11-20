@@ -3,9 +3,8 @@ import DashboardLayout from "page_components/wallet/layout";
 import WalletHeader from "page_components/wallet/header";
 import styles from "styles/pages/wallet/message.module.css";
 import { ProviderContext } from "context/web3";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext } from "react";
 import Notification, { useNotification } from "components/notification";
-import { SignatureObject } from "web3-core";
 
 const Page: NextPageX = () => {
   const [provider] = useContext(ProviderContext);

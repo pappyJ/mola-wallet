@@ -174,7 +174,7 @@
   transition: all 300ms;
 }
 .expandable_section .expandable.active {
-  max-height: 50rem;
+  max-height: 100rem;
   transition: all 800ms;
 }
 
@@ -395,4 +395,86 @@
   width: 30px;
   height: 30px;
   margin-right: 1.6rem;
+}
+
+.select_currency {
+  border: 1px solid #bfbfbf;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.select_currency button {
+  width: 100%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+
+  transition: all 200ms;
+}
+
+.select_currency button:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.select_currency button .img {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  position: relative;
+
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  overflow: hidden;
+  margin-right: 1rem;
+}
+
+.select_currency button .text {
+  width: 100%;
+}
+
+.select_currency .selected .icon_box {
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  border: none !important;
+  background-color: transparent !important;
+  color: black !important;
+}
+
+.select_currency button:not(.selected):hover,
+.select_currency button:not(.selected):focus {
+  background-color: rgba(0, 102, 255, 0.1);
+  border: 1px solid rgb(0, 102, 255);
+}
+
+.select_currency .options_container {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 500ms;
+}
+.select_currency .options_container.active {
+  max-height: 100rem;
+  transition: all 1000ms;
+}
+
+.select_currency .selected {
+  margin-bottom: 0 !important;
+}
+.select_currency .options_container button:first-child {
+  margin-top: 1rem;
 }
