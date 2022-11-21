@@ -23,10 +23,6 @@ export function AcoountContextComponent({
   };
   const [account, setAccount] = useState<IAccount>(defaultAccount as IAccount);
 
-  useEffect(() => {
-    console.log(account);
-  }, [account]);
-
   return (
     <AccountContext.Provider value={[account, setAccount]}>
       {children}
