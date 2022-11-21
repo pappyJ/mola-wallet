@@ -6,7 +6,6 @@ import {
   SearchIcon,
   WBTCIcon,
 } from "components/icons";
-import styles from "styles/pages/wallet/network_selector.module.css";
 import { useContext, useState } from "react";
 import { NetworkContext } from "./context";
 import { NETWORKS } from "interfaces/IRpc";
@@ -17,8 +16,18 @@ import { ProviderContext } from "context/web3";
 import { getWeb3Connection, getWalletBalanceEth } from "utils/wallet";
 import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
-import { primaryFixedValue } from 'constants/digits'
-import { getCoinUSD } from 'utils/priceFeed';
+import { primaryFixedValue } from "constants/digits";
+import { getCoinUSD } from "utils/priceFeed";
+import styles from "styles/pages/wallet/network_selector.module.css";
+
+export const networkLogoMap: { [key: string]: JSX.Element } = {
+  [NETWORKS.ETHEREUM]: <EthereumIcon />,
+  [NETWORKS.BINANCE]: <BNBIcon />,
+  [NETWORKS.POLYGON]: <WBTCIcon />,
+  [NETWORKS.GOERLI]: <EthereumIcon />,
+  [NETWORKS.T_BINANCE]: <BNBIcon />,
+  [NETWORKS.MUMBAI]: <WBTCIcon />,
+};
 
 export default function NetworkSelector() {
   const [notification, pushNotification] = useNotification();
@@ -28,29 +37,31 @@ export default function NetworkSelector() {
   const [modalActive, setModalActive] = useState(false);
   const [filter, setFilter] = useState("main");
 
-  const networkLogoMap: { [key: string]: JSX.Element } = {
-    [NETWORKS.ETHEREUM]: <EthereumIcon />,
-    [NETWORKS.BINANCE]: <BNBIcon />,
-    [NETWORKS.POLYGON]: <WBTCIcon />,
-    [NETWORKS.GOERLI]: <EthereumIcon />,
-    [NETWORKS.T_BINANCE]: <BNBIcon />,
-    [NETWORKS.MUMBAI]: <WBTCIcon />,
-  };
-
   async function chooseNetwork(network: INET_CONFIG) {
     try {
       const provider = getWeb3Connection(network.chainName as NETWORKS);
 
-      const balance = Number(await getWalletBalanceEth(provider, account.address));
+      const balance = Number(
+        await getWalletBalanceEth(provider, account.address)
+      );
 
-      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG[network.chainName as NETWORKS].nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+      const balanceFiat = Number(
+        (balance <= 0
+          ? 0
+          : (
+              await getCoinUSD(
+                NET_CONFIG[network.chainName as NETWORKS].nativeCurrency.symbol
+              )
+            ).value! * balance
+        ).toFixed(primaryFixedValue)
+      );
 
       setAccount((prev: IAccount) => ({
         ...prev,
 
         balance: balance,
 
-        balanceFiat
+        balanceFiat,
       }));
 
       setNetwork(network);
@@ -93,11 +104,7 @@ export default function NetworkSelector() {
             <CaretDownOutline />
           </span>
         </button>
-        <div
-          className={`${styles.network_modal} ${
-            modalActive ? styles.active : ""
-          }`}
-        >
+        <div className={`${styles.modal} ${modalActive ? styles.active : ""}`}>
           <div className={`${styles.container} c-scroll`}>
             <h4>Select Network</h4>
             <button
@@ -141,9 +148,7 @@ export default function NetworkSelector() {
                     <span className={styles.network_icon_box}>
                       {networkLogoMap[e.chainName]}
                     </span>
-                    <span className={styles.text}>
-                      {e.nativeCurrency.name}
-                    </span>
+                    <span className={styles.text}>{e.nativeCurrency.name}</span>
                     <span
                       className={`${styles.indicator} ${
                         network.chainId == e.chainId ? styles.active : ""

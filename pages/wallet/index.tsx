@@ -1,11 +1,13 @@
 import DashBoardLayout from "page_components/wallet/layout";
 import { NextPageX } from "types/next";
 import styles from "styles/pages/wallet/index.module.css";
+import network_styles from "styles/pages/wallet/network_selector.module.css";
 import Link from "next/link";
 import {
   CardIcon,
   CaretDownOutline,
   CaretDownSolidSmall,
+  ClockFillIcon,
   CloseIconInBigCircle,
   CopyIcon,
   ScanIcon,
@@ -13,20 +15,13 @@ import {
   TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { AccountContext } from "context/account";
 import { NetworkContext } from "page_components/wallet/context";
 import WalletHeader from "page_components/wallet/header";
 import { useRouter } from "next/router";
 import Notification, { useNotification } from "components/notification";
+import { networkLogoMap } from "page_components/wallet/network_selector";
 
 const WalletPage: NextPageX = () => {
   const [account] = useContext(AccountContext);
@@ -170,10 +165,14 @@ function SendModal({ active }: { active: boolean }) {
 
   return (
     <>
-      <div className={`${styles.send_modal} ${active ? styles.active : ""}`}>
-        <div className={`${styles.container} c-scroll`}>
+      <div
+        className={`${network_styles.modal} ${
+          active ? network_styles.active : ""
+        }`}
+      >
+        <div className={`${network_styles.container} c-scroll`}>
           <h4>Send Token</h4>
-          <a className={styles.close_btn} href="#">
+          <a className={network_styles.close_btn} href="#">
             <CloseIconInBigCircle />
           </a>
 
@@ -181,22 +180,49 @@ function SendModal({ active }: { active: boolean }) {
             <div className={styles.input_container}>
               <div className={styles.input_box}>
                 <label>Select Currency</label>
-                <input readOnly value={network.chainName} />
+                <div className={styles.input}>
+                  <div className={network_styles.network_icon_box}>
+                    {networkLogoMap[network.chainName]}
+                  </div>
+                  <span>{network.nativeCurrency.symbol}</span>
+                </div>
               </div>
               <div className={styles.input_box}>
                 <label>Amount</label>
-                <input type="number" />
+                <input className={styles.input} type="number" />
               </div>
             </div>
 
             <div className={styles.input_container}>
               <div className={styles.input_box}>
                 <label>Address</label>
-                <input />
+                <input className={styles.input} />
               </div>
             </div>
 
-            <div className={styles.input_container}></div>
+            <div className={styles.transfer_fee_section}>
+              <h6>Transfer fee</h6>
+              <div className={styles.transfer_fee_container}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div className={styles.transfer_fee_box}>
+                    <span>0.54</span>
+                    <span className={styles.timer}>
+                      <span className={styles.clock_icon}>
+                        <ClockFillIcon />
+                      </span>
+                      15 mins
+                    </span>
+                  </div>
+                  0.5467000
+                </div>
+                <button className={styles.blue_text}>
+                  How fees are determined?
+                </button>
+              </div>
+              <button className={styles.blue_text}>
+                Buy more {network.nativeCurrency.symbol}
+              </button>
+            </div>
 
             <SendAdvancedSection hiddenComponent={<GasAndDataForm />}>
               <h6>Advanced</h6>
@@ -227,7 +253,7 @@ function SendAdvancedSection({
 }) {
   const [active, setActive] = useState(false);
   return (
-    <div className={`${styles.section} ${styles.expandable_section}`}>
+    <div className={`${styles.section} ${styles.advanced_section}`}>
       <div style={{ display: "flex" }}>
         <div className={styles.left}>{children}</div>
         <div className={styles.right}>
@@ -264,16 +290,22 @@ function GasAndDataForm() {
           transaction failing or getting stuck.
         </p>
       </div>
-      <div className={styles.input_container}>
+      <div className={styles.input_container} style={{ marginTop: "2rem" }}>
         <div className={styles.input_box}>
           <label>Gas limit</label>
-          <input />
+          <button
+            style={{ position: "absolute", right: "0.5rem" }}
+            className={styles.blue_text}
+          >
+            Reset to default: 200000
+          </button>
+          <input className={styles.input} />
         </div>
       </div>
       <div className={styles.input_container}>
         <div className={styles.input_box}>
           <label>Add Data</label>
-          <input />
+          <input className={styles.input} />
         </div>
       </div>
     </div>

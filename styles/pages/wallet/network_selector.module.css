@@ -44,7 +44,7 @@
   border: none;
 }
 
-.network_modal {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,12 +63,12 @@
   justify-content: center;
   align-items: center;
 }
-.network_modal.active {
+.modal.active {
   opacity: 1;
   z-index: 100;
 }
 
-.network_modal .container {
+.modal .container {
   background-color: white;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
 
@@ -81,7 +81,7 @@
 
   position: relative;
 }
-.network_modal .container h4 {
+.modal .container h4 {
   padding: 2rem;
   font-weight: 600;
   font-size: 2.8rem;
@@ -91,7 +91,7 @@
   justify-content: center;
   align-items: center;
 }
-.network_modal .container .close_btn {
+.modal .container .close_btn {
   width: 4rem;
   height: 4rem;
   flex-shrink: 0;
@@ -101,7 +101,7 @@
   border: none;
   background-color: transparent;
 }
-.network_modal .toolbar {
+.modal .toolbar {
   padding: 1rem;
   margin: 1rem 0;
   width: 100%;
