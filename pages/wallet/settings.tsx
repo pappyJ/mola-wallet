@@ -11,7 +11,7 @@ import {
   TickHeavyIcon,
   UpIcon,
 } from "components/icons";
-import { engineName } from "constants/digits";
+import { engineName, GAS_PRIORITY } from "constants/digits";
 import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import WalletHeader from "page_components/wallet/header";
 import { AccountContext } from "context/account";
@@ -100,23 +100,28 @@ const priorities = [
     icon: TickHeavyIcon,
     text: "Normal Priority",
     time: "15 Min",
-    id: "normal",
+    id: GAS_PRIORITY.NORMAL,
   },
-  { icon: UpIcon, text: "High Priority", time: "5 Min", id: "high" },
-  { icon: DoubleIcon, text: "Highest Priority", time: "2 Min", id: "highest" },
+  { icon: UpIcon, text: "High Priority", time: "5 Min", id: GAS_PRIORITY.HIGH },
+  {
+    icon: DoubleIcon,
+    text: "Highest Priority",
+    time: "2 Min",
+    id: GAS_PRIORITY.HIGHEST,
+  },
 ];
 
 function Priorities() {
   const [account, setAccount] = useContext(AccountContext);
 
-  function updateGasPriority(gasPriority: string) {
+  function updateGasPriority(gasPriority: number) {
     setAccount((prev) => {
       return { ...prev, gasPriority };
     });
   }
 
   useEffect(() => {
-    if (!account.gasPriority) updateGasPriority("normal");
+    if (!account.gasPriority) updateGasPriority(GAS_PRIORITY.NORMAL);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
@@ -488,7 +493,7 @@ function Address({ address }: { address: string }) {
   return (
     <div className={styles.address}>
       <div ref={imageDivRef} className={styles.blockies_img}></div>
-      <a>{shorten(address, 15, 20, 40)}</a>
+      <a>{shorten(address, 15, 6, 24)}</a>
       <button
         className={styles.icon_box}
         onClick={copyAddress}

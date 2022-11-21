@@ -15,7 +15,13 @@ import {
   TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-import { ReactNode, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import { NetworkContext } from "page_components/wallet/context";
@@ -27,9 +33,10 @@ import { NETWORKS } from "interfaces/IRpc";
 import { getCoinUSD } from "utils/priceFeed";
 import { getWalletBalanceEth } from "utils/wallet";
 import NET_CONFIG from "config/allNet";
-import { useRouter } from "next/router";
 import Notification, { useNotification } from "components/notification";
 import { networkLogoMap } from "page_components/wallet/network_selector";
+import { shorten } from "utils/string";
+import blockies from "ethereum-blockies";
 
 const WalletPage: NextPageX = () => {
   const [account, setAccount] = useContext(AccountContext);
@@ -40,7 +47,6 @@ const WalletPage: NextPageX = () => {
 
   const copyRef = useRef<HTMLTextAreaElement>(null);
   const [sendTokenActive, setSendTokenActive] = useState(false);
-  const router = useRouter();
 
   function shorten(address: string | null) {
     if (!account.address) return "";
@@ -223,9 +229,25 @@ WalletPage.Layout = DashBoardLayout;
 
 export default WalletPage;
 
+type details = {
+  currency: string;
+  amount: string;
+  address: string;
+  gasLimit: string;
+  addData: string;
+};
+
 function SendModal({ active }: { active: boolean }) {
   const [notification, pushNotification] = useNotification();
   const [network] = useContext(NetworkContext);
+
+  const [details, setDetails] = useState({
+    currency: network.nativeCurrency.symbol,
+    amount: "0",
+    address: "",
+    gasLimit: "200000",
+    addData: "",
+  });
 
   return (
     <>
@@ -253,14 +275,24 @@ function SendModal({ active }: { active: boolean }) {
               </div>
               <div className={styles.input_box}>
                 <label>Amount</label>
-                <input className={styles.input} type="number" />
+                <input
+                  className={styles.input}
+                  type="number"
+                  value={details.amount}
+                  onChange={(e) =>
+                    setDetails((prev) => ({ ...prev, amount: e.target.value }))
+                  }
+                />
               </div>
             </div>
 
             <div className={styles.input_container}>
               <div className={styles.input_box}>
                 <label>Address</label>
-                <input className={styles.input} />
+                <AddressInput
+                  address={details.address}
+                  setDetails={setDetails}
+                />
               </div>
             </div>
 
@@ -288,7 +320,15 @@ function SendModal({ active }: { active: boolean }) {
               </button>
             </div>
 
-            <SendAdvancedSection hiddenComponent={<GasAndDataForm />}>
+            <SendAdvancedSection
+              hiddenComponent={
+                <GasAndDataForm
+                  addData={details.addData}
+                  gasLimit={details.gasLimit}
+                  setDetails={setDetails}
+                />
+              }
+            >
               <h6>Advanced</h6>
             </SendAdvancedSection>
 
@@ -316,6 +356,7 @@ function SendAdvancedSection({
   hiddenComponent: ReactNode;
 }) {
   const [active, setActive] = useState(false);
+
   return (
     <div className={`${styles.section} ${styles.advanced_section}`}>
       <div style={{ display: "flex" }}>
@@ -343,7 +384,15 @@ function SendAdvancedSection({
   );
 }
 
-function GasAndDataForm() {
+function GasAndDataForm({
+  addData,
+  gasLimit,
+  setDetails,
+}: {
+  addData: string;
+  gasLimit: string;
+  setDetails: React.Dispatch<React.SetStateAction<details>>;
+}) {
   return (
     <div className={styles.gas_data_form}>
       <div className={styles.info}>
@@ -363,15 +412,92 @@ function GasAndDataForm() {
           >
             Reset to default: 200000
           </button>
-          <input className={styles.input} />
+          <input
+            className={styles.input}
+            value={gasLimit}
+            onChange={(e) =>
+              setDetails((prev) => ({ ...prev, gasLimit: e.target.value }))
+            }
+          />
         </div>
       </div>
       <div className={styles.input_container}>
         <div className={styles.input_box}>
           <label>Add Data</label>
-          <input className={styles.input} />
+          <input
+            className={styles.input}
+            value={addData}
+            onChange={(e) =>
+              setDetails((prev) => ({ ...prev, addData: e.target.value }))
+            }
+          />
         </div>
       </div>
     </div>
+  );
+}
+
+function AddressInput({
+  address,
+  setDetails,
+}: {
+  address: string;
+  setDetails: React.Dispatch<React.SetStateAction<details>>;
+}) {
+  const [account] = useContext(AccountContext);
+  const [active, setActive] = useState(false);
+
+  return (
+    <div
+      className={`${styles.address_input} ${active ? styles.active : ""}`}
+      onFocusCapture={() => setActive(true)}
+      onBlur={() => setActive(false)}
+    >
+      <div>
+        <input
+          value={address}
+          onChange={(e) =>
+            setDetails((prev) => ({ ...prev, address: e.target.value }))
+          }
+        />
+      </div>
+      {!!account.addressList?.length && (
+        <div className={`${styles.dropdown} c-scroll`}>
+          <div style={{ padding: ".5rem" }}>
+            {account.addressList?.map((e, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setDetails((prev) => ({ ...prev, address: e.address }));
+                  setActive(false);
+                }}
+              >
+                <Address address={e.address} nickname={e.nickname} />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Address({ address, nickname }: { address: string; nickname: string }) {
+  const imageRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    imageRef.current?.lastChild &&
+      imageRef.current.removeChild(imageRef.current.lastChild);
+    imageRef.current?.appendChild(
+      blockies.create({ seed: address, size: 10, scale: 3 })
+    );
+  }, [address]);
+
+  return (
+    <>
+      <span ref={imageRef} className={styles.blockies_img}></span>
+      <span className={styles.nickname}>{shorten(nickname, 8, 0, 10)}</span>
+      <span className={styles.address}>{shorten(address, 15, 6, 24)}</span>
+    </>
   );
 }
