@@ -7,30 +7,38 @@
 
 .container {
   max-width: 42rem;
+  width: 100%;
+  background-color: white;
+  padding: 3rem;
+  border-radius: 2rem;
 }
 
 .heading {
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 2rem;
+  text-align: center;
+  color: #00244e;
 }
 
 .button_container {
   display: flex;
   justify-content: center;
 }
-.button_container button {
+.button_container button,
+.button_container a {
   padding: 0.8rem 4rem;
   margin: 0 1rem;
   border: none;
 
   background-color: white;
   color: #00244e;
+  border: 2px solid #00244e;
 
   border-radius: 0.5rem;
   font-weight: 600;
 }
-.button_container button.primary {
+.button_container .primary {
   background-color: #00244e;
   color: white;
   font-weight: 500;

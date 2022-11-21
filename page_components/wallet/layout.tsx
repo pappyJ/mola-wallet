@@ -11,21 +11,37 @@ import {
   UserIcon,
 } from "components/icons";
 import { useRouter } from "next/router";
-import { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { AccountContext } from "context/account";
 import WalletContext from "./context";
+import logout_styles from "styles/pages/wallet/logout.module.css";
+import network_styles from "styles/pages/wallet/network_selector.module.css";
+
+import { ProviderContext } from "context/web3";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const [account] = useContext(AccountContext);
+  const [logoutModalActive, setLogoutModalActive] = useState(false);
   const router = useRouter();
+
+  function activateLogout() {
+    if (window.location.hash === "#logout") setLogoutModalActive(true);
+    else setLogoutModalActive(false);
+  }
 
   useEffect(() => {
     if (!account?.address) router.replace("/wallet/access");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address]);
 
+  useEffect(() => {
+    window.addEventListener("hashchange", activateLogout);
+    return () => window.removeEventListener("hashchange", activateLogout);
+  }, []);
+
   return (
     <WalletContext>
+      <LogoutModal active={logoutModalActive} />
       <div className={styles.main}>
         <div className={`${styles.left} c-scroll`}>
           <h1>
@@ -98,6 +114,14 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
                   </li>
                 )
               )}
+              <li className={styles.li}>
+                <a className={styles.anchor} href="#logout">
+                  <span className={styles.icon}>
+                    <LogoutIcon />
+                  </span>
+                  <span className={styles.text}>Logout</span>
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -142,5 +166,37 @@ const links = [
     ],
   },
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
-  { text: "Log out", href: "/wallet/logout", icon: LogoutIcon },
 ];
+
+function LogoutModal({ active }: { active: boolean }) {
+  const [, setAccount] = useContext(AccountContext);
+  const [, setProvider] = useContext(ProviderContext);
+
+  return (
+    <div
+      className={`${network_styles.modal} ${
+        active ? network_styles.active : ""
+      }`}
+    >
+      <div className={logout_styles.container}>
+        <p className={logout_styles.heading}>
+          Are you sure you want to logout ?
+        </p>
+        <div className={logout_styles.button_container}>
+          <a href="#">No</a>
+          <button
+            onClick={() => {
+              setProvider(null);
+              setAccount((prev) => {
+                return { ...prev, address: "" };
+              });
+            }}
+            className={logout_styles.primary}
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
