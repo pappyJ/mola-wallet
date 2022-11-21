@@ -5,5 +5,5 @@ export interface IAccount {
   fiat: string;
   privateKey: string;
   addressList?: { nickname: string; address: string }[];
-  gasPriority?: string;
+  gasPriority?: number;
 }

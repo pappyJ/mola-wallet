@@ -1,9 +1,10 @@
 import Axios from "./axios";
+import { currencyRoute } from "constants/digits"
 
 export const getCoinUSD = async (coin: string) => {
   try {
     const response = await Axios.get(
-      `https://api.dexscreener.io/latest/dex/search/?q=${coin}`
+      `${currencyRoute}${coin}`
     );
 
     if (response.status !== 200) {
