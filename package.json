@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ethersproject/units": "^5.7.0",
     "axios": "^1.1.3",
     "bip39": "^3.0.4",
     "ethereum-blockies": "^0.1.1",

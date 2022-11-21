@@ -13,13 +13,26 @@ import {
 import Image from "next/image";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AccountContext } from "context/account";
+import { ProviderContext } from "context/web3";
 import { NetworkContext } from "page_components/wallet/context";
 import WalletHeader from "page_components/wallet/header";
+import { sendNativeToken } from "utils/transactions";
+import { primaryFixedValue } from "constants/digits";
+import { IAccount } from "interfaces/IAccount";
+import { NETWORKS } from "interfaces/IRpc";
+import { getCoinUSD } from "utils/priceFeed";
+import { getWalletBalanceEth } from "utils/wallet";
+import NET_CONFIG from "config/allNet";
+import Notification, { useNotification } from "components/notification";
+
 
 const WalletPage: NextPageX = () => {
-  const [account] = useContext(AccountContext);
+  const [account, setAccount] = useContext(AccountContext);
+  const [provider] = useContext(ProviderContext);
   const [currentNetwork] = useContext(NetworkContext);
   const [copied, setCopied] = useState(false);
+  const [notifcation, pushNotification] = useNotification();
+
   const copyRef = useRef<HTMLTextAreaElement>(null);
 
   function shorten(address: string | null) {
@@ -37,6 +50,45 @@ const WalletPage: NextPageX = () => {
     copyRef.current?.select();
     document.execCommand("copy");
     setCopied(true);
+  }
+
+  const sendNative = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      const tx = await sendNativeToken(
+        provider,
+        '0.00001',
+        currentNetwork.nativeCurrency.decimals,
+        '0x5eB93f1b0b3E1Fd0f99118e39684f087a84d40Ec',
+        account.address,
+        account.privateKey,
+        account.gasPriority!
+  
+      );
+
+
+      const balance = Number(await getWalletBalanceEth(provider, account.address));
+
+      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG[currentNetwork.chainName as NETWORKS].nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+
+      setAccount((prev: IAccount) => ({
+        ...prev,
+
+        balance: balance,
+
+        balanceFiat
+      }));
+
+      pushNotification({ 
+        element: "Transaction Successful", 
+        type: "success" 
+      })
+
+      console.log(tx)
+    } catch (error: any) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -103,7 +155,7 @@ const WalletPage: NextPageX = () => {
               </a>
             </Link>
             <Link href="#">
-              <a className={styles.secondary}>
+              <a className={styles.secondary} onClick={async (e) => await sendNative(e)}>
                 <span className={styles.icon}>
                   <SendIcon />
                 </span>
@@ -135,6 +187,10 @@ const WalletPage: NextPageX = () => {
         <div className={styles.token_value_table}></div>
         <div className={styles.right}></div>
       </div>
+      <Notification
+        notification={notifcation}
+        pushNotification={pushNotification}
+      />
     </main>
   );
 };
