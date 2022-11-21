@@ -15,20 +15,7 @@ import {
   TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-<<<<<<< HEAD
 import { ReactNode, useContext, useEffect, useRef, useState } from "react";
-=======
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import Notification, { useNotification } from "components/notification";
->>>>>>> f1c0496b24563d8051d7f2b1fef674a1f369e23b
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import { NetworkContext } from "page_components/wallet/context";
@@ -41,11 +28,8 @@ import { getCoinUSD } from "utils/priceFeed";
 import { getWalletBalanceEth } from "utils/wallet";
 import NET_CONFIG from "config/allNet";
 import { useRouter } from "next/router";
-<<<<<<< HEAD
 import Notification, { useNotification } from "components/notification";
 import { networkLogoMap } from "page_components/wallet/network_selector";
-=======
->>>>>>> f1c0496b24563d8051d7f2b1fef674a1f369e23b
 
 const WalletPage: NextPageX = () => {
   const [account, setAccount] = useContext(AccountContext);
@@ -81,39 +65,48 @@ const WalletPage: NextPageX = () => {
     try {
       const tx = await sendNativeToken(
         provider,
-        '0.00001',
+        "0.00001",
         currentNetwork.nativeCurrency.decimals,
-        '0x5eB93f1b0b3E1Fd0f99118e39684f087a84d40Ec',
+        "0x5eB93f1b0b3E1Fd0f99118e39684f087a84d40Ec",
         account.address,
         account.privateKey,
         account.gasPriority!
-  
       );
 
+      const balance = Number(
+        await getWalletBalanceEth(provider, account.address)
+      );
 
-      const balance = Number(await getWalletBalanceEth(provider, account.address));
-
-      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG[currentNetwork.chainName as NETWORKS].nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+      const balanceFiat = Number(
+        (balance <= 0
+          ? 0
+          : (
+              await getCoinUSD(
+                NET_CONFIG[currentNetwork.chainName as NETWORKS].nativeCurrency
+                  .symbol
+              )
+            ).value! * balance
+        ).toFixed(primaryFixedValue)
+      );
 
       setAccount((prev: IAccount) => ({
         ...prev,
 
         balance: balance,
 
-        balanceFiat
+        balanceFiat,
       }));
 
-      pushNotification({ 
-        element: "Transaction Successful", 
-        type: "success" 
-      })
+      pushNotification({
+        element: "Transaction Successful",
+        type: "success",
+      });
 
-      console.log(tx)
+      console.log(tx);
     } catch (error: any) {
       console.log(error);
     }
-
-  }
+  };
 
   function c() {
     if (location.hash === "#send") setSendTokenActive(true);
