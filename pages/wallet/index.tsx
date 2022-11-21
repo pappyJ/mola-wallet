@@ -4,14 +4,25 @@ import styles from "styles/pages/wallet/index.module.css";
 import Link from "next/link";
 import {
   CardIcon,
+  CaretDownOutline,
   CaretDownSolidSmall,
+  CloseIconInBigCircle,
   CopyIcon,
   ScanIcon,
   SendIcon,
   TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import Notification, { useNotification } from "components/notification";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import { NetworkContext } from "page_components/wallet/context";
@@ -23,8 +34,7 @@ import { NETWORKS } from "interfaces/IRpc";
 import { getCoinUSD } from "utils/priceFeed";
 import { getWalletBalanceEth } from "utils/wallet";
 import NET_CONFIG from "config/allNet";
-import Notification, { useNotification } from "components/notification";
-
+import { useRouter } from "next/router";
 
 const WalletPage: NextPageX = () => {
   const [account, setAccount] = useContext(AccountContext);
@@ -34,6 +44,8 @@ const WalletPage: NextPageX = () => {
   const [notifcation, pushNotification] = useNotification();
 
   const copyRef = useRef<HTMLTextAreaElement>(null);
+  const [sendTokenActive, setSendTokenActive] = useState(false);
+  const router = useRouter();
 
   function shorten(address: string | null) {
     if (!account.address) return "";
@@ -89,15 +101,27 @@ const WalletPage: NextPageX = () => {
     } catch (error: any) {
       console.log(error);
     }
+
+  }
+
+  function c() {
+    if (location.hash === "#send") setSendTokenActive(true);
+    else setSendTokenActive(false);
   }
 
   useEffect(() => {
     if (copied) setTimeout(() => setCopied(false), 2000);
   }, [copied]);
 
+  useEffect(() => {
+    window.addEventListener("hashchange", c);
+    return () => window.removeEventListener("hashchange", c);
+  }, []);
+
   return (
     <main className={styles.main}>
       <WalletHeader />
+      <SendModal active={sendTokenActive} />
       <div className={styles.card_section}>
         <div className={styles.balance_section}>
           <div className={styles.top}>
@@ -146,22 +170,18 @@ const WalletPage: NextPageX = () => {
             </div>
           </div>
           <div className={styles.bottom}>
-            <Link href="#">
-              <a className={styles.primary}>
-                <span className={styles.icon}>
-                  <CardIcon />
-                </span>
-                Buy
-              </a>
-            </Link>
-            <Link href="#">
-              <a className={styles.secondary} onClick={async (e) => await sendNative(e)}>
-                <span className={styles.icon}>
-                  <SendIcon />
-                </span>
-                Send
-              </a>
-            </Link>
+            <a className={styles.primary} href="#">
+              <span className={styles.icon}>
+                <CardIcon />
+              </span>
+              Buy
+            </a>
+            <a className={styles.secondary} href="#send">
+              <span className={styles.icon}>
+                <SendIcon />
+              </span>
+              Send
+            </a>
           </div>
         </div>
         <div className={styles.buy_with_card_section}>
@@ -198,3 +218,119 @@ const WalletPage: NextPageX = () => {
 WalletPage.Layout = DashBoardLayout;
 
 export default WalletPage;
+
+function SendModal({ active }: { active: boolean }) {
+  const [notification, pushNotification] = useNotification();
+  const [network] = useContext(NetworkContext);
+
+  return (
+    <>
+      <div className={`${styles.send_modal} ${active ? styles.active : ""}`}>
+        <div className={`${styles.container} c-scroll`}>
+          <h4>Send Token</h4>
+          <a className={styles.close_btn} href="#">
+            <CloseIconInBigCircle />
+          </a>
+
+          <div>
+            <div className={styles.input_container}>
+              <div className={styles.input_box}>
+                <label>Select Currency</label>
+                <input readOnly value={network.nativeCurrency.symbol} />
+              </div>
+              <div className={styles.input_box}>
+                <label>Amount</label>
+                <input type="number" />
+              </div>
+            </div>
+
+            <div className={styles.input_container}>
+              <div className={styles.input_box}>
+                <label>Address</label>
+                <input />
+              </div>
+            </div>
+
+            <div className={styles.input_container}></div>
+
+            <SendAdvancedSection hiddenComponent={<GasAndDataForm />}>
+              <h6>Advanced</h6>
+            </SendAdvancedSection>
+
+            <div className={styles.center_box}>
+              <button style={{ padding: "2rem 5rem" }} className={styles.btn}>
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Notification
+        notification={notification}
+        pushNotification={pushNotification}
+      />
+    </>
+  );
+}
+
+function SendAdvancedSection({
+  children,
+  hiddenComponent,
+}: {
+  children: ReactNode;
+  hiddenComponent: ReactNode;
+}) {
+  const [active, setActive] = useState(false);
+  return (
+    <div className={`${styles.section} ${styles.expandable_section}`}>
+      <div style={{ display: "flex" }}>
+        <div className={styles.left}>{children}</div>
+        <div className={styles.right}>
+          <span>Gas limit and Data</span>
+          <button
+            className={`${styles.caret_down_icon} ${
+              active ? styles.active : ""
+            }`}
+            onClick={() => setActive((prev) => !prev)}
+          >
+            <CaretDownOutline />
+          </button>
+        </div>
+      </div>
+      <div
+        className={`${styles.expandable} ${
+          active ? styles.active : ""
+        } c-scroll`}
+      >
+        {hiddenComponent}
+      </div>
+    </div>
+  );
+}
+
+function GasAndDataForm() {
+  return (
+    <div className={styles.gas_data_form}>
+      <div className={styles.info}>
+        <h6 className={styles.heading}>For Advanced Users Only</h6>
+        <p>
+          Please don’t edit these fields unless you are an expert user & know
+          what you’re doing. Entering the wrong information could result in your
+          transaction failing or getting stuck.
+        </p>
+      </div>
+      <div className={styles.input_container}>
+        <div className={styles.input_box}>
+          <label>Gas limit</label>
+          <input />
+        </div>
+      </div>
+      <div className={styles.input_container}>
+        <div className={styles.input_box}>
+          <label>Add Data</label>
+          <input />
+        </div>
+      </div>
+    </div>
+  );
+}

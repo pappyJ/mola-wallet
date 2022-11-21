@@ -18,6 +18,7 @@ import { AccountContext } from "context/account";
 import Notification, { useNotification } from "components/notification";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
+import Image from "next/image";
 
 const Page: NextPageX = () => {
   const [addressModalActive, setAddressModalActive] = useState(false);
@@ -84,6 +85,7 @@ const Page: NextPageX = () => {
 
         <Section>
           <h6>Currency Settings</h6>
+          <SelectCurrency />
         </Section>
       </div>
     </div>
@@ -602,3 +604,57 @@ function EditAddressModal({ editActive, setEditAcitve, editAddress }: any) {
     </div>
   );
 }
+
+function SelectCurrency() {
+  const [account, setAccount] = useContext(AccountContext);
+  const [open, setOpen] = useState(false);
+
+  function setCurrency(fiat: string) {
+    setAccount((prev) => {
+      return { ...prev, fiat };
+    });
+    setOpen(false);
+  }
+
+  return (
+    <div className={`${styles.select_currency} ${open ? styles.active : ""}`}>
+      <button
+        className={styles.selected}
+        onClick={() => setOpen((prev) => !prev)}
+      >
+        <span className={styles.img}>
+          <Image
+            src={
+              currencies.find((e) => e.name == account.fiat)?.flag ||
+              "/us_flag.png"
+            }
+            alt=""
+            layout="fill"
+            quality={100}
+          />
+        </span>
+        <span className={styles.text}>{account.fiat}</span>
+        <span className={styles.icon_box}>
+          <CaretDownOutline />
+        </span>
+      </button>
+      <div className={`${styles.options_container} c-scroll`}>
+        {currencies.map((e, i) => (
+          <button key={i} onClick={() => setCurrency(e.name)}>
+            <span className={styles.img}>
+              <Image src={e.flag} alt="" layout="fill" quality={100} />
+            </span>
+            <span className={styles.text}>{e.name}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const currencies = [
+  { name: "USD", flag: "/us_flag.png" },
+  { name: "GBP", flag: "/gb_flag.png" },
+  { name: "EUR", flag: "/eu_flag.png" },
+  { name: "IDR", flag: "/indonesian_flag.png" },
+];
