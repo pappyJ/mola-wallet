@@ -20,6 +20,7 @@ import Notification, { useNotification } from "components/notification";
 import { primaryFixedValue } from "constants/digits";
 import { getCoinUSD } from "utils/priceFeed";
 import styles from "styles/pages/wallet/network_selector.module.css";
+import { LoaderContext } from "context/loader";
 
 export const networkLogoMap: { [key: string]: JSX.Element } = {
   [NETWORKS.ETHEREUM]: <EthereumIcon />,
@@ -37,8 +38,10 @@ export default function NetworkSelector() {
   const [, setProvider] = useContext(ProviderContext);
   const [modalActive, setModalActive] = useState(false);
   const [filter, setFilter] = useState("main");
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
   async function chooseNetwork(network: INET_CONFIG) {
+    startLoader();
     try {
       const provider = getWeb3Connection(network.chainName as NETWORKS);
 
@@ -84,6 +87,7 @@ export default function NetworkSelector() {
     }
 
     setModalActive(false);
+    stopLoader();
   }
 
   function handleSearch(e: any) {

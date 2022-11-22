@@ -1,0 +1,37 @@
+.main {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 0.4rem;
+  z-index: 1000;
+  display: none;
+}
+.main.active {
+  display: block;
+}
+
+.main span {
+  display: flex;
+  height: 0.4rem;
+  width: 90%;
+
+  position: fixed;
+  top: 0;
+  z-index: 15;
+
+  background-color: #3aa0ee;
+  border-radius: 1rem;
+
+  animation-name: loader;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes loader {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
