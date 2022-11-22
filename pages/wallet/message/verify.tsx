@@ -5,6 +5,7 @@ import styles from "styles/pages/wallet/message.module.css";
 import { ProviderContext } from "context/web3";
 import React, { useContext } from "react";
 import Notification, { useNotification } from "components/notification";
+import NetworkSelector from "page_components/wallet/network_selector";
 
 const Page: NextPageX = () => {
   const [provider] = useContext(ProviderContext);
@@ -34,17 +35,20 @@ const Page: NextPageX = () => {
   return (
     <div className={styles.main}>
       <WalletHeader />
-      <div className={styles.container}>
-        <h2>Verify Message</h2>
-        <form spellCheck={false} onSubmit={verifyMessage}>
-          <div className={styles.input_container}>
-            <textarea placeholder="signature" className="c-scroll" />
-          </div>
-          <div className={styles.btn_container}>
-            <button type="reset">Clear All</button>
-            <button type="submit">Verify</button>
-          </div>
-        </form>
+      <div style={{ display: "flex" }}>
+        <div className={styles.container}>
+          <h2>Verify Message</h2>
+          <form spellCheck={false} onSubmit={verifyMessage}>
+            <div className={styles.input_container}>
+              <textarea placeholder="signature" className="c-scroll" />
+            </div>
+            <div className={styles.btn_container}>
+              <button type="reset">Clear All</button>
+              <button type="submit">Verify</button>
+            </div>
+          </form>
+        </div>
+        <NetworkSelector />
       </div>
       <Notification
         notification={notifcation}

@@ -1,17 +1,25 @@
 .network_selector {
-  border-radius: 2rem;
-  height: 3.6rem;
-  padding: 0 1rem;
+  border-radius: 0.8rem;
+  padding: 2.4rem;
 
   border: none;
-  background-color: #f5f5f5;
-  color: #00244e;
   font-weight: 600;
+  font-size: 1.8rem;
+  text-align: left;
 
-  display: flex;
-  align-items: center;
+  flex-shrink: 0;
+  width: 25rem;
+  height: fit-content;
 
-  margin: 0 3rem;
+  background: linear-gradient(
+    110.35deg,
+    rgba(255, 255, 255, 0.18) 10.73%,
+    #e8e8e8 61.1%,
+    rgba(0, 36, 78, 0.63) 99.32%
+  );
+  box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
+
   text-transform: capitalize;
 }
 
@@ -19,8 +27,8 @@
   background-color: white;
   border-radius: 50%;
 
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 3rem;
+  height: 3rem;
   flex-shrink: 0;
 
   display: flex;
@@ -29,6 +37,18 @@
 
   margin-right: 1rem;
 }
+
+.network_selector .caret_right_icon {
+  display: flex;
+  width: 1.6rem;
+  height: 1.6rem;
+  color: rgba(0, 0, 0, 0.5);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  padding: 0.2rem;
+  margin-left: 1rem;
+}
+
 .network_selector .caret_down_box {
   width: 1.2rem;
   height: 1.2rem;
@@ -42,6 +62,14 @@
   position: relative;
   top: 2px;
   border: none;
+}
+
+.network_details {
+  margin-top: 2.4rem;
+  font-size: 1.6rem;
+}
+.network_details > div {
+  line-height: 3rem;
 }
 
 .modal {
@@ -188,11 +216,11 @@
 }
 .select_container tr {
   border: 1px solid #e9f5fe;
-  height: 4.8rem;
+  height: 5.4rem;
 }
 .select_container .selection {
   width: 100%;
-  height: 4.8rem;
+  height: 5.4rem;
   border: none;
   background-color: transparent;
   display: flex;

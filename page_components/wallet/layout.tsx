@@ -30,7 +30,7 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (!account?.address) router.replace("/wallet/access");
+    // if (!account?.address) router.replace("/wallet/access");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address]);
 
@@ -62,56 +62,9 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
             <ul>
               {links.map((e, i) =>
                 e.child ? (
-                  <li
-                    key={i}
-                    className={`${styles.li} ${
-                      e.child.some((e) => router.pathname == e.href)
-                        ? styles.open
-                        : ""
-                    }`}
-                  >
-                    <Link href={e.href}>
-                      <a className={styles.anchor}>
-                        <span className={styles.icon}>
-                          <e.icon />
-                        </span>
-                        <span className={styles.text}>{e.text}</span>
-                        <span className={styles.drop_icon}>
-                          <CaretDownOutline />
-                        </span>
-                      </a>
-                    </Link>
-                    {e.child.map((e, i) => (
-                      <li
-                        key={i}
-                        className={`${styles.li2} ${
-                          router.pathname == e.href ? styles.active : ""
-                        }`}
-                      >
-                        <Link href={e.href}>
-                          <a className={styles.anchor}>
-                            <span className={styles.text}>{e.text}</span>
-                          </a>
-                        </Link>
-                      </li>
-                    ))}
-                  </li>
+                  <NavLinkDropDown e={e} key={i} />
                 ) : (
-                  <li
-                    key={i}
-                    className={`${styles.li} ${
-                      router.pathname == e.href ? styles.active : ""
-                    }`}
-                  >
-                    <Link href={e.href}>
-                      <a className={styles.anchor}>
-                        <span className={styles.icon}>
-                          <e.icon />
-                        </span>
-                        <span className={styles.text}>{e.text}</span>
-                      </a>
-                    </Link>
-                  </li>
+                  <NavLink e={e} key={i} />
                 )
               )}
               <li className={styles.li}>
@@ -167,6 +120,86 @@ const links = [
   },
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
 ];
+
+function NavLink({
+  e: { href, icon: Icon, text },
+}: {
+  e: { text: string; href: string; icon: () => JSX.Element };
+}) {
+  const router = useRouter();
+  return (
+    <li
+      className={`${styles.li} ${router.pathname == href ? styles.active : ""}`}
+    >
+      <Link href={href}>
+        <a className={styles.anchor}>
+          <span className={styles.icon}>
+            <Icon />
+          </span>
+          <span className={styles.text}>{text}</span>
+        </a>
+      </Link>
+    </li>
+  );
+}
+
+function NavLinkDropDown({
+  e: { href, icon: Icon, text, child },
+}: {
+  e: {
+    text: string;
+    href: string;
+    icon: () => JSX.Element;
+    child: {
+      text: string;
+      href: string;
+    }[];
+  };
+}) {
+  const router = useRouter();
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    setActive(child.some((e) => router.pathname == e.href));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
+
+  return (
+    <li className={`${styles.li} ${active ? styles.open : ""}`}>
+      <Link href={href}>
+        <a className={styles.anchor}>
+          <span className={styles.icon}>
+            <Icon />
+          </span>
+          <span className={styles.text}>{text}</span>
+          <button
+            className={styles.drop_icon}
+            onClick={(e) => {
+              e.preventDefault();
+              setActive((prev) => !prev);
+            }}
+          >
+            <CaretDownOutline />
+          </button>
+        </a>
+      </Link>
+      {child.map((e, i) => (
+        <li
+          key={i}
+          className={`${styles.li2} ${
+            router.pathname == e.href ? styles.active : ""
+          }`}
+        >
+          <Link href={e.href}>
+            <a className={styles.anchor}>
+              <span className={styles.text}>{e.text}</span>
+            </a>
+          </Link>
+        </li>
+      ))}
+    </li>
+  );
+}
 
 function LogoutModal({ active }: { active: boolean }) {
   const [, setAccount] = useContext(AccountContext);

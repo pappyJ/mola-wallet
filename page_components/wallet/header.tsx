@@ -2,7 +2,6 @@ import { NotificationSolidIcon } from "components/icons";
 import Link from "next/link";
 import { ReactNode } from "react";
 import styles from "styles/pages/wallet/index.module.css";
-import NetworkSelector from "./network_selector";
 
 export default function WalletHeader({ children }: { children?: ReactNode }) {
   return (
@@ -30,7 +29,6 @@ export default function WalletHeader({ children }: { children?: ReactNode }) {
         )}
       </div>
       <div className={styles.right}>
-        <NetworkSelector />
         <div className={styles.notification_icon_box}>
           <span className={styles.icon}>
             <NotificationSolidIcon />
