@@ -35,7 +35,9 @@ import { convertToWei, getGasPrice } from "utils/tools";
 import { getWalletBalanceEth } from "utils/wallet";
 import NET_CONFIG from "config/allNet";
 import Notification, { useNotification } from "components/notification";
-import { networkLogoMap } from "page_components/wallet/network_selector";
+import NetworkSelector, {
+  networkLogoMap,
+} from "page_components/wallet/network_selector";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
 
@@ -166,8 +168,64 @@ const WalletPage: NextPageX = () => {
         </div>
       </div>
       <div className={styles.bottom_section}>
-        <div className={styles.token_value_table}></div>
-        <div className={styles.right}></div>
+        <div className={styles.token_value_table}>
+          <h4>MY TOKENS VALUE</h4>
+          <p className={styles.token_value}>$0.00</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Price</th>
+                <th>Market Cap</th>
+                <th>24hr</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {" "}
+              {Object.values(NET_CONFIG).map((e, i) => (
+                <tr key={i}>
+                  <td>
+                    <span style={{ display: "flex" }}>
+                      <span
+                        className={network_styles.network_icon_box}
+                        style={{ marginRight: "1.6rem" }}
+                      >
+                        {networkLogoMap[e.chainName]}
+                      </span>
+                      <span
+                        className={styles.text}
+                        style={{ fontWeight: "600" }}
+                      >
+                        {e.nativeCurrency.symbol}
+                      </span>
+                    </span>
+                  </td>
+                  <td>$1,297.80</td>
+                  <td>156.3491B</td>
+                  <td style={{ fontWeight: "600", color: "#FF0707" }}>
+                    -2.10%
+                  </td>
+                  <td
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      fontFamily: "consolas, monospace",
+                    }}
+                  >
+                    <span style={{ display: "flex", flexDirection: "column" }}>
+                      <span>0 {e.nativeCurrency.symbol}</span>
+                      <span>$0.00</span>
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className={styles.right}>
+          <NetworkSelector />
+        </div>
       </div>
       <Notification
         notification={notifcation}

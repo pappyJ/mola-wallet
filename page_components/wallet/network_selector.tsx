@@ -1,6 +1,7 @@
 import {
   BNBIcon,
   CaretDownOutline,
+  CaretRight,
   CloseIconInBigCircle,
   EthereumIcon,
   SearchIcon,
@@ -19,6 +20,7 @@ import Notification, { useNotification } from "components/notification";
 import { primaryFixedValue } from "constants/digits";
 import { getCoinUSD } from "utils/priceFeed";
 import styles from "styles/pages/wallet/network_selector.module.css";
+import { LoaderContext } from "context/loader";
 
 export const networkLogoMap: { [key: string]: JSX.Element } = {
   [NETWORKS.ETHEREUM]: <EthereumIcon />,
@@ -36,8 +38,10 @@ export default function NetworkSelector() {
   const [, setProvider] = useContext(ProviderContext);
   const [modalActive, setModalActive] = useState(false);
   const [filter, setFilter] = useState("main");
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
   async function chooseNetwork(network: INET_CONFIG) {
+    startLoader();
     try {
       const provider = getWeb3Connection(network.chainName as NETWORKS);
 
@@ -83,6 +87,7 @@ export default function NetworkSelector() {
     }
 
     setModalActive(false);
+    stopLoader();
   }
 
   function handleSearch(e: any) {
@@ -91,76 +96,89 @@ export default function NetworkSelector() {
 
   return (
     <>
-      <div>
-        <button
-          className={styles.network_selector}
-          onClick={() => setModalActive(true)}
-        >
-          <div className={styles.network_icon_box}>
+      <button
+        className={styles.network_selector}
+        onClick={() => setModalActive(true)}
+      >
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            style={{ flex: "1 1 100%", display: "flex", alignItems: "center" }}
+          >
+            Network
+            <span className={styles.caret_right_icon}>
+              <CaretRight />
+            </span>
+          </div>
+          <div
+            className={styles.network_icon_box}
+            style={{ width: "4rem", height: "4rem" }}
+          >
             {networkLogoMap[network.chainName]}
           </div>
-          {network.chainName}
-          <span className={styles.caret_down_box}>
-            <CaretDownOutline />
-          </span>
-        </button>
-        <div className={`${styles.modal} ${modalActive ? styles.active : ""}`}>
-          <div className={`${styles.container} c-scroll`}>
-            <h4>Select Network</h4>
-            <button
-              className={styles.close_btn}
-              onClick={() => setModalActive(false)}
-            >
-              <CloseIconInBigCircle />
-            </button>
-
-            <div className={styles.toolbar}>
-              <form className={styles.search_container} onSubmit={handleSearch}>
-                <button className={styles.icon} type="submit">
-                  <SearchIcon />
-                </button>
-                <input
-                  type="text"
-                  className={styles.search}
-                  placeholder="Find in network"
-                />
-              </form>
-
-              <div className={styles.btns_container}>
-                {["main", "test", "all"].map((e, i) => (
-                  <button
-                    className={filter == e ? styles.active : ""}
-                    onClick={() => setFilter(e)}
-                    key={i}
-                  >
-                    {e}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <table className={styles.select_container}>
-              {Object.values(NET_CONFIG).map((e, i) => (
-                <tr key={i}>
-                  <button
-                    className={styles.selection}
-                    onClick={() => chooseNetwork(e)}
-                  >
-                    <span className={styles.network_icon_box}>
-                      {networkLogoMap[e.chainName]}
-                    </span>
-                    <span className={styles.text}>{e.nativeCurrency.name}</span>
-                    <span
-                      className={`${styles.indicator} ${
-                        network.chainId == e.chainId ? styles.active : ""
-                      }`}
-                    >
-                      <span></span>
-                    </span>
-                  </button>
-                </tr>
-              ))}
-            </table>
+        </div>
+        <div className={styles.network_details}>
+          <div>
+            {network.nativeCurrency.symbol} - {network.nativeCurrency.name}
           </div>
+          <div>Last Block: 15,782,160</div>
+        </div>
+      </button>
+      <div className={`${styles.modal} ${modalActive ? styles.active : ""}`}>
+        <div className={`${styles.container} c-scroll`}>
+          <h4>Select Network</h4>
+          <button
+            className={styles.close_btn}
+            onClick={() => setModalActive(false)}
+          >
+            <CloseIconInBigCircle />
+          </button>
+
+          <div className={styles.toolbar}>
+            <form className={styles.search_container} onSubmit={handleSearch}>
+              <button className={styles.icon} type="submit">
+                <SearchIcon />
+              </button>
+              <input
+                type="text"
+                className={styles.search}
+                placeholder="Find in network"
+              />
+            </form>
+
+            <div className={styles.btns_container}>
+              {["main", "test", "all"].map((e, i) => (
+                <button
+                  className={filter == e ? styles.active : ""}
+                  onClick={() => setFilter(e)}
+                  key={i}
+                >
+                  {e}
+                </button>
+              ))}
+            </div>
+          </div>
+          <table className={styles.select_container}>
+            {Object.values(NET_CONFIG).map((e, i) => (
+              <tr key={i}>
+                <button
+                  className={styles.selection}
+                  onClick={() => chooseNetwork(e)}
+                >
+                  <span className={styles.network_icon_box}>
+                    {networkLogoMap[e.chainName]}
+                  </span>
+                  <span className={styles.text}>{e.nativeCurrency.name}</span>
+                  <span
+                    className={`${styles.indicator} ${
+                      network.chainId == e.chainId ? styles.active : ""
+                    }`}
+                  >
+                    <span></span>
+                  </span>
+                </button>
+              </tr>
+            ))}
+          </table>
         </div>
       </div>
       <Notification
