@@ -15,10 +15,13 @@ import {
   getWeb3Connection,
   getWalletBalanceEth,
 } from "utils/wallet";
+import { fetchWalletAssets } from "utils/assetEngine"
 import { NETWORKS } from "interfaces/IRpc";
 import Notification, { useNotification } from "components/notification";
+import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
+import { AssetProviderContext } from "context/web3/assets";
 import { IAccount } from "interfaces/IAccount";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 import { getCoinUSD } from "utils/priceFeed";
@@ -145,6 +148,8 @@ function Step2Component({
   const [notification, pushNotification] = useNotification();
   const [account, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
+  const [, setAssetProvider] = useContext(AssetProviderContext);
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
   useEffect(() => {
     if (!success) router.replace("?step=1");
@@ -155,12 +160,18 @@ function Step2Component({
   async function handleSubmit(e: any) {
     e.preventDefault();
 
+    startLoader();
+
     try {
       const wallet = decryptWallet(
         passwordedWalletFile,
         `${passwordRef.current?.value}`
       );
       const provider = getWeb3Connection(NETWORKS.ETHEREUM);
+
+      const walletAssets = await fetchWalletAssets(wallet.address, NET_CONFIG.ETHEREUM.chainId);
+
+      console.log(walletAssets)
 
       const balance = Number(
         await getWalletBalanceEth(provider, wallet.address)
@@ -184,13 +195,18 @@ function Step2Component({
         balanceFiat,
 
         privateKey: wallet.privateKey,
+
+        addressList: [{nickname: "my address", address: wallet.address}]
       }));
 
       setProvider(provider);
 
+      setAssetProvider(walletAssets);
+
       router.push("/wallet");
     } catch (error) {
-      console.log(error);
+      stopLoader();
+
       pushNotification({
         element: (
           <p style={{ textAlign: "center" }}>
@@ -200,6 +216,8 @@ function Step2Component({
         type: "error",
       });
     }
+
+    stopLoader();
   }
 
   return (

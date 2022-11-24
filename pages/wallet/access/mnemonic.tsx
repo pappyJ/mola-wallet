@@ -9,13 +9,16 @@ import {
   getWeb3Connection,
   getWalletBalanceEth,
 } from "utils/wallet";
+import { fetchWalletAssets } from "utils/assetEngine"
 
 import { NextPageX } from "types/next";
 import Steps, { useStep } from "components/step";
 import { CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
+import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
+import { AssetProviderContext } from "context/web3/assets";
 import { IAccount } from "interfaces/IAccount";
 import { NETWORKS } from "interfaces/IRpc";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
@@ -32,6 +35,8 @@ const CreateWithMnemonic: NextPageX = () => {
   const [notification, pushNotification] = useNotification();
   const [, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
+  const [, setAssetProvider] = useContext(AssetProviderContext);
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
   function getMemonicInputValues(): string[] {
     const mnemonicInputs: string[] = [];
@@ -50,6 +55,9 @@ const CreateWithMnemonic: NextPageX = () => {
   async function handleSubmit(e: any) {
     e.preventDefault();
 
+    startLoader();
+
+
     if (getMemonicInputValues().some((e) => !e.length)) {
       pushNotification({
         element: (
@@ -63,6 +71,8 @@ const CreateWithMnemonic: NextPageX = () => {
 
     try {
       const wallet = await accessWalletUsingMnemonic(mnemonicArray.join(" "));
+
+      const walletAssets = await fetchWalletAssets(wallet.address, NET_CONFIG.ETHEREUM.chainId);
 
       const provider = getWeb3Connection(NETWORKS.ETHEREUM);
       
@@ -81,11 +91,17 @@ const CreateWithMnemonic: NextPageX = () => {
 
         privateKey: wallet.privateKey,
 
+        addressList: [{nickname: "my address", address: wallet.address}]
+
       }));
 
       setProvider(provider);
+
+      setAssetProvider(walletAssets);
       router.push("/wallet");
     } catch (error) {
+      stopLoader();
+
       pushNotification({
         element: (
           <p style={{ textAlign: "center" }}>
@@ -94,6 +110,8 @@ const CreateWithMnemonic: NextPageX = () => {
         ),
       });
     }
+
+    stopLoader();
   }
 
   return (

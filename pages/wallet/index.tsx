@@ -22,6 +22,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
 import { NetworkContext } from "page_components/wallet/context";
@@ -253,8 +254,9 @@ function SendModal({ active }: { active: boolean }) {
   const [currentNetwork] = useContext(NetworkContext);
   const [notification, pushNotification] = useNotification();
   const [network] = useContext(NetworkContext);
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
-  const [gasPrice, setGasPrice] = useState('0');
+  const [gasPrice, setGasPrice] = useState("0");
   const [details, setDetails] = useState({
     currency: network.nativeCurrency.symbol,
     amount: "0",
@@ -290,6 +292,8 @@ function SendModal({ active }: { active: boolean }) {
 
   const sendNative = async (e: any) => {
     e.preventDefault();
+
+    startLoader();
 
     try {
       const tx = await sendNativeToken(
@@ -334,8 +338,15 @@ function SendModal({ active }: { active: boolean }) {
 
       console.log(tx);
     } catch (error: any) {
-      console.log(error);
+      stopLoader();
+
+      pushNotification({
+        element: error.message,
+        type: "error",
+      });
     }
+    
+    stopLoader();
   };
 
   const [addressValid, setAddressValid] = useState({ value: true, msg: "" });
@@ -345,8 +356,7 @@ function SendModal({ active }: { active: boolean }) {
   //details validation
   useEffect(() => {
     //address validation
-    if (details.address.length && !provider.utils.isAddress(details.address)
-    )
+    if (details.address.length && !provider.utils.isAddress(details.address))
       setAddressValid({ value: false, msg: "Not a valid address" });
     else setAddressValid({ value: true, msg: "" });
 
@@ -553,9 +563,7 @@ function GasAndDataForm({
           <button
             style={{ position: "absolute", right: "0.5rem" }}
             className={styles.blue_text}
-            onClick={() =>
-              setDetails((prev) => ({ ...prev, gasLimit: 21000 }))
-            }
+            onClick={() => setDetails((prev) => ({ ...prev, gasLimit: 21000 }))}
           >
             Reset to default: 21000
           </button>
