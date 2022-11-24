@@ -108,3 +108,20 @@ export const walletTransactionBalanceValidate = async (
 
   throw new Error(balanceInWei);
 };
+
+export const getGasPrice = async (
+  provider: Web3,
+  transaction: Object,
+  decimals: number
+) => {
+  const gasLimit = await provider?.eth?.estimateGas(transaction);
+
+  const gasPrice = await provider?.eth?.getGasPrice();
+
+  const fee = Number(gasPrice) * gasLimit;
+
+
+
+  return Number(convertToEther(String(fee), decimals)) || 0;
+}
+  

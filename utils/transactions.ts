@@ -20,7 +20,8 @@ export const sendNativeToken = async (
   recipientAddress: string,
   senderWalletAddress: string,
   sendersPrivateKey: string,
-  gasPriority: number
+  gasPriority: number,
+  gasLimitCustom: number
 ) => {
   try {
     // convert amount to send from string to wei format
@@ -40,7 +41,7 @@ export const sendNativeToken = async (
     // if user has sufficient balance for the transaction
     await walletTransactionBalanceValidate(
       provider,
-      gasLimit.toString(),
+      gasLimitCustom.toString() || gasPriorityBuffer.toString(),
       senderWalletAddress,
       true,
       amountInWei

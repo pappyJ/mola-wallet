@@ -31,6 +31,7 @@ import { primaryFixedValue } from "constants/digits";
 import { IAccount } from "interfaces/IAccount";
 import { NETWORKS } from "interfaces/IRpc";
 import { getCoinUSD } from "utils/priceFeed";
+import { convertToWei, getGasPrice } from "utils/tools";
 import { getWalletBalanceEth } from "utils/wallet";
 import NET_CONFIG from "config/allNet";
 import Notification, { useNotification } from "components/notification";
@@ -41,8 +42,7 @@ import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
 
 const WalletPage: NextPageX = () => {
-  const [account, setAccount] = useContext(AccountContext);
-  const [provider] = useContext(ProviderContext);
+  const [account] = useContext(AccountContext);
   const [currentNetwork] = useContext(NetworkContext);
   const [copied, setCopied] = useState(false);
   const [notifcation, pushNotification] = useNotification();
@@ -66,55 +66,6 @@ const WalletPage: NextPageX = () => {
     document.execCommand("copy");
     setCopied(true);
   }
-
-  const sendNative = async (e: any) => {
-    e.preventDefault();
-
-    try {
-      const tx = await sendNativeToken(
-        provider,
-        "0.00001",
-        currentNetwork.nativeCurrency.decimals,
-        "0x5eB93f1b0b3E1Fd0f99118e39684f087a84d40Ec",
-        account.address,
-        account.privateKey,
-        account.gasPriority!
-      );
-
-      const balance = Number(
-        await getWalletBalanceEth(provider, account.address)
-      );
-
-      const balanceFiat = Number(
-        (balance <= 0
-          ? 0
-          : (
-              await getCoinUSD(
-                NET_CONFIG[currentNetwork.chainName as NETWORKS].nativeCurrency
-                  .symbol
-              )
-            ).value! * balance
-        ).toFixed(primaryFixedValue)
-      );
-
-      setAccount((prev: IAccount) => ({
-        ...prev,
-
-        balance: balance,
-
-        balanceFiat,
-      }));
-
-      pushNotification({
-        element: "Transaction Successful",
-        type: "success",
-      });
-
-      console.log(tx);
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
 
   function c() {
     if (location.hash === "#send") setSendTokenActive(true);
@@ -291,22 +242,100 @@ type details = {
   currency: string;
   amount: string;
   address: string;
-  gasLimit: string;
+  gasLimit: number;
   addData: string;
 };
 
 function SendModal({ active }: { active: boolean }) {
+  const [account, setAccount] = useContext(AccountContext);
+  const [provider] = useContext(ProviderContext);
+  const [currentNetwork] = useContext(NetworkContext);
   const [notification, pushNotification] = useNotification();
   const [network] = useContext(NetworkContext);
-  const [account, setAccount] = useContext(AccountContext);
 
+  const [gasPrice, setGasPrice] = useState(0);
   const [details, setDetails] = useState({
     currency: network.nativeCurrency.symbol,
     amount: "0",
     address: "",
-    gasLimit: "200000",
+    gasLimit: 210000,
     addData: "",
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (details.address && details.amount) {
+          const gasFee = await getGasPrice(
+            provider,
+            {
+              to: details.address || account.address,
+              from: account.address,
+              value: convertToWei(
+                details.amount,
+                network.nativeCurrency.decimals
+              ),
+            },
+            network.nativeCurrency.decimals
+          );
+
+          setGasPrice(gasFee);
+        }
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    })();
+  }, [details]);
+
+  const sendNative = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      const tx = await sendNativeToken(
+        provider,
+        details.amount,
+        currentNetwork.nativeCurrency.decimals,
+        details.address,
+        account.address,
+        account.privateKey,
+        account.gasPriority!,
+        details.gasLimit
+      );
+
+      const balance = Number(
+        await getWalletBalanceEth(provider, account.address)
+      );
+
+      const balanceFiat = Number(
+        (balance <= 0
+          ? 0
+          : (
+              await getCoinUSD(
+                NET_CONFIG[currentNetwork.chainName as NETWORKS].nativeCurrency
+                  .symbol
+              )
+            ).value! * balance
+        ).toFixed(primaryFixedValue)
+      );
+
+      setAccount((prev: IAccount) => ({
+        ...prev,
+
+        balance: balance,
+
+        balanceFiat,
+      }));
+
+      pushNotification({
+        element: "Transaction Successful",
+        type: "success",
+      });
+
+      console.log(tx);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
   const [addressValid, setAddressValid] = useState({ value: true, msg: "" });
   const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
@@ -415,7 +444,7 @@ function SendModal({ active }: { active: boolean }) {
                       15 mins
                     </span>
                   </div>
-                  0.5467000
+                  {gasPrice}
                 </div>
                 <button className={styles.blue_text}>
                   How fees are determined?
@@ -440,7 +469,11 @@ function SendModal({ active }: { active: boolean }) {
             </SendAdvancedSection>
 
             <div className={styles.center_box}>
-              <button style={{ padding: "2rem 5rem" }} className={styles.btn}>
+              <button
+                style={{ padding: "2rem 5rem" }}
+                className={styles.btn}
+                onClick={sendNative}
+              >
                 Send
               </button>
             </div>
@@ -498,7 +531,7 @@ function GasAndDataForm({
   setDetails,
 }: {
   addData: string;
-  gasLimit: string;
+  gasLimit: number;
   gasLimitValid: { value: boolean; msg: string };
   setDetails: React.Dispatch<React.SetStateAction<details>>;
 }) {
@@ -519,10 +552,10 @@ function GasAndDataForm({
             style={{ position: "absolute", right: "0.5rem" }}
             className={styles.blue_text}
             onClick={() =>
-              setDetails((prev) => ({ ...prev, gasLimit: "200000" }))
+              setDetails((prev) => ({ ...prev, gasLimit: 210000 }))
             }
           >
-            Reset to default: 200000
+            Reset to default: 210000
           </button>
           <input
             className={`${styles.input} ${
@@ -530,7 +563,10 @@ function GasAndDataForm({
             }`}
             value={gasLimit}
             onChange={(e) =>
-              setDetails((prev) => ({ ...prev, gasLimit: e.target.value }))
+              setDetails((prev) => ({
+                ...prev,
+                gasLimit: Number(e.target.value),
+              }))
             }
           />
           {!gasLimitValid.value && <span>{gasLimitValid.msg}</span>}
