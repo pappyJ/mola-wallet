@@ -22,6 +22,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { NetworkContext } from "page_components/wallet/context";
 import WalletHeader from "page_components/wallet/header";

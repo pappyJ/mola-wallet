@@ -5,11 +5,17 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3/index";
+import { AssetProviderContext } from "context/web3/assets";
+import { NetworkContext } from "page_components/wallet/context";
+
+import { IAccount } from "interfaces/IAccount";
 
 const Page: NextPageX = () => {
   const router = useRouter();
+  const [, setNetwork] = useContext(NetworkContext);
   const [, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
+  const [, setAssetProvider] = useContext(AssetProviderContext);
 
   return (
     <div className={styles.main}>
@@ -20,9 +26,9 @@ const Page: NextPageX = () => {
           <button
             onClick={() => {
               setProvider(null);
-              setAccount((prev) => {
-                return { ...prev, address: "" };
-              });
+              setAccount({} as IAccount);
+              setAssetProvider([])
+              setNetwork(null)
             }}
             className={styles.primary}
           >

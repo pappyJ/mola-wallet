@@ -7,13 +7,16 @@ import { NextPageX } from "types/next";
 import Steps, { useStep } from "components/step";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useContext } from "react";
+import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
+import { AssetProviderContext } from "context/web3/assets";
 import {
   getWeb3Connection,
   generateWalletUsingPKey,
   getWalletBalanceEth,
 } from "utils/wallet";
+import { fetchWalletAssets } from "utils/assetEngine"
 import { NETWORKS } from "interfaces/IRpc";
 import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
@@ -27,16 +30,22 @@ const PrivateKeyPage: NextPageX = () => {
   const privateKeyRef = useRef<HTMLInputElement>(null);
   const [account, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
+  const [, setAssetProvider] = useContext(AssetProviderContext);
   const [notification, pushNotification] = useNotification();
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
   useEffect(() => {}, [account]);
   async function handleFormSubmit(e: any, privateKey: string) {
     e.preventDefault();
 
+    startLoader();
+
     try {
       const wallet = await generateWalletUsingPKey(privateKey);
 
       const provider = getWeb3Connection(NETWORKS.ETHEREUM);
+
+      const walletAssets = await fetchWalletAssets(wallet.address, NET_CONFIG.ETHEREUM.chainId);
       
       const balance = Number(await getWalletBalanceEth(provider, wallet.address));
 
@@ -53,17 +62,25 @@ const PrivateKeyPage: NextPageX = () => {
 
         privateKey: wallet.privateKey,
 
+        addressList: [{nickname: "my address", address: wallet.address}]
+
       }));
 
       setProvider(provider);
 
+      setAssetProvider(walletAssets);
       router.push("/wallet");
     } catch (error: any) {
+      stopLoader();
+
       pushNotification({
         element: <p style={{ textAlign: "center" }}>{error?.message}</p>,
         type: "error",
       });
     }
+
+    stopLoader();
+
   }
 
   useEffect(() => {

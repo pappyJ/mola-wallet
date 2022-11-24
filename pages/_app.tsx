@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppPropsX } from "types/next";
 import Head from "next/head";
 import { ProviderContextComponent } from "context/web3";
+import { AssetProviderContextComponent } from "context/web3/assets";
 import { AcoountContextComponent } from "context/account";
 import LoaderContextComponent from "context/loader";
 
@@ -20,11 +21,13 @@ function MyApp({ Component, pageProps }: AppPropsX) {
       </Head>
       <LoaderContextComponent>
         <ProviderContextComponent>
-          <AcoountContextComponent>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </AcoountContextComponent>
+          <AssetProviderContextComponent>
+            <AcoountContextComponent>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </AcoountContextComponent>
+          </AssetProviderContextComponent>
         </ProviderContextComponent>
       </LoaderContextComponent>
     </>

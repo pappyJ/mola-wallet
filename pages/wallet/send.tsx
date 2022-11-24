@@ -31,6 +31,7 @@ import NetworkSelector, {
   networkLogoMap,
 } from "page_components/wallet/network_selector";
 import WalletHeader from "page_components/wallet/header";
+import { LoaderContext } from "context/loader";
 
 import styles from "styles/pages/wallet/send.module.css";
 import network_styles from "styles/pages/wallet/network_selector.module.css";
@@ -49,6 +50,7 @@ const SendWalletPage: NextPageX = () => {
   const [currentNetwork] = useContext(NetworkContext);
   const [notification, pushNotification] = useNotification();
   const [network] = useContext(NetworkContext);
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
   const [gasPrice, setGasPrice] = useState("0");
   const [details, setDetails] = useState({
@@ -87,6 +89,8 @@ const SendWalletPage: NextPageX = () => {
 
   const sendNative = async (e: any) => {
     e.preventDefault();
+
+    startLoader();
 
     try {
       const tx = await sendNativeToken(
@@ -131,8 +135,15 @@ const SendWalletPage: NextPageX = () => {
 
       console.log(tx);
     } catch (error: any) {
-      console.log(error);
+      stopLoader();
+
+      pushNotification({
+        element: error.message,
+        type: "error",
+      });
     }
+
+    stopLoader();
   };
 
   const [addressValid, setAddressValid] = useState({ value: true, msg: "" });

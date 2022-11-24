@@ -1,6 +1,5 @@
 import {
   BNBIcon,
-  CaretDownOutline,
   CaretRight,
   CloseIconInBigCircle,
   EthereumIcon,
@@ -8,7 +7,7 @@ import {
   SearchIcon,
   WBTCIcon,
 } from "components/icons";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NetworkContext } from "./context";
 import { NETWORKS } from "interfaces/IRpc";
 import NET_CONFIG from "config/allNet";
@@ -22,6 +21,8 @@ import { primaryFixedValue } from "constants/digits";
 import { getCoinUSD } from "utils/priceFeed";
 import styles from "styles/pages/wallet/network_selector.module.css";
 import { LoaderContext } from "context/loader";
+import { fetchWalletAssets } from "utils/assetEngine"
+import { AssetProviderContext } from "context/web3/assets";
 
 export const networkLogoMap: { [key: string]: JSX.Element } = {
   [NETWORKS.ETHEREUM]: <EthereumIcon />,
@@ -36,20 +37,19 @@ export default function NetworkSelector() {
   const [notification, pushNotification] = useNotification();
   const [network, setNetwork] = useContext(NetworkContext);
   const [account, setAccount] = useContext(AccountContext);
-  const [, setProvider] = useContext(ProviderContext);
+  const [provider, setProvider] = useContext(ProviderContext);
   const [modalActive, setModalActive] = useState(false);
-  const [blockNumber, setBlockNumber] = useState(0);
+  const [blockNumber, setBlockNumber] = useState('0');
   const [filter, setFilter] = useState("main");
   const [startLoader, stopLoader] = useContext(LoaderContext);
+  const [, setAssetProvider] = useContext(AssetProviderContext);
 
   async function chooseNetwork(network: INET_CONFIG) {
     startLoader();
     try {
       const provider = getWeb3Connection(network.chainName as NETWORKS);
 
-      const latesBlock = await provider.eth.getBlockNumber();
-
-      setBlockNumber(latesBlock)
+      const walletAssets = await fetchWalletAssets(account.address, network.chainId);
 
       const balance = Number(
         await getWalletBalanceEth(provider, account.address)
@@ -81,7 +81,11 @@ export default function NetworkSelector() {
       }));
 
       setProvider(provider);
+
+      setAssetProvider(walletAssets);
     } catch (error: any) {
+      stopLoader();
+
       pushNotification({
         element: (
           <p style={{ textAlign: "center" }}>
@@ -105,6 +109,15 @@ export default function NetworkSelector() {
   function handleSearch(e: any) {
     e.preventDefault();
   }
+
+  useEffect(() => {
+    (async () => {
+      const latesBlock = await provider.eth.getBlockNumber();
+
+      setBlockNumber(latesBlock.toLocaleString() )
+    })()
+ 
+  },[])
 
   return (
     <>
