@@ -40,6 +40,7 @@ import NetworkSelector, {
 } from "page_components/wallet/network_selector";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
+import { gasPriceFixedValue } from "constants/digits";
 
 const WalletPage: NextPageX = () => {
   const [account] = useContext(AccountContext);
@@ -66,7 +67,6 @@ const WalletPage: NextPageX = () => {
     document.execCommand("copy");
     setCopied(true);
   }
-
 
   function c() {
     if (location.hash === "#send") setSendTokenActive(true);
@@ -254,44 +254,44 @@ function SendModal({ active }: { active: boolean }) {
   const [notification, pushNotification] = useNotification();
   const [network] = useContext(NetworkContext);
 
-  const [gasPrice , setGasPrice] = useState(0);
+  const [gasPrice, setGasPrice] = useState('0');
   const [details, setDetails] = useState({
     currency: network.nativeCurrency.symbol,
     amount: "0",
     address: "",
-    gasLimit: 210000,
+    gasLimit: 21000,
     addData: "",
   });
 
   useEffect(() => {
     (async () => {
-
       try {
-        if(details.address && details.amount) {
-        const gasFee = await getGasPrice(provider, {
-          to: details.address || account.address,
-          from: account.address,
-          value: convertToWei(details.amount, network.nativeCurrency.decimals),
-        },
-        network.nativeCurrency.decimals
-        )
+        if (details.address && details.amount) {
+          const gasFee = await getGasPrice(
+            provider,
+            {
+              to: details.address || account.address,
+              from: account.address,
+              value: convertToWei(
+                details.amount,
+                network.nativeCurrency.decimals
+              ),
+            },
+            network.nativeCurrency.decimals
+          );
 
-        
-        setGasPrice(gasFee);
-    }
-
+          setGasPrice(gasFee.toFixed(gasPriceFixedValue));
+        }
       } catch (error: any) {
-        console.log(error.message); 
+        console.log(error.message);
       }
-    })()
-
-  },[details])
+    })();
+  }, [details]);
 
   const sendNative = async (e: any) => {
     e.preventDefault();
 
     try {
-
       const tx = await sendNativeToken(
         provider,
         details.amount,
@@ -337,9 +337,20 @@ function SendModal({ active }: { active: boolean }) {
       console.log(error);
     }
   };
+
+  const [addressValid, setAddressValid] = useState({ value: true, msg: "" });
   const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
   const [gasLimitValid, setGasLimitValid] = useState({ value: true, msg: "" });
+
+  //details validation
   useEffect(() => {
+    //address validation
+    if (details.address.length && !provider.utils.isAddress(details.address)
+    )
+      setAddressValid({ value: false, msg: "Not a valid address" });
+    else setAddressValid({ value: true, msg: "" });
+
+    //amount validation
     if (+details.amount <= 0)
       setAmountValid({
         value: false,
@@ -351,16 +362,15 @@ function SendModal({ active }: { active: boolean }) {
         msg: "Total transaction cost is less than balance",
       });
     else setAmountValid({ value: true, msg: "" });
-  }, [details, account]);
 
-  useEffect(() => {
+    //gas limit validation
     if (+details.gasLimit < 21000)
       setGasLimitValid({
         value: false,
         msg: "Gas limit should not be less than 21,000",
       });
     else setGasLimitValid({ value: true, msg: "" });
-  }, [details]);
+  }, [details, account]);
 
   return (
     <>
@@ -405,14 +415,22 @@ function SendModal({ active }: { active: boolean }) {
               </div>
             </div>
 
-            <div className={styles.input_container}>
-              <div className={styles.input_box}>
+            <div
+              className={styles.input_container}
+              style={{ flexDirection: "column" }}
+            >
+              <div
+                className={`${styles.input_box} ${styles.address_input_box} ${
+                  !addressValid.value ? styles.error : ""
+                }`}
+              >
                 <label>Address</label>
                 <AddressInput
                   address={details.address}
                   setDetails={setDetails}
                 />
               </div>
+              {!addressValid.value && <span>{addressValid.msg}</span>}
             </div>
 
             <div className={styles.transfer_fee_section}>
@@ -453,7 +471,11 @@ function SendModal({ active }: { active: boolean }) {
             </SendAdvancedSection>
 
             <div className={styles.center_box}>
-              <button style={{ padding: "2rem 5rem" }} className={styles.btn} onClick={sendNative}>
+              <button
+                style={{ padding: "2rem 5rem" }}
+                className={styles.btn}
+                onClick={sendNative}
+              >
                 Send
               </button>
             </div>
@@ -532,10 +554,10 @@ function GasAndDataForm({
             style={{ position: "absolute", right: "0.5rem" }}
             className={styles.blue_text}
             onClick={() =>
-              setDetails((prev) => ({ ...prev, gasLimit: 210000 }))
+              setDetails((prev) => ({ ...prev, gasLimit: 21000 }))
             }
           >
-            Reset to default: 210000
+            Reset to default: 21000
           </button>
           <input
             className={`${styles.input} ${
@@ -543,7 +565,10 @@ function GasAndDataForm({
             }`}
             value={gasLimit}
             onChange={(e) =>
-              setDetails((prev) => ({ ...prev, gasLimit: Number(e.target.value) }))
+              setDetails((prev) => ({
+                ...prev,
+                gasLimit: Number(e.target.value),
+              }))
             }
           />
           {!gasLimitValid.value && <span>{gasLimitValid.msg}</span>}

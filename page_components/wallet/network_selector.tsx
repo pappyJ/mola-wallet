@@ -38,15 +38,18 @@ export default function NetworkSelector() {
   const [account, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
   const [modalActive, setModalActive] = useState(false);
+  const [blockNumber, setBlockNumber] = useState(0);
   const [filter, setFilter] = useState("main");
   const [startLoader, stopLoader] = useContext(LoaderContext);
-
-  console.log(network);
 
   async function chooseNetwork(network: INET_CONFIG) {
     startLoader();
     try {
       const provider = getWeb3Connection(network.chainName as NETWORKS);
+
+      const latesBlock = await provider.eth.getBlockNumber();
+
+      setBlockNumber(latesBlock)
 
       const balance = Number(
         await getWalletBalanceEth(provider, account.address)
@@ -129,7 +132,7 @@ export default function NetworkSelector() {
           <div>
             {network.nativeCurrency.symbol} - {network.nativeCurrency.name}
           </div>
-          <div>Last Block: 15,782,160</div>
+          <div>Last Block: { blockNumber }</div>
         </div>
       </button>
       <div className={`${styles.modal} ${modalActive ? styles.active : ""}`}>

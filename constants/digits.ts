@@ -1,5 +1,7 @@
 export const primaryFixedValue = 4;
 
+export const gasPriceFixedValue = 10;
+
 export const currentVersion = 1;
 
 export const engineName = `MOLA_WALLET v${currentVersion}`;

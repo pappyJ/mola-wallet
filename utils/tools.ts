@@ -120,8 +120,8 @@ export const getGasPrice = async (
 
   const fee = Number(gasPrice) * gasLimit;
 
-
-
-  return Number(convertToEther(String(fee), decimals)) || 0;
-}
-  
+  return (
+    Number(convertToEther(String(fee), decimals)) ||
+    0
+  );
+};
