@@ -337,6 +337,31 @@ function SendModal({ active }: { active: boolean }) {
       console.log(error);
     }
   };
+  const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
+  const [gasLimitValid, setGasLimitValid] = useState({ value: true, msg: "" });
+
+  useEffect(() => {
+    if (+details.amount <= 0)
+      setAmountValid({
+        value: false,
+        msg: "Minimum transferable amount is 1",
+      });
+    else if (+details.amount + +details.gasLimit > account.balance)
+      setAmountValid({
+        value: false,
+        msg: "Total transaction cost is less than balance",
+      });
+    else setAmountValid({ value: true, msg: "" });
+  }, [details, account]);
+
+  useEffect(() => {
+    if (+details.gasLimit < 21000)
+      setGasLimitValid({
+        value: false,
+        msg: "Gas limit should not be less than 21,000",
+      });
+    else setGasLimitValid({ value: true, msg: "" });
+  }, [details]);
 
   return (
     <>
@@ -355,7 +380,10 @@ function SendModal({ active }: { active: boolean }) {
             <div className={styles.input_container}>
               <div className={styles.input_box}>
                 <label>Select Currency</label>
-                <div className={styles.input}>
+                <div
+                  className={styles.input}
+                  style={{ height: "4.5rem", padding: "0 2rem" }}
+                >
                   <div className={network_styles.network_icon_box}>
                     {networkLogoMap[network.chainName]}
                   </div>
@@ -365,13 +393,16 @@ function SendModal({ active }: { active: boolean }) {
               <div className={styles.input_box}>
                 <label>Amount</label>
                 <input
-                  className={styles.input}
+                  className={`${styles.input} ${
+                    !amountValid.value ? styles.error : ""
+                  }`}
                   type="number"
                   value={details.amount}
                   onChange={(e) =>
                     setDetails((prev) => ({ ...prev, amount: e.target.value }))
                   }
                 />
+                {!amountValid.value && <span>{amountValid.msg}</span>}
               </div>
             </div>
 
@@ -414,6 +445,7 @@ function SendModal({ active }: { active: boolean }) {
                 <GasAndDataForm
                   addData={details.addData}
                   gasLimit={details.gasLimit}
+                  gasLimitValid={gasLimitValid}
                   setDetails={setDetails}
                 />
               }
@@ -476,10 +508,12 @@ function SendAdvancedSection({
 function GasAndDataForm({
   addData,
   gasLimit,
+  gasLimitValid,
   setDetails,
 }: {
   addData: string;
   gasLimit: number;
+  gasLimitValid: { value: boolean; msg: string };
   setDetails: React.Dispatch<React.SetStateAction<details>>;
 }) {
   return (
@@ -498,16 +532,22 @@ function GasAndDataForm({
           <button
             style={{ position: "absolute", right: "0.5rem" }}
             className={styles.blue_text}
+            onClick={() =>
+              setDetails((prev) => ({ ...prev, gasLimit: 210000 }))
+            }
           >
-            Reset to default: 200000
+            Reset to default: 210000
           </button>
           <input
-            className={styles.input}
+            className={`${styles.input} ${
+              !gasLimitValid.value ? styles.error : ""
+            }`}
             value={gasLimit}
             onChange={(e) =>
               setDetails((prev) => ({ ...prev, gasLimit: Number(e.target.value) }))
             }
           />
+          {!gasLimitValid.value && <span>{gasLimitValid.msg}</span>}
         </div>
       </div>
       <div className={styles.input_container}>

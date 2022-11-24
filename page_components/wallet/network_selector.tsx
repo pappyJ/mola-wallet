@@ -4,6 +4,7 @@ import {
   CaretRight,
   CloseIconInBigCircle,
   EthereumIcon,
+  PolygonIcon,
   SearchIcon,
   WBTCIcon,
 } from "components/icons";
@@ -25,7 +26,7 @@ import { LoaderContext } from "context/loader";
 export const networkLogoMap: { [key: string]: JSX.Element } = {
   [NETWORKS.ETHEREUM]: <EthereumIcon />,
   [NETWORKS.BINANCE]: <BNBIcon />,
-  [NETWORKS.POLYGON]: <WBTCIcon />,
+  [NETWORKS.POLYGON]: <PolygonIcon />,
   [NETWORKS.GOERLI]: <EthereumIcon />,
   [NETWORKS.T_BINANCE]: <BNBIcon />,
   [NETWORKS.MUMBAI]: <WBTCIcon />,
@@ -39,6 +40,8 @@ export default function NetworkSelector() {
   const [modalActive, setModalActive] = useState(false);
   const [filter, setFilter] = useState("main");
   const [startLoader, stopLoader] = useContext(LoaderContext);
+
+  console.log(network);
 
   async function chooseNetwork(network: INET_CONFIG) {
     startLoader();
@@ -88,6 +91,12 @@ export default function NetworkSelector() {
 
     setModalActive(false);
     stopLoader();
+  }
+
+  function networkFilterFunction(e: INET_CONFIG) {
+    if (filter === "main") return e.test == false;
+    else if (filter === "test") return e.test === true;
+    else return true;
   }
 
   function handleSearch(e: any) {
@@ -158,26 +167,28 @@ export default function NetworkSelector() {
             </div>
           </div>
           <table className={styles.select_container}>
-            {Object.values(NET_CONFIG).map((e, i) => (
-              <tr key={i}>
-                <button
-                  className={styles.selection}
-                  onClick={() => chooseNetwork(e)}
-                >
-                  <span className={styles.network_icon_box}>
-                    {networkLogoMap[e.chainName]}
-                  </span>
-                  <span className={styles.text}>{e.nativeCurrency.name}</span>
-                  <span
-                    className={`${styles.indicator} ${
-                      network.chainId == e.chainId ? styles.active : ""
-                    }`}
+            {Object.values(NET_CONFIG)
+              .filter(networkFilterFunction)
+              .map((e, i) => (
+                <tr key={i}>
+                  <button
+                    className={styles.selection}
+                    onClick={() => chooseNetwork(e)}
                   >
-                    <span></span>
-                  </span>
-                </button>
-              </tr>
-            ))}
+                    <span className={styles.network_icon_box}>
+                      {networkLogoMap[e.chainName]}
+                    </span>
+                    <span className={styles.text}>{e.nativeCurrency.name}</span>
+                    <span
+                      className={`${styles.indicator} ${
+                        network.chainId == e.chainId ? styles.active : ""
+                      }`}
+                    >
+                      <span></span>
+                    </span>
+                  </button>
+                </tr>
+              ))}
           </table>
         </div>
       </div>
