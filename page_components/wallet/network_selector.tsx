@@ -4,6 +4,7 @@ import {
   CaretRight,
   CloseIconInBigCircle,
   EthereumIcon,
+  PolygonIcon,
   SearchIcon,
   WBTCIcon,
 } from "components/icons";
@@ -25,7 +26,7 @@ import { LoaderContext } from "context/loader";
 export const networkLogoMap: { [key: string]: JSX.Element } = {
   [NETWORKS.ETHEREUM]: <EthereumIcon />,
   [NETWORKS.BINANCE]: <BNBIcon />,
-  [NETWORKS.POLYGON]: <WBTCIcon />,
+  [NETWORKS.POLYGON]: <PolygonIcon />,
   [NETWORKS.GOERLI]: <EthereumIcon />,
   [NETWORKS.T_BINANCE]: <BNBIcon />,
   [NETWORKS.MUMBAI]: <WBTCIcon />,
