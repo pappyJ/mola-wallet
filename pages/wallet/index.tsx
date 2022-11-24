@@ -308,10 +308,18 @@ function SendModal({ active }: { active: boolean }) {
     addData: "",
   });
 
+  const [addressValid, setAddressValid] = useState({ value: true, msg: "" });
   const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
   const [gasLimitValid, setGasLimitValid] = useState({ value: true, msg: "" });
 
+  //details validation
   useEffect(() => {
+    //address validation
+    if (details.address.length && !details.address.startsWith("0x"))
+      setAddressValid({ value: false, msg: "Not a valid address" });
+    else setAddressValid({ value: true, msg: "" });
+
+    //amount validation
     if (+details.amount <= 0)
       setAmountValid({
         value: false,
@@ -323,16 +331,15 @@ function SendModal({ active }: { active: boolean }) {
         msg: "Total transaction cost is less than balance",
       });
     else setAmountValid({ value: true, msg: "" });
-  }, [details, account]);
 
-  useEffect(() => {
+    //gas limit validation
     if (+details.gasLimit < 21000)
       setGasLimitValid({
         value: false,
         msg: "Gas limit should not be less than 21,000",
       });
     else setGasLimitValid({ value: true, msg: "" });
-  }, [details]);
+  }, [details, account]);
 
   return (
     <>
@@ -377,14 +384,22 @@ function SendModal({ active }: { active: boolean }) {
               </div>
             </div>
 
-            <div className={styles.input_container}>
-              <div className={styles.input_box}>
+            <div
+              className={styles.input_container}
+              style={{ flexDirection: "column" }}
+            >
+              <div
+                className={`${styles.input_box} ${styles.address_input_box} ${
+                  !addressValid.value ? styles.error : ""
+                }`}
+              >
                 <label>Address</label>
                 <AddressInput
                   address={details.address}
                   setDetails={setDetails}
                 />
               </div>
+              {!addressValid.value && <span>{addressValid.msg}</span>}
             </div>
 
             <div className={styles.transfer_fee_section}>

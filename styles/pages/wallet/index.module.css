@@ -543,6 +543,16 @@
   border: none;
 }
 
+.address_input_box.error .address_input {
+  outline: 2px solid #eb4c37;
+  color: #eb4c37;
+}
+.address_input_box.error ~ span {
+  font-style: italic;
+  font-size: 1.4rem;
+  color: #eb4c37;
+}
+
 .address_input {
   font-size: 1.6rem;
   line-height: 1.6rem;
