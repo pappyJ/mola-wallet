@@ -339,14 +339,13 @@ function SendModal({ active }: { active: boolean }) {
   };
   const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
   const [gasLimitValid, setGasLimitValid] = useState({ value: true, msg: "" });
-
   useEffect(() => {
     if (+details.amount <= 0)
       setAmountValid({
         value: false,
         msg: "Minimum transferable amount is 1",
       });
-    else if (+details.amount + +details.gasLimit > account.balance)
+    else if (+details.amount + +gasPrice > account.balance)
       setAmountValid({
         value: false,
         msg: "Total transaction cost is less than balance",
