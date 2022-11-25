@@ -44,7 +44,7 @@ const WalletPage: NextPageX = () => {
     document.execCommand("copy");
     setCopied(true);
   }
-  console.log(assets);
+
   return (
     <main className={styles.main}>
       <WalletHeader />
@@ -146,51 +146,61 @@ const WalletPage: NextPageX = () => {
               </tr>
             </thead>
             <tbody>
-              {assets.map((e: any, i: number) => (
-                <tr key={i}>
-                  <td>
-                    <span style={{ display: "flex" }}>
-                      <span
-                        className={network_styles.network_icon_box}
-                        style={{ marginRight: "1.6rem", position: "relative" }}
-                      >
-                        {e.token?.logo ? (
-                          <Image src={e.token.logo} layout="fill" alt="" />
-                        ) : (
-                          networkLogoMap[network.chainName]
-                        )}
+              {!!assets.length &&
+                assets.map((e: any, i: number) => (
+                  <tr key={i}>
+                    <td>
+                      <span style={{ display: "flex" }}>
+                        <span
+                          className={network_styles.network_icon_box}
+                          style={{
+                            marginRight: "1.6rem",
+                            position: "relative",
+                          }}
+                        >
+                          {e.token?.logo ? (
+                            <Image src={e.token.logo} layout="fill" alt="" />
+                          ) : (
+                            networkLogoMap[network.chainName]
+                          )}
+                        </span>
+                        <span
+                          className={styles.text}
+                          style={{ fontWeight: "600" }}
+                        >
+                          {e?.token?.symbol}
+                        </span>
                       </span>
+                    </td>
+                    <td>{e?.token?.name}</td>
+                    <td>
+                      <a href="#">
+                        {shorten(e.token?.contactAddress, 6, 4, 13)}
+                      </a>
+                    </td>
+                    <td
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        fontFamily: "consolas, monospace",
+                      }}
+                    >
                       <span
-                        className={styles.text}
-                        style={{ fontWeight: "600" }}
+                        style={{ display: "flex", flexDirection: "column" }}
                       >
-                        {e?.token?.symbol}
+                        <span>
+                          {Number(e?.value).toFixed(2)} {e.token.symbol}
+                        </span>
+                        {/* <span>$0.00</span> */}
                       </span>
-                    </span>
-                  </td>
-                  <td>{e?.token?.name}</td>
-                  <td>
-                    <a href="#">{shorten(e.token?.contactAddress, 6, 4, 13)}</a>
-                  </td>
-                  <td
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      fontFamily: "consolas, monospace",
-                    }}
-                  >
-                    <span style={{ display: "flex", flexDirection: "column" }}>
-                      <span>{Number(e?.value).toFixed(2)} {e.token.symbol}</span>
-                      {/* <span>$0.00</span> */}
-                    </span>
-                  </td>
-                  <td>
-                    <Link href={`/send?token=${e.token.symbol}`}>
-                      <a style={{ color: "#1e85dd" }}>Send</a>
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <Link href={`/wallet/send?token=${e.token.symbol}`}>
+                        <a style={{ color: "#1e85dd" }}>Send</a>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

@@ -34,13 +34,14 @@ import NetworkSelector, {
 } from "page_components/wallet/network_selector";
 import WalletHeader from "page_components/wallet/header";
 import { LoaderContext } from "context/loader";
-
+import Image from "next/image";
 import styles from "styles/pages/wallet/send.module.css";
 import network_styles from "styles/pages/wallet/network_selector.module.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import TokenValue from "page_components/wallet/token_value";
 import TransactionHistory from "page_components/wallet/transaction_history";
+import { AssetProviderContext } from "context/web3/assets";
 
 type details = {
   currency: string;
@@ -56,12 +57,17 @@ const SendWalletPage: NextPageX = () => {
   const [currentNetwork] = useContext(NetworkContext);
   const [notification, pushNotification] = useNotification();
   const [network] = useContext(NetworkContext);
-  const [startLoader, stopLoader] = useContext(LoaderContext);
+  const [assets] = useContext(AssetProviderContext);
+  const [currentToken, setCurrentToken] = useState<any>();
   const router = useRouter();
+
+  const isNotNative = !!currentToken && !!router.query.token;
+
+  const [startLoader, stopLoader] = useContext(LoaderContext);
 
   const [gasPrice, setGasPrice] = useState("0");
   const [details, setDetails] = useState({
-    currency: network.nativeCurrency.symbol,
+    currency: (router.query.token as string) || network.nativeCurrency.symbol,
     amount: "0",
     address: "",
     gasLimit: "21000",
@@ -101,7 +107,7 @@ const SendWalletPage: NextPageX = () => {
 
       const balance = Number(
         await getWalletBalanceEth(provider, account.address)
-      );      
+      );
 
       const balanceFiat = Number(
         (balance <= 0
@@ -127,7 +133,6 @@ const SendWalletPage: NextPageX = () => {
         element: "Transaction Successful",
         type: "success",
       });
-
     } catch (error: any) {
       stopLoader();
 
@@ -143,7 +148,7 @@ const SendWalletPage: NextPageX = () => {
 
   function resetDetails() {
     setDetails({
-      currency: network.nativeCurrency.symbol,
+      currency: (router.query.token as string) || network.nativeCurrency.symbol,
       amount: "0",
       address: "",
       gasLimit: "21000",
@@ -176,6 +181,14 @@ const SendWalletPage: NextPageX = () => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [details]);
+
+  useEffect(() => {
+    if (assets.length) {
+      setCurrentToken(
+        assets.find((e: any) => e.token?.symbol === router.query.token)
+      );
+    }
+  }, [assets, router.query]);
 
   //details validation
   useEffect(() => {
@@ -248,10 +261,24 @@ const SendWalletPage: NextPageX = () => {
                       className={styles.input}
                       style={{ height: "4.5rem", padding: "0 2rem" }}
                     >
-                      <div className={network_styles.network_icon_box}>
-                        {networkLogoMap[network.chainName]}
-                      </div>
-                      <span>{network.nativeCurrency.symbol}</span>
+                      <span
+                        className={network_styles.network_icon_box}
+                        style={{
+                          marginRight: "1.6rem",
+                          position: "relative",
+                        }}
+                      >
+                        {currentToken?.token?.logo ? (
+                          <Image
+                            src={currentToken.token.logo}
+                            layout="fill"
+                            alt=""
+                          />
+                        ) : (
+                          networkLogoMap[network.chainName]
+                        )}
+                      </span>
+                      <span>{details.currency}</span>
                     </div>
                   </div>
                   <div className={styles.input_box}>
@@ -664,7 +691,7 @@ function TransConfirmModal({
 function TransInitModal({
   active,
   setActive,
-  txHash
+  txHash,
 }: {
   txHash: string;
   active: boolean;

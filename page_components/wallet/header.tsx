@@ -30,9 +30,11 @@ export default function WalletHeader({ children }: { children?: ReactNode }) {
       </div>
       <div className={styles.right}>
         <div className={styles.notification_icon_box}>
-          <span className={styles.icon}>
-            <NotificationSolidIcon />
-          </span>
+          <Link href="/wallet/notifications">
+            <a className={styles.icon}>
+              <NotificationSolidIcon />
+            </a>
+          </Link>
         </div>
       </div>
     </div>
