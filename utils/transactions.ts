@@ -1,4 +1,5 @@
 import Web3 from "web3";
+import { SignedTransaction } from "web3-core";
 import {
   convertToWei,
   walletTransactionBalanceValidate,
@@ -13,7 +14,7 @@ import {
     @params enderWalletAddress -> sender's wallet address
     @param sendersPrivateKey -> private key of sender
 */
-export const sendNativeToken = async (
+export const signNativeTokenTx = async (
   provider: Web3,
   amountToSend: number | string,
   decimals: number,
@@ -60,6 +61,20 @@ export const sendNativeToken = async (
       sendersPrivateKey
     );
 
+    // return signed transaction
+
+    return signedTx;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const sendNativeToken = async (
+  provider: Web3,
+  signedTx: SignedTransaction,
+
+) => {
+  try {
     // send transaction
     return await provider.eth.sendSignedTransaction(signedTx.rawTransaction!);
   } catch (error: any) {

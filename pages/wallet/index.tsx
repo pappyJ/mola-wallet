@@ -15,14 +15,8 @@ import {
   TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-import React, {
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { LoaderContext } from "context/loader";
+import React, { useContext, useRef, useState } from "react";
+// import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { NetworkContext } from "page_components/wallet/context";
 import WalletHeader from "page_components/wallet/header";
@@ -50,7 +44,7 @@ const WalletPage: NextPageX = () => {
     document.execCommand("copy");
     setCopied(true);
   }
-
+  console.log(assets);
   return (
     <main className={styles.main}>
       <WalletHeader />
@@ -186,8 +180,8 @@ const WalletPage: NextPageX = () => {
                     }}
                   >
                     <span style={{ display: "flex", flexDirection: "column" }}>
-                      <span>0 {e.nativeCurrency.symbol}</span>
-                      <span>$0.00</span>
+                      <span>{Number(e?.value).toFixed(2)} {e.token.symbol}</span>
+                      {/* <span>$0.00</span> */}
                     </span>
                   </td>
                   <td>

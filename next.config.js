@@ -2,7 +2,17 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  env: {}
+  env: {},
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.moralis.io',
+        port: '',
+        pathname: '/eth/**',
+      },
+    ],
+  },
 }
 
 module.exports = nextConfig

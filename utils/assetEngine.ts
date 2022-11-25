@@ -1,5 +1,4 @@
 import Moralis from "moralis";
-import { EvmChain } from "@moralisweb3/evm-utils";
 
 export const initAssetEngine = async () => {
   try {

@@ -5,6 +5,8 @@ import { ProviderContextComponent } from "context/web3";
 import { AssetProviderContextComponent } from "context/web3/assets";
 import { AcoountContextComponent } from "context/account";
 import LoaderContextComponent from "context/loader";
+import { useEffect } from "react";
+import { initAssetEngine } from "utils/assetEngine";
 
 function MyApp({ Component, pageProps }: AppPropsX) {
   let GivenLayout = Component.Layout;
@@ -12,6 +14,12 @@ function MyApp({ Component, pageProps }: AppPropsX) {
     <>{children}</>
   );
   let Layout = GivenLayout || DefaultLayout;
+
+  useEffect(() => {
+    (( async () => {
+      await initAssetEngine()
+    }))()
+  })
 
   return (
     <>

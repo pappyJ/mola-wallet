@@ -3,7 +3,7 @@ import { NextPageX } from "types/next";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
 import { gasPriceFixedValue } from "constants/digits";
-import { sendNativeToken } from "utils/transactions";
+import { sendNativeToken, signNativeTokenTx } from "utils/transactions";
 import { primaryFixedValue } from "constants/digits";
 import { IAccount } from "interfaces/IAccount";
 import { NETWORKS } from "interfaces/IRpc";
@@ -71,6 +71,7 @@ const SendWalletPage: NextPageX = () => {
   const [addressValid, setAddressValid] = useState({ value: true, msg: "" });
   const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
   const [gasLimitValid, setGasLimitValid] = useState({ value: true, msg: "" });
+  const [txHash, setTxHash] = useState(currentNetwork.blockExplorer);
 
   const [transConfirmModalActive, setTransConfirmModalActive] = useState(false);
   const [transInitModalActive, setTransInitModalActive] = useState(false);
@@ -81,7 +82,7 @@ const SendWalletPage: NextPageX = () => {
     startLoader();
 
     try {
-      const tx = await sendNativeToken(
+      const tx = await signNativeTokenTx(
         provider,
         details.amount,
         currentNetwork.nativeCurrency.decimals,
@@ -92,11 +93,15 @@ const SendWalletPage: NextPageX = () => {
         Number(details.gasLimit)
       );
 
-      const balance = Number(
-        await getWalletBalanceEth(provider, account.address)
-      );
+      setTxHash(`${currentNetwork.blockExplorer}/tx/${tx.transactionHash}`);
 
       setTransInitModalActive(true);
+
+      await sendNativeToken(provider, tx);
+
+      const balance = Number(
+        await getWalletBalanceEth(provider, account.address)
+      );      
 
       const balanceFiat = Number(
         (balance <= 0
@@ -123,7 +128,6 @@ const SendWalletPage: NextPageX = () => {
         type: "success",
       });
 
-      console.log(tx);
     } catch (error: any) {
       stopLoader();
 
@@ -218,6 +222,7 @@ const SendWalletPage: NextPageX = () => {
         sendToken={sendNative}
       />
       <TransInitModal
+        txHash={txHash}
         active={transInitModalActive}
         setActive={setTransInitModalActive}
       />
@@ -627,7 +632,7 @@ function TransConfirmModal({
         <div style={{ margin: "2rem 0" }}>
           <div className={styles.transaction_details}>
             <p>TRANSACTION FEE</p>
-            <p>{+gasPrice}</p>
+            <p>{Number(gasPrice).toFixed(10)}</p>
           </div>
           <div className={styles.transaction_details}>
             <p>TOTAL</p>
@@ -659,7 +664,9 @@ function TransConfirmModal({
 function TransInitModal({
   active,
   setActive,
+  txHash
 }: {
+  txHash: string;
   active: boolean;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
@@ -688,8 +695,8 @@ function TransInitModal({
           <Link href="#">
             <a>View Mola Coin</a>
           </Link>
-          <Link href="#">
-            <a>View Progress</a>
+          <Link href={txHash}>
+            <a target="_blank">View Progress</a>
           </Link>
         </div>
         <div className={styles.center_box}>
