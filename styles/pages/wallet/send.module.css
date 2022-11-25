@@ -26,6 +26,9 @@
   width: 2.4rem;
   display: flex;
   position: absolute;
+  background-color: transparent;
+  border: none;
+  color: #00244e;
 }
 
 .input_container {
@@ -94,10 +97,10 @@
   font-size: 1.5rem;
   margin-right: 1.6rem;
 }
-.section .center .caret_down_icon {
+
+.caret_down_icon {
   display: flex;
   width: 4rem;
-  height: 4rem;
 
   padding: 1rem;
   background-color: transparent;
@@ -107,12 +110,12 @@
 
 .btn {
   background-color: #00244e;
-  border: 1px solid #00244e;
   color: white;
+  border: 2px solid #00244e;
 
   border-radius: 0.5rem;
-  padding: 0 3.2rem;
-  height: 4rem;
+  padding: 0.5rem 3.2rem;
+  height: 4.2rem;
 
   letter-spacing: 0.05rem;
   font-size: 1.6rem;
@@ -120,6 +123,19 @@
 
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.btn.btn_secondary {
+  background-color: white;
+  color: #00244e;
+  font-weight: 600;
+}
+.btn:disabled {
+  cursor: not-allowed;
+  background-color: #acacac;
+  color: #444;
+  border-color: #acacac;
 }
 
 .advanced_section .left {
@@ -181,7 +197,7 @@
 }
 
 .center_box {
-  margin: 1rem 0;
+  margin: 4rem 0 1rem;
   display: flex;
   justify-content: center;
 }
@@ -209,8 +225,10 @@
 .transfer_fee_box {
   background-color: #fafafa;
   display: flex;
+  align-items: center;
+
   border-radius: 2rem;
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 1rem 3rem;
   margin-right: 1.6rem;
 }
 
@@ -277,6 +295,7 @@
 .address_input.active .dropdown {
   max-height: 50rem;
   transition: all 800ms;
+  color: #333;
 }
 
 .address_input .dropdown button {
@@ -307,4 +326,74 @@
   flex-shrink: 0;
   width: 10rem;
   display: inline-flex;
+}
+
+.trans_illustration {
+  display: flex;
+}
+.trans_illustration .icon_box {
+  margin: 0 2rem;
+  display: flex;
+  align-items: center;
+}
+.trans_illustration .arrow_right {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: #1e89dd;
+  display: flex;
+  flex-shrink: 0;
+}
+.trans_illustration .bodies {
+  background-color: #f7f7f7;
+  flex: 1 1 100%;
+  padding: 1rem;
+}
+.trans_illustration .bodies .sec {
+  margin: 1rem 0;
+  display: flex;
+  color: #333;
+  font-weight: 600;
+}
+.transaction_details {
+  padding: 1rem 0;
+  display: flex;
+}
+.transaction_details p {
+  width: 50%;
+  font-weight: 600;
+  color: #333;
+}
+.transaction_label {
+  font-size: 2rem;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  padding: 0.5rem 0;
+  font-weight: 600;
+  color: #333;
+}
+.trans_illustration h6 {
+  font-weight: 600;
+}
+
+.trans_init .tick_icon_box {
+  margin: 0 auto;
+  width: 15rem;
+  color: #1e89dd;
+}
+.trans_init .href_box {
+  margin: 2rem auto;
+  width: 80%;
+  justify-content: space-between;
+  display: flex;
+}
+.trans_init .href_box a {
+  color: #1e89dd;
+}
+
+.cards_container {
+  width: 30rem;
+  flex-shrink: 0;
+}
+.cards_container > * {
+  margin-bottom: 1rem;
 }

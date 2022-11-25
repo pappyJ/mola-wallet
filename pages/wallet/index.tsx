@@ -32,26 +32,18 @@ import Notification, { useNotification } from "components/notification";
 import NetworkSelector, {
   networkLogoMap,
 } from "page_components/wallet/network_selector";
+import { AssetProviderContext } from "context/web3/assets";
+import { shorten } from "utils/string";
 
 const WalletPage: NextPageX = () => {
   const [account] = useContext(AccountContext);
   const [currentNetwork] = useContext(NetworkContext);
   const [copied, setCopied] = useState(false);
   const [notifcation, pushNotification] = useNotification();
+  const [assets] = useContext(AssetProviderContext);
+  const [network] = useContext(NetworkContext);
 
   const copyRef = useRef<HTMLTextAreaElement>(null);
-  const [sendTokenActive, setSendTokenActive] = useState(false);
-
-  function shorten(address: string | null) {
-    if (!account.address) return "";
-
-    if (account.address.length < 11) return address;
-
-    let a = account.address.toString().slice(0, 7);
-    let b = account.address.toString().slice(-4);
-
-    return `${a}...${b}`;
-  }
 
   function copyAddress() {
     copyRef.current?.select();
@@ -78,7 +70,7 @@ const WalletPage: NextPageX = () => {
                 className={styles.wallet_id}
                 rel="noreferrer"
               >
-                {shorten(account.address)}
+                {shorten(account.address, 7, 4, 13)}
               </a>
             </div>
             <div className={styles.right}>
@@ -153,36 +145,38 @@ const WalletPage: NextPageX = () => {
             <thead>
               <tr>
                 <th>Token</th>
-                <th>Price</th>
-                <th>Market Cap</th>
-                <th>24hr</th>
+                <th>Name</th>
+                <th>View</th>
                 <th>Balance</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {" "}
-              {Object.values(NET_CONFIG).map((e, i) => (
+              {assets.map((e: any, i: number) => (
                 <tr key={i}>
                   <td>
                     <span style={{ display: "flex" }}>
                       <span
                         className={network_styles.network_icon_box}
-                        style={{ marginRight: "1.6rem" }}
+                        style={{ marginRight: "1.6rem", position: "relative" }}
                       >
-                        {networkLogoMap[e.chainName]}
+                        {e.token?.logo ? (
+                          <Image src={e.token.logo} layout="fill" alt="" />
+                        ) : (
+                          networkLogoMap[network.chainName]
+                        )}
                       </span>
                       <span
                         className={styles.text}
                         style={{ fontWeight: "600" }}
                       >
-                        {e.nativeCurrency.symbol}
+                        {e?.token?.symbol}
                       </span>
                     </span>
                   </td>
-                  <td>$1,297.80</td>
-                  <td>156.3491B</td>
-                  <td style={{ fontWeight: "600", color: "#FF0707" }}>
-                    -2.10%
+                  <td>{e?.token?.name}</td>
+                  <td>
+                    <a href="#">{shorten(e.token?.contactAddress, 6, 4, 13)}</a>
                   </td>
                   <td
                     style={{
@@ -195,6 +189,11 @@ const WalletPage: NextPageX = () => {
                       <span>0 {e.nativeCurrency.symbol}</span>
                       <span>$0.00</span>
                     </span>
+                  </td>
+                  <td>
+                    <Link href={`/send?token=${e.token.symbol}`}>
+                      <a style={{ color: "#1e85dd" }}>Send</a>
+                    </Link>
                   </td>
                 </tr>
               ))}

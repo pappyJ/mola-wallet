@@ -13,8 +13,10 @@ import { getWalletBalanceEth } from "utils/wallet";
 import { ProviderContext } from "context/web3";
 import {
   ArrowLeftIcon,
+  ArrowRightIcon,
   CaretDownOutline,
   ClockFillIcon,
+  TickHeavyIcon,
 } from "components/icons";
 import React, {
   ReactNode,
@@ -35,6 +37,10 @@ import { LoaderContext } from "context/loader";
 
 import styles from "styles/pages/wallet/send.module.css";
 import network_styles from "styles/pages/wallet/network_selector.module.css";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import TokenValue from "page_components/wallet/token_value";
+import TransactionHistory from "page_components/wallet/transaction_history";
 
 type details = {
   currency: string;
@@ -51,6 +57,7 @@ const SendWalletPage: NextPageX = () => {
   const [notification, pushNotification] = useNotification();
   const [network] = useContext(NetworkContext);
   const [startLoader, stopLoader] = useContext(LoaderContext);
+  const router = useRouter();
 
   const [gasPrice, setGasPrice] = useState("0");
   const [details, setDetails] = useState({
@@ -61,31 +68,12 @@ const SendWalletPage: NextPageX = () => {
     addData: "",
   });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (details.address && details.amount) {
-          const gasFee = await getGasPrice(
-            provider,
-            {
-              to: details.address || account.address,
-              from: account.address,
-              value: convertToWei(
-                details.amount,
-                network.nativeCurrency.decimals
-              ),
-            },
-            network.nativeCurrency.decimals
-          );
+  const [addressValid, setAddressValid] = useState({ value: true, msg: "" });
+  const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
+  const [gasLimitValid, setGasLimitValid] = useState({ value: true, msg: "" });
 
-          setGasPrice(gasFee.toFixed(gasPriceFixedValue));
-        }
-      } catch (error: any) {
-        console.log(error.message);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [details]);
+  const [transConfirmModalActive, setTransConfirmModalActive] = useState(false);
+  const [transInitModalActive, setTransInitModalActive] = useState(false);
 
   const sendNative = async (e: any) => {
     e.preventDefault();
@@ -107,6 +95,8 @@ const SendWalletPage: NextPageX = () => {
       const balance = Number(
         await getWalletBalanceEth(provider, account.address)
       );
+
+      setTransInitModalActive(true);
 
       const balanceFiat = Number(
         (balance <= 0
@@ -144,11 +134,44 @@ const SendWalletPage: NextPageX = () => {
     }
 
     stopLoader();
+    setTransConfirmModalActive(false);
   };
 
-  const [addressValid, setAddressValid] = useState({ value: true, msg: "" });
-  const [amountValid, setAmountValid] = useState({ value: true, msg: "" });
-  const [gasLimitValid, setGasLimitValid] = useState({ value: true, msg: "" });
+  function resetDetails() {
+    setDetails({
+      currency: network.nativeCurrency.symbol,
+      amount: "0",
+      address: "",
+      gasLimit: "21000",
+      addData: "",
+    });
+  }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (details.address && details.amount) {
+          const gasFee = await getGasPrice(
+            provider,
+            {
+              to: details.address || account.address,
+              from: account.address,
+              value: convertToWei(
+                details.amount,
+                network.nativeCurrency.decimals
+              ),
+            },
+            network.nativeCurrency.decimals
+          );
+
+          setGasPrice(gasFee.toFixed(gasPriceFixedValue));
+        }
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [details]);
 
   //details validation
   useEffect(() => {
@@ -158,7 +181,9 @@ const SendWalletPage: NextPageX = () => {
     else setAddressValid({ value: true, msg: "" });
 
     //amount validation
-    if (+details.amount <= 0)
+    if (isNaN(Number(details.amount)))
+      setAmountValid({ value: false, msg: "Enter a valid number" });
+    else if (+details.amount <= 0)
       setAmountValid({
         value: false,
         msg: "Enter valid amount",
@@ -171,123 +196,164 @@ const SendWalletPage: NextPageX = () => {
     else setAmountValid({ value: true, msg: "" });
 
     //gas limit validation
-    if (+details.gasLimit < 21000)
+    if (isNaN(Number(details.gasLimit)))
+      setGasLimitValid({ value: false, msg: "Enter a valid number" });
+    else if (+details.gasLimit < 21000)
       setGasLimitValid({
         value: false,
         msg: "Gas limit should not be less than 21,000",
       });
     else setGasLimitValid({ value: true, msg: "" });
-  }, [details, account, gasPrice, provider.utils]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [details, account, gasPrice]);
 
   return (
     <div className={styles.main}>
       <WalletHeader />
+      <TransConfirmModal
+        active={transConfirmModalActive}
+        setActive={setTransConfirmModalActive}
+        details={details}
+        gasPrice={gasPrice}
+        sendToken={sendNative}
+      />
+      <TransInitModal
+        active={transInitModalActive}
+        setActive={setTransInitModalActive}
+      />
       <div style={{ display: "flex" }}>
-        <div className={styles.send_container}>
-          <h2 className={styles.heading}>
-            <span className={styles.arrow_left}>
-              <ArrowLeftIcon />
-            </span>
-            Send Token
-          </h2>
+        <div>
+          <div className={styles.send_container}>
+            <h2 className={styles.heading}>
+              <button
+                className={styles.arrow_left}
+                onClick={() => router.back()}
+              >
+                <ArrowLeftIcon />
+              </button>
+              Send Token
+            </h2>
 
-          <div>
             <div>
-              <div className={styles.input_container}>
-                <div className={styles.input_box}>
-                  <label>Select Currency</label>
-                  <div
-                    className={styles.input}
-                    style={{ height: "4.5rem", padding: "0 2rem" }}
-                  >
-                    <div className={network_styles.network_icon_box}>
-                      {networkLogoMap[network.chainName]}
+              <div>
+                <div className={styles.input_container}>
+                  <div className={styles.input_box}>
+                    <label>Select Currency</label>
+                    <div
+                      className={styles.input}
+                      style={{ height: "4.5rem", padding: "0 2rem" }}
+                    >
+                      <div className={network_styles.network_icon_box}>
+                        {networkLogoMap[network.chainName]}
+                      </div>
+                      <span>{network.nativeCurrency.symbol}</span>
                     </div>
-                    <span>{network.nativeCurrency.symbol}</span>
+                  </div>
+                  <div className={styles.input_box}>
+                    <label>Amount</label>
+                    <input
+                      className={`${styles.input} ${
+                        !amountValid.value ? styles.error : ""
+                      }`}
+                      type="number"
+                      value={details.amount}
+                      onChange={(e) =>
+                        setDetails((prev) => ({
+                          ...prev,
+                          amount: e.target.value,
+                        }))
+                      }
+                    />
+                    {!amountValid.value && <span>{amountValid.msg}</span>}
                   </div>
                 </div>
-                <div className={styles.input_box}>
-                  <label>Amount</label>
-                  <input
-                    className={`${styles.input} ${
-                      !amountValid.value ? styles.error : ""
-                    }`}
-                    type="number"
-                    value={details.amount}
-                    onChange={(e) =>
-                      setDetails((prev) => ({
-                        ...prev,
-                        amount: e.target.value,
-                      }))
-                    }
-                  />
-                  {!amountValid.value && <span>{amountValid.msg}</span>}
-                </div>
-              </div>
 
-              <div
-                className={styles.input_container}
-                style={{ flexDirection: "column" }}
-              >
                 <div
-                  className={`${styles.input_box} ${styles.address_input_box} ${
-                    !addressValid.value ? styles.error : ""
-                  }`}
+                  className={styles.input_container}
+                  style={{ flexDirection: "column" }}
                 >
-                  <label>Address</label>
-                  <AddressInput
-                    address={details.address}
-                    setDetails={setDetails}
-                  />
+                  <div
+                    className={`${styles.input_box} ${
+                      styles.address_input_box
+                    } ${!addressValid.value ? styles.error : ""}`}
+                  >
+                    <label>Address</label>
+                    <AddressInput
+                      address={details.address}
+                      setDetails={setDetails}
+                    />
+                  </div>
+                  {!addressValid.value && <span>{addressValid.msg}</span>}
                 </div>
-                {!addressValid.value && <span>{addressValid.msg}</span>}
-              </div>
 
-              <div className={styles.transfer_fee_section}>
-                <h6>Transfer fee</h6>
-                <div className={styles.transfer_fee_container}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div className={styles.transfer_fee_box}>
-                      <span>0.54</span>
-                      <span className={styles.timer}>
-                        <span className={styles.clock_icon}>
-                          <ClockFillIcon />
+                <div className={styles.transfer_fee_section}>
+                  <h6>Transfer fee</h6>
+                  <div className={styles.transfer_fee_container}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <div className={styles.transfer_fee_box}>
+                        <span style={{ fontSize: "1.7rem" }}>0.54</span>
+                        <span className={styles.timer}>
+                          <span className={styles.clock_icon}>
+                            <ClockFillIcon />
+                          </span>
+                          15 mins
                         </span>
-                        15 mins
-                      </span>
+                        <button
+                          className={styles.caret_down_icon}
+                          style={{ marginLeft: "1rem", color: "#00244e" }}
+                        >
+                          <CaretDownOutline />
+                        </button>
+                      </div>
+                      {gasPrice}
                     </div>
-                    {gasPrice}
+                    <button className={styles.blue_text}>
+                      How fees are determined?
+                    </button>
                   </div>
                   <button className={styles.blue_text}>
-                    How fees are determined?
+                    Buy more {network.nativeCurrency.symbol}
                   </button>
                 </div>
-                <button className={styles.blue_text}>
-                  Buy more {network.nativeCurrency.symbol}
-                </button>
-              </div>
 
-              <SendAdvancedSection
-                hiddenComponent={
-                  <GasAndDataForm
-                    addData={details.addData}
-                    gasLimit={details.gasLimit}
-                    gasLimitValid={gasLimitValid}
-                    setDetails={setDetails}
-                  />
-                }
-              >
-                <h6>Advanced</h6>
-              </SendAdvancedSection>
-
-              <div className={styles.center_box}>
-                <button
-                  style={{ padding: "2rem 5rem" }}
-                  className={styles.btn}
-                  onClick={sendNative}
+                <SendAdvancedSection
+                  hiddenComponent={
+                    <GasAndDataForm
+                      addData={details.addData}
+                      gasLimit={details.gasLimit}
+                      gasLimitValid={gasLimitValid}
+                      setDetails={setDetails}
+                    />
+                  }
                 >
-                  Send
-                </button>
+                  <h6>Advanced</h6>
+                </SendAdvancedSection>
+
+                <div className={styles.center_box}>
+                  <button
+                    className={`${styles.btn} ${styles.btn_secondary}`}
+                    style={{ width: "15rem", marginRight: "2rem" }}
+                    onClick={resetDetails}
+                  >
+                    Clear All
+                  </button>
+                  <button
+                    style={{ width: "15rem" }}
+                    className={styles.btn}
+                    onClick={() => setTransConfirmModalActive(true)}
+                    disabled={
+                      !(
+                        gasLimitValid.value &&
+                        addressValid.value &&
+                        amountValid.value &&
+                        details.address
+                      )
+                    }
+                    // disabled={true}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -296,7 +362,17 @@ const SendWalletPage: NextPageX = () => {
             pushNotification={pushNotification}
           />
         </div>
-        <NetworkSelector />
+        <div className={styles.cards_container}>
+          <div>
+            <NetworkSelector />
+          </div>
+          <div>
+            <TokenValue />
+          </div>
+          <div>
+            <TransactionHistory />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -379,6 +455,7 @@ function GasAndDataForm({
               !gasLimitValid.value ? styles.error : ""
             }`}
             value={gasLimit}
+            type="number"
             onChange={(e) =>
               setDetails((prev) => ({
                 ...prev,
@@ -467,5 +544,164 @@ function Address({ address, nickname }: { address: string; nickname: string }) {
       <span className={styles.nickname}>{shorten(nickname, 8, 0, 10)}</span>
       <span className={styles.address}>{shorten(address, 15, 6, 24)}</span>
     </>
+  );
+}
+
+function TransConfirmModal({
+  active,
+  setActive,
+  details,
+  gasPrice,
+  sendToken,
+}: {
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  details: details;
+  gasPrice: string;
+  sendToken: (e: any) => any;
+}) {
+  const [network] = useContext(NetworkContext);
+  const [account] = useContext(AccountContext);
+  const imageRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    imageRef.current?.lastChild &&
+      imageRef.current.removeChild(imageRef.current.lastChild);
+    imageRef.current?.appendChild(
+      blockies.create({ seed: account.address, size: 10, scale: 3 })
+    );
+  }, [account.address]);
+
+  return (
+    <div
+      className={`${network_styles.modal} ${
+        active ? network_styles.active : ""
+      }`}
+    >
+      <div
+        className={`${network_styles.container} c-scroll`}
+        style={{ padding: "4rem" }}
+      >
+        <h4>TRANSACTION CONFIRMATION</h4>
+        <p style={{ fontSize: "1.7rem", padding: "1rem 0 3rem" }}>
+          Please double check everything, mola team will not be able to reverse
+          your transactions once it summited, you will still be charged gas fee
+          even if the transaction fails.{" "}
+          <Link href="#">
+            <a style={{ color: "#1e89dd" }}>Learn More</a>
+          </Link>
+        </p>
+        <div className={styles.trans_illustration}>
+          <div className={styles.bodies}>
+            <h6>SENDING</h6>
+            <div className={styles.sec}>
+              <span className={network_styles.network_icon_box}>
+                {networkLogoMap[network.chainName]}
+              </span>
+              <div>
+                <p>{details.amount}</p>
+                <p>ALL 0</p>
+              </div>
+            </div>
+          </div>
+          <div className={styles.icon_box}>
+            <span className={styles.arrow_right}>
+              <ArrowRightIcon />
+            </span>
+          </div>
+          <div className={styles.bodies}>
+            <h6>TO ADDRESS</h6>
+            <div className={styles.sec}>
+              <span
+                className={network_styles.network_icon_box}
+                ref={imageRef}
+                style={{ borderRadius: "50%", overflow: "hidden" }}
+              ></span>
+              <div>
+                <p>Username</p>
+                <p>{shorten(details.address, 8, 4, 15)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ margin: "2rem 0" }}>
+          <div className={styles.transaction_details}>
+            <p>TRANSACTION FEE</p>
+            <p>{+gasPrice}</p>
+          </div>
+          <div className={styles.transaction_details}>
+            <p>TOTAL</p>
+            <p>{+details.amount + +gasPrice}</p>
+          </div>
+        </div>
+        <div className={styles.transaction_label}>Transaction Details</div>
+        <div className={styles.center_box}>
+          <button
+            className={`${styles.btn} ${styles.btn_secondary}`}
+            style={{ minWidth: "15rem", marginRight: "2rem" }}
+            onClick={() => setActive(false)}
+          >
+            Cancel
+          </button>
+          <button
+            style={{ minWidth: "15rem" }}
+            className={styles.btn}
+            onClick={sendToken}
+          >
+            Confirm & Send
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TransInitModal({
+  active,
+  setActive,
+}: {
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <div
+      className={`${network_styles.modal} ${
+        active ? network_styles.active : ""
+      }`}
+    >
+      <div
+        className={`${network_styles.container} ${styles.trans_init} c-scroll`}
+        style={{ padding: "4rem" }}
+      >
+        <h4>TRANSACTION INITIATED</h4>
+        <div className={styles.tick_icon_box}>
+          <TickHeavyIcon />
+        </div>
+        <div style={{ margin: "2rem" }}>
+          <p style={{ textAlign: "center", fontSize: "1.7rem" }}>
+            Ones completed the token amount will be deposited to the address you
+            provided, this takes a few min depending on how conjested the
+            etherum network is.
+          </p>
+        </div>
+        <div className={styles.href_box}>
+          <Link href="#">
+            <a>View Mola Coin</a>
+          </Link>
+          <Link href="#">
+            <a>View Progress</a>
+          </Link>
+        </div>
+        <div className={styles.center_box}>
+          <button
+            className={styles.btn}
+            style={{ width: "30rem" }}
+            onClick={() => setActive(false)}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

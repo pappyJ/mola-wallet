@@ -10,14 +10,15 @@ export default function Loader({ loader }: { loader: boolean }) {
 }
 
 export function useLoader() {
-  const [active, setAcitve] = useState(false);
+  const [active, setActive] = useState(false);
 
   function startLoader() {
-    setAcitve(true);
+    setActive(true);
+    console.log("loader started");
   }
 
   function stopLoader() {
-    setAcitve(false);
+    setActive(false);
   }
 
   return { loader: active, startLoader, stopLoader };

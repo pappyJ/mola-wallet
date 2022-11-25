@@ -15,7 +15,7 @@ import {
   getWeb3Connection,
   getWalletBalanceEth,
 } from "utils/wallet";
-import { fetchWalletAssets } from "utils/assetEngine"
+import { fetchWalletAssets } from "utils/assetEngine";
 import { NETWORKS } from "interfaces/IRpc";
 import Notification, { useNotification } from "components/notification";
 import { LoaderContext } from "context/loader";
@@ -169,9 +169,12 @@ function Step2Component({
       );
       const provider = getWeb3Connection(NETWORKS.ETHEREUM);
 
-      const walletAssets = await fetchWalletAssets(wallet.address, NET_CONFIG.ETHEREUM.chainId);
+      const walletAssets = await fetchWalletAssets(
+        wallet.address,
+        NET_CONFIG.ETHEREUM.chainId
+      );
 
-      console.log(walletAssets)
+      console.log(walletAssets);
 
       const balance = Number(
         await getWalletBalanceEth(provider, wallet.address)
@@ -196,7 +199,7 @@ function Step2Component({
 
         privateKey: wallet.privateKey,
 
-        addressList: [{nickname: "my address", address: wallet.address}]
+        addressList: [{ nickname: "my address", address: wallet.address }],
       }));
 
       setProvider(provider);
@@ -205,6 +208,7 @@ function Step2Component({
 
       router.push("/wallet");
     } catch (error) {
+      console.log(error);
       stopLoader();
 
       pushNotification({

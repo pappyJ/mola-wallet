@@ -48,7 +48,9 @@ const Page: NextPageX = () => {
             </div>
           </form>
         </div>
-        <NetworkSelector />
+        <div style={{ width: "28rem", flexShrink: "0" }}>
+          <NetworkSelector />
+        </div>
       </div>
       <Notification
         notification={notifcation}

@@ -233,6 +233,8 @@
   border-radius: 0.5rem;
 }
 .bottom_section .right {
+  width: 28rem;
+  flex-shrink: 0;
   margin-left: 0.8rem;
 }
 
@@ -276,4 +278,27 @@
 }
 .token_value_table tr:not(:last-child) {
   border-bottom: 1px solid #f0f0f0;
+}
+
+.btn {
+  background-color: #00244e;
+  color: white;
+  border: 1px solid #00244e;
+
+  border-radius: 0.5rem;
+  padding: 0 3.2rem;
+  height: 4rem;
+
+  letter-spacing: 0.05rem;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.btn.btn_secondary {
+  background-color: white;
+  color: #00244e;
 }
