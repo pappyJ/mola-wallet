@@ -22,27 +22,29 @@ export default function Footer() {
         </div>
         <div className={styles.sections}>
           <h4>Mola</h4>
-          <Link href="#">
-            <a>About us</a>
-          </Link>
-          <Link href="#">
-            <a>Career</a>
-          </Link>
-          <Link href="#">
-            <a>Team</a>
-          </Link>
-          <Link href="#">
-            <a>Help Center</a>
-          </Link>
-          <Link href="#">
-            <a>Customer Support</a>
-          </Link>
-          <Link href="#">
-            <a>Security Policy</a>
-          </Link>
-          <Link href="#">
-            <a>Submit DApps</a>
-          </Link>
+          <div>
+            <Link href="#">
+              <a>About us</a>
+            </Link>
+            <Link href="#">
+              <a>Career</a>
+            </Link>
+            <Link href="#">
+              <a>Team</a>
+            </Link>
+            <Link href="#">
+              <a>Help Center</a>
+            </Link>
+            <Link href="#">
+              <a>Customer Support</a>
+            </Link>
+            <Link href="#">
+              <a>Security Policy</a>
+            </Link>
+            <Link href="#">
+              <a>Submit DApps</a>
+            </Link>
+          </div>
         </div>
         <div className={styles.sections}>
           <h4>Tools</h4>
