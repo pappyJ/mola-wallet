@@ -9,6 +9,7 @@ import { AssetProviderContext } from "context/web3/assets";
 import { NetworkContext } from "page_components/wallet/context";
 
 import { IAccount } from "interfaces/IAccount";
+import INetwork from "interfaces/INetwok";
 
 const Page: NextPageX = () => {
   const router = useRouter();
@@ -27,8 +28,8 @@ const Page: NextPageX = () => {
             onClick={() => {
               setProvider(null);
               setAccount({} as IAccount);
-              setAssetProvider([])
-              setNetwork(null)
+              setAssetProvider([]);
+              setNetwork({} as INetwork);
             }}
             className={styles.primary}
           >

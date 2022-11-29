@@ -13,11 +13,13 @@ import {
 import { useRouter } from "next/router";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { AccountContext } from "context/account";
-import WalletContext from "./context";
+import WalletContext, { NetworkContext } from "./context";
 import logout_styles from "styles/pages/wallet/logout.module.css";
 import network_styles from "styles/pages/wallet/network_selector.module.css";
 
 import { ProviderContext } from "context/web3";
+import INetwork from "interfaces/INetwok";
+import { AssetProviderContext } from "context/web3/assets";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const [account] = useContext(AccountContext);
@@ -204,6 +206,8 @@ function NavLinkDropDown({
 function LogoutModal({ active }: { active: boolean }) {
   const [, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
+  const [, setNetwork] = useContext(NetworkContext);
+  const [, setAssetProvider] = useContext(AssetProviderContext);
 
   return (
     <div
@@ -220,9 +224,11 @@ function LogoutModal({ active }: { active: boolean }) {
           <button
             onClick={() => {
               setProvider(null);
+              setAssetProvider([]);
               setAccount((prev) => {
                 return { ...prev, address: "" };
               });
+              setNetwork({} as INetwork);
             }}
             className={logout_styles.primary}
           >
