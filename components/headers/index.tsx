@@ -16,11 +16,13 @@ export default function Header() {
               />
             </a>
           </Link>
-          {links.map((e, i) => (
-            <Link key={i} href={e.href}>
-              <a>{e.title}</a>
-            </Link>
-          ))}
+          <div className={styles.nav}>
+            {links.map((e, i) => (
+              <Link key={i} href={e.href}>
+                <a>{e.title}</a>
+              </Link>
+            ))}
+          </div>
         </div>
         <div className={styles.right}>
           <Link href="/">

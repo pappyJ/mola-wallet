@@ -10,10 +10,10 @@
   color: white;
   border-radius: 0.5rem;
   padding: 1.2rem 3.6rem;
-  margin-right: 2rem;
   border: 1px solid #00244e;
   display: inline-flex;
   min-width: 20rem;
+  margin-right: 2rem;
   justify-content: center;
 }
 .action_secondary {
@@ -46,6 +46,7 @@
   border: 1px solid #99cff9;
   border-radius: 0.8rem;
   align-items: center;
+  text-align: left;
 }
 .store_button.app_store {
   margin-right: 2rem;
@@ -76,11 +77,13 @@
 /* hero */
 .hero {
   display: flex;
-  padding: 6.4rem 0 15rem;
+  align-items: center;
   width: 100%;
+  height: calc(100vh - 12rem);
+  max-height: 80rem;
 }
 .hero .left {
-  flex: 0 1 48rem;
+  flex: 0 1 50%;
   padding-top: 3.2rem;
 }
 .hero .right {
@@ -109,7 +112,6 @@
   background-size: contain;
   background-position: right center;
   background-repeat: no-repeat;
-  margin-right: 5rem;
 }
 
 .section_a {
@@ -148,7 +150,6 @@
   background-position: right top;
   background-size: cover;
   background-repeat: no-repeat;
-  padding: 2rem;
   display: flex;
 }
 .section_b .left {
@@ -159,7 +160,7 @@
   margin: 1.3rem;
 }
 .section_b .card {
-  width: 22rem;
+  max-width: 22rem;
   padding: 2rem 2rem 3rem;
   box-shadow: 0px 5px 50px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
@@ -234,6 +235,9 @@
 }
 .section_d .action_btn_container {
   padding: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mobile_app_container {
@@ -269,4 +273,103 @@
 }
 .mobile_app_container .app_store {
   margin-right: 3.2rem;
+}
+
+@media screen and (max-width: 1000px) {
+  .padder {
+    padding: 2.4rem;
+  }
+
+  .action_primary,
+  .action_secondary {
+    margin: 0 2rem 2rem;
+  }
+
+  .store_button_container {
+    justify-content: center;
+  }
+
+  .hero {
+    flex-direction: column;
+    height: auto;
+  }
+  .hero .left {
+    margin: 0 auto;
+    max-width: 72rem;
+    order: 2;
+  }
+  .hero .right {
+    order: 1;
+    width: 100%;
+    justify-content: center;
+    max-width: 72rem;
+  }
+  .hero .right .hero_img {
+    max-height: 30rem;
+  }
+
+  .hero,
+  .section_a,
+  .section_b {
+    background-image: none;
+    text-align: center;
+  }
+
+  .section_a .padder,
+  .section_b .padder,
+  .section_c .padder,
+  .section_d .padder,
+  .mobile_app_container {
+    flex-direction: column;
+  }
+
+  .section_a .left,
+  .section_a .right,
+  .section_b .left,
+  .section_b .right,
+  .section_c .left,
+  .section_c .right,
+  .section_d .left,
+  .section_d .right,
+  .mobile_app_container .left,
+  .mobile_app_container .right {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 72rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .section_c {
+    padding: 2rem;
+  }
+  .section_c .action_primary {
+    margin: 0;
+  }
+  .section_c .img {
+    height: 40rem !important;
+  }
+
+  .padder .right .img {
+    background-position: center center;
+  }
+
+  .mobile_app_container .right {
+    margin-top: 2rem;
+  }
+
+  .section_d .action_btn_container {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .store_button_container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .store_button.app_store {
+    margin: 0 0 1rem 0;
+  }
 }
