@@ -229,7 +229,7 @@ function LogoutModal({ active }: { active: boolean }) {
                 return { ...prev, address: "" };
               });
               setNetwork({} as INetwork);
-            }}
+            }}        
             className={logout_styles.primary}
           >
             Yes
