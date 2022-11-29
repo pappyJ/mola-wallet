@@ -4,6 +4,7 @@
 .card_container {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .card_container .card {
   max-width: 320px;
@@ -51,4 +52,10 @@
   margin: 2.4rem auto;
   text-align: center;
   color: #00244e;
+}
+
+@media screen and (max-width: 640px) {
+  .card_container {
+    flex-direction: column;
+  }
 }
