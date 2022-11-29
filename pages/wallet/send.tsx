@@ -1,9 +1,10 @@
+import { nanoid } from "nanoid";
 import DashBoardLayout from "page_components/wallet/layout";
 import { NextPageX } from "types/next";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
-import { gasPriceFixedValue } from "constants/digits";
-import { sendNativeToken, signNativeTokenTx } from "utils/transactions";
+import { gasPriceFixedValue, TX_STATUS, TX_TYPE } from "constants/digits";
+import { sendTxn, signNativeTokenTx, sendERC20Token } from "utils/transactions";
 import { primaryFixedValue } from "constants/digits";
 import { IAccount } from "interfaces/IAccount";
 import { NETWORKS } from "interfaces/IRpc";
@@ -42,6 +43,8 @@ import Link from "next/link";
 import TokenValue from "page_components/wallet/token_value";
 import TransactionHistory from "page_components/wallet/transaction_history";
 import { AssetProviderContext } from "context/web3/assets";
+import { fetchWalletAssets } from "utils/assetEngine";
+import { Notifier } from "utils/notifications";
 
 type details = {
   currency: string;
@@ -59,11 +62,13 @@ const SendWalletPage: NextPageX = () => {
   const [network] = useContext(NetworkContext);
   const [assets] = useContext(AssetProviderContext);
   const [currentToken, setCurrentToken] = useState<any>();
+  const [currentTxId, setCurrentTxId] = useState<string>();
   const router = useRouter();
 
   const isNotNative = !!currentToken && !!router.query.token;
 
   const [startLoader, stopLoader] = useContext(LoaderContext);
+  const [, setAssetProvider] = useContext(AssetProviderContext);
 
   const [gasPrice, setGasPrice] = useState("0");
   const [details, setDetails] = useState({
@@ -88,22 +93,58 @@ const SendWalletPage: NextPageX = () => {
     startLoader();
 
     try {
-      const tx = await signNativeTokenTx(
-        provider,
-        details.amount,
-        currentNetwork.nativeCurrency.decimals,
-        details.address,
-        account.address,
-        account.privateKey,
-        account.gasPriority!,
-        Number(details.gasLimit)
-      );
+      const tx = isNotNative
+        ? await sendERC20Token(
+            provider,
+            details.amount,
+            currentToken.token.decimals,
+            details.address,
+            account.address,
+            account.privateKey,
+            account.gasPriority!,
+            Number(details.gasLimit),
+            currentToken.token.contractAddress
+          )
+        : await signNativeTokenTx(
+            provider,
+            details.amount,
+            currentNetwork.nativeCurrency.decimals,
+            details.address,
+            account.address,
+            account.privateKey,
+            account.gasPriority!,
+            Number(details.gasLimit)
+          );
+
+      const nonce = nanoid();
+
+      setCurrentTxId(nonce);
+
+      Notifier.create(nonce, {
+        id: nonce,
+        from: account.address,
+        to: account.address,
+        txHash: tx.transactionHash!,
+        amount: +details.amount,
+        gasPrice: +gasPrice,
+        gasLimit: +details.gasLimit,
+        status: TX_STATUS.PENDING,
+        time: Date.now(),
+        direction: TX_TYPE.OUT,
+      });
 
       setTxHash(`${currentNetwork.blockExplorer}/tx/${tx.transactionHash}`);
 
       setTransInitModalActive(true);
 
-      await sendNativeToken(provider, tx);
+      await sendTxn(provider, tx);
+
+      Notifier.update(nonce, TX_STATUS.SUCCESS);
+
+      const walletAssets = await fetchWalletAssets(
+        account.address,
+        network.chainId
+      );
 
       const balance = Number(
         await getWalletBalanceEth(provider, account.address)
@@ -129,11 +170,17 @@ const SendWalletPage: NextPageX = () => {
         balanceFiat,
       }));
 
+      setAssetProvider(walletAssets);
+
       pushNotification({
         element: "Transaction Successful",
         type: "success",
       });
     } catch (error: any) {
+      console.log(error);
+
+      Notifier.update(currentTxId!, TX_STATUS.FAILED);
+
       stopLoader();
 
       pushNotification({
@@ -205,7 +252,11 @@ const SendWalletPage: NextPageX = () => {
         value: false,
         msg: "Enter valid amount",
       });
-    else if (+details.amount + +gasPrice > account.balance)
+    else if (
+      (!isNotNative && +details.amount + +gasPrice > account.balance) ||
+      +details.amount > +currentToken?.value ||
+      +gasPrice > account.balance
+    )
       setAmountValid({
         value: false,
         msg: "Total transaction cost is less than balance",
@@ -278,7 +329,11 @@ const SendWalletPage: NextPageX = () => {
                           networkLogoMap[network.chainName]
                         )}
                       </span>
-                      <span>{details.currency}</span>
+                      <span>
+                        {isNotNative
+                          ? details.currency
+                          : currentNetwork.nativeCurrency.symbol}
+                      </span>
                     </div>
                   </div>
                   <div className={styles.input_box}>
@@ -401,9 +456,7 @@ const SendWalletPage: NextPageX = () => {
           <div>
             <TokenValue />
           </div>
-          <div>
-            <TransactionHistory />
-          </div>
+          <div>{Notifier.state ? <TransactionHistory /> : <></>}</div>
         </div>
       </div>
     </div>

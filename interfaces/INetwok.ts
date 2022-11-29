@@ -1,5 +1,3 @@
-import { NETWORKS } from "interfaces/IRpc";
-
 export default interface INetwork {
   test: boolean;
   
