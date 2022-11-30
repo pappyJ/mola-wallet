@@ -434,36 +434,41 @@ function AddressList() {
 
   if (!account.addressList?.length) return <></>;
   return (
-    <table className={styles.address_list}>
-      <EditAddressModal
-        editActive={editActive}
-        setEditAcitve={setEditActive}
-        editAddress={editAddress}
-      />
-      <tr className={styles.list_header}>
-        <th>#</th>
-        <th style={{ width: "25%" }}>Nickname</th>
-        <th style={{ width: "75%" }}>Address</th>
-        <th></th>
-      </tr>
-      {account.addressList?.map((e, i) => (
-        <tr key={`${e.address}${e.nickname}${i}${Date.now()}`}>
-          <td>{i + 1}</td>
-          <td>{shorten(e.nickname, 10, 5, 20)}</td>
-          <td>
-            <Address address={e.address} />
-          </td>
-          <td>
-            <button
-              className={styles.edit_btn}
-              onClick={() => activateEdit(e.address)}
-            >
-              Edit
-            </button>
-          </td>
+    <div
+      style={{ overflowX: "auto", padding: "0.2rem", marginTop: "3rem" }}
+      className="c-scroll mini"
+    >
+      <table className={styles.address_list}>
+        <EditAddressModal
+          editActive={editActive}
+          setEditAcitve={setEditActive}
+          editAddress={editAddress}
+        />
+        <tr className={styles.list_header}>
+          <th>#</th>
+          <th style={{ width: "25%" }}>Nickname</th>
+          <th style={{ width: "75%" }}>Address</th>
+          <th></th>
         </tr>
-      ))}
-    </table>
+        {account.addressList?.map((e, i) => (
+          <tr key={`${e.address}${e.nickname}${i}${Date.now()}`}>
+            <td>{i + 1}</td>
+            <td>{shorten(e.nickname, 10, 5, 20)}</td>
+            <td>
+              <Address address={e.address} />
+            </td>
+            <td>
+              <button
+                className={styles.edit_btn}
+                onClick={() => activateEdit(e.address)}
+              >
+                Edit
+              </button>
+            </td>
+          </tr>
+        ))}
+      </table>
+    </div>
   );
 }
 

@@ -39,7 +39,7 @@ const Page: NextPageX = () => {
   return (
     <div className={styles.main}>
       <WalletHeader />
-      <div style={{ display: "flex" }}>
+      <div className={styles.padder}>
         {!signed ? (
           <div className={styles.container} key={1}>
             <h2>Sign Message</h2>
@@ -71,7 +71,7 @@ const Page: NextPageX = () => {
             </form>
           </div>
         )}
-        <div style={{ width: "28rem", flexShrink: "0" }}>
+        <div className={styles.network_selector_container}>
           <NetworkSelector />
         </div>
       </div>

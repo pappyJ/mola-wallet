@@ -83,6 +83,8 @@
 
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .priorities_container {
@@ -93,7 +95,7 @@
   align-items: center;
 
   width: calc(100% - 0.6rem);
-  padding: 1.4rem 2rem;
+  padding: 1.4rem 1rem 1.4rem 1.6rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 1rem;
 
@@ -116,7 +118,8 @@
 .priorities_box .icon_box {
   width: 2rem;
   height: 2rem;
-  margin-right: 3.2rem;
+  flex-shrink: 0;
+  margin-right: 2.4rem;
   display: inline-flex;
   color: #1e89dd;
 }
@@ -132,7 +135,7 @@
 }
 
 .priorities_box .time_box {
-  width: 10rem;
+  width: 8rem;
   color: #1e89dd;
   font-weight: 600;
 
@@ -323,7 +326,6 @@
   border: none;
   border-radius: 1.2rem;
   width: 100%;
-  margin: 3rem 0;
   border-collapse: collapse;
   outline: 1px solid #bfbfbf;
 }
@@ -484,4 +486,55 @@
 }
 .select_currency .options_container button:first-child {
   margin-top: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 0;
+    background-color: transparent;
+  }
+
+  .section {
+    padding: 1.6rem 2rem !important;
+    background-color: white;
+  }
+
+  .caret_down_icon {
+    padding: 0 !important;
+    width: 2.4rem !important;
+    height: 2.4rem !important;
+  }
+
+  .container .section .center {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .container .section .center .btn {
+    width: fit-content;
+    margin: 0 auto;
+  }
+  .container .section .center p {
+    flex: 0 0 100%;
+    margin-bottom: 1rem;
+  }
+
+  .import_file {
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.2rem;
+  }
+  .import_file button {
+    margin: 0 0 1rem !important;
+  }
+
+  .priorities_box .icon_box {
+    margin-right: 1.6rem;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .priorities_box .time_box {
+    flex-shrink: 0;
+  }
 }

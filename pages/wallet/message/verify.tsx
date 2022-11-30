@@ -35,7 +35,7 @@ const Page: NextPageX = () => {
   return (
     <div className={styles.main}>
       <WalletHeader />
-      <div style={{ display: "flex" }}>
+      <div className={styles.padder}>
         <div className={styles.container}>
           <h2>Verify Message</h2>
           <form spellCheck={false} onSubmit={verifyMessage}>
@@ -48,7 +48,7 @@ const Page: NextPageX = () => {
             </div>
           </form>
         </div>
-        <div style={{ width: "28rem", flexShrink: "0" }}>
+        <div className={styles.network_selector_container}>
           <NetworkSelector />
         </div>
       </div>

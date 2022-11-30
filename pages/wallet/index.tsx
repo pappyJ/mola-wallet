@@ -132,7 +132,7 @@ const WalletPage: NextPageX = () => {
         </div>
       </div>
       <div className={styles.bottom_section}>
-        <div className={styles.token_value_table}>
+        <div className={`${styles.token_value_table} c-scroll`}>
           <h4>MY TOKENS VALUE</h4>
           <p className={styles.token_value}>$0.00</p>
           <table>
@@ -140,7 +140,6 @@ const WalletPage: NextPageX = () => {
               <tr>
                 <th>Token</th>
                 <th>Name</th>
-                <th>View</th>
                 <th>Balance</th>
                 <th></th>
               </tr>
@@ -173,11 +172,7 @@ const WalletPage: NextPageX = () => {
                       </span>
                     </td>
                     <td>{e?.token?.name}</td>
-                    <td>
-                      <a href="#">
-                        {shorten(e.token?.contactAddress, 6, 4, 13)}
-                      </a>
-                    </td>
+
                     <td
                       style={{
                         display: "flex",
@@ -186,12 +181,14 @@ const WalletPage: NextPageX = () => {
                       }}
                     >
                       <span
-                        style={{ display: "flex", flexDirection: "column" }}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          flexWrap: "wrap",
+                        }}
                       >
-                        <span>
-                          {Number(e?.value).toFixed(2)} {e.token.symbol}
-                        </span>
-                        {/* <span>$0.00</span> */}
+                        <span>{Number(e?.value).toFixed(2)} </span>
+                        <span>{e.token.symbol}</span>
                       </span>
                     </td>
                     <td>
