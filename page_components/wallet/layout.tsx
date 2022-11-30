@@ -5,6 +5,7 @@ import {
   CaretDownOutline,
   DashboardIcon,
   LogoutIcon,
+  MenuIcon,
   MenuIcon2,
   MessageIcon,
   SettingsIcon,
@@ -46,39 +47,12 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
       <LogoutModal active={logoutModalActive} />
       <div className={styles.main}>
         <div className={`${styles.left} c-scroll`}>
-          <h1>
-            <Link href="/wallet">
-              <a>
-                <span className={styles.logo_image_container}>
-                  <Image
-                    layout="fill"
-                    src="/mola-logo-1.png"
-                    alt="mola digital logo"
-                  />
-                </span>
-                Mola Digital
-              </a>
-            </Link>
-          </h1>
-          <nav>
-            <ul>
-              {links.map((e, i) =>
-                e.child ? (
-                  <NavLinkDropDown e={e} key={i} />
-                ) : (
-                  <NavLink e={e} key={i} />
-                )
-              )}
-              <li className={styles.li}>
-                <a className={styles.anchor} href="#logout">
-                  <span className={styles.icon}>
-                    <LogoutIcon />
-                  </span>
-                  <span className={styles.text}>Logout</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <div className={styles.lg}>
+            <SideNav />
+          </div>
+          <div className={styles.md} style={{ height: "100%" }}>
+            <MdHeader />
+          </div>
         </div>
         <div className={styles.right}>
           <div className={styles.section}>{children}</div>
@@ -103,7 +77,6 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
 
 const links = [
   { text: "Dashboard", href: "/wallet", icon: DashboardIcon },
-  { text: "Nft Manager", href: "/wallet/nft", icon: UserIcon },
   { text: "DApps", href: "/wallet/d_apps", icon: MenuIcon2 },
   {
     text: "Message",
@@ -122,6 +95,87 @@ const links = [
   },
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
 ];
+
+function MdHeader() {
+  const [modalActive, setModalActive] = useState(false);
+  const router = useRouter();
+
+  function closeModal() {
+    setModalActive(false);
+  }
+
+  useEffect(() => {
+    router.events.on("routeChangeComplete", closeModal);
+    return () => {
+      router.events.off("routeChangeComplete", closeModal);
+    };
+  }, [router]);
+
+  return (
+    <>
+      <header className={styles.header}>
+        <button className={styles.menu} onClick={() => setModalActive(true)}>
+          <MenuIcon />
+        </button>
+      </header>
+      <div
+        className={`${styles.side_nav_modal} ${
+          modalActive ? styles.active : ""
+        }`}
+        onFocus={() => setModalActive(false)}
+        tabIndex={1}
+      >
+        <div
+          className={styles.side_nav_container}
+          onFocusCapture={(e) => e.stopPropagation()}
+        >
+          <SideNav />
+        </div>
+      </div>
+    </>
+  );
+}
+
+function SideNav() {
+  return (
+    <>
+      {" "}
+      <h1>
+        <Link href="/wallet">
+          <a>
+            <span className={styles.logo_image_container}>
+              <Image
+                layout="fill"
+                src="/mola-logo-1.png"
+                alt="mola digital logo"
+              />
+            </span>
+            Mola Digital
+          </a>
+        </Link>
+      </h1>
+      <nav>
+        <ul>
+          {links.map((e, i) =>
+            e.child ? (
+              <NavLinkDropDown e={e} key={i} />
+            ) : (
+              <NavLink e={e} key={i} />
+            )
+          )}
+          <li className={styles.li}>
+            <a className={styles.anchor} href="#logout">
+              <span className={styles.icon}>
+                <LogoutIcon />
+              </span>
+              <span className={styles.text}>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </>
+  );
+}
 
 function NavLink({
   e: { href, icon: Icon, text },
@@ -229,7 +283,7 @@ function LogoutModal({ active }: { active: boolean }) {
                 return { ...prev, address: "" };
               });
               setNetwork({} as INetwork);
-            }}        
+            }}
             className={logout_styles.primary}
           >
             Yes
