@@ -3,64 +3,46 @@ import network_styles from "styles/pages/wallet/network_selector.module.css";
 import { shorten } from "utils/string";
 import { useRef, useEffect } from "react";
 import blockies from "ethereum-blockies";
+import { Notifier } from "utils/notifications";
+import { INotification } from "interfaces/INotification";
+import { TX_STATUS, TX_TYPE } from "constants/digits";
 
-type transactionList = {
-  address: string;
-  amount: string;
-  status: string;
-  direction: string;
-  time: number;
-};
-
-export default function TransactionHistory() {
-  function getTransactionHistory(): transactionList[] {
-    return [
-      {
-        address: "0xb7409a1046b02b1b6970507871B8B9cc5dA546a4",
-        amount: "0.0001ETH",
-        status: "pending",
-        direction: "out",
-        time: Date.now(),
-      },
-      {
-        address: "0xb7409a1046b02b1b6970507871B8B9cc5dA546a4",
-        amount: "0.0001ETH",
-        status: "completed",
-        direction: "out",
-        time: Date.now(),
-      },
-    ];
-  }
+export default function TransactionHistory({ network }: { network: string }) {
+  const notifications = Object.values(Notifier.state).filter(
+    (notifier) => notifier.chain === network
+  );
 
   return (
     <div className={styles.main}>
       <p className={styles.heading}>TX History</p>
       <div style={{ margin: "2rem 0 4rem" }}>
-        {getTransactionHistory().map((e, i) => (
-          <List key={i} e={e} />
-        ))}
+        {notifications.length > 0 ? (
+          notifications.map((e) => <List key={e?.id} e={e} />)
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
 }
 
-function List({ e }: { e: transactionList }) {
+function List({ e }: { e: INotification }) {
   const imageRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     imageRef.current?.lastChild &&
       imageRef.current.removeChild(imageRef.current.lastChild);
     imageRef.current?.appendChild(
-      blockies.create({ seed: e.address, size: 10, scale: 3 })
+      blockies.create({ seed: e.from, size: 10, scale: 3 })
     );
-  }, [e.address]);
+  }, [e.from]);
 
   return (
     <div
       className={`${styles.list} ${
-        e.status === "pending"
+        e.status === TX_STATUS.PENDING
           ? styles.pending
-          : e.direction === "in"
+          : e.direction === TX_TYPE.IN
           ? styles.in
           : styles.out
       }`}
@@ -73,7 +55,7 @@ function List({ e }: { e: transactionList }) {
       <div style={{ width: "100%", marginLeft: "0.5rem" }}>
         <p>
           <span className={styles.field_label}>From:</span>
-          {shorten(e.address, 8, 4, 15)}
+          {shorten(e.from, 8, 4, 15)}
         </p>
         <p>
           <span className={styles.field_label}>Amount:</span>

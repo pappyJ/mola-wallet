@@ -21,7 +21,7 @@ import { primaryFixedValue } from "constants/digits";
 import { getCoinUSD } from "utils/priceFeed";
 import styles from "styles/pages/wallet/network_selector.module.css";
 import { LoaderContext } from "context/loader";
-import { fetchWalletAssets } from "utils/assetEngine"
+import { fetchWalletAssets } from "utils/assetEngine";
 import { AssetProviderContext } from "context/web3/assets";
 
 export const networkLogoMap: { [key: string]: JSX.Element } = {
@@ -39,7 +39,7 @@ export default function NetworkSelector() {
   const [account, setAccount] = useContext(AccountContext);
   const [provider, setProvider] = useContext(ProviderContext);
   const [modalActive, setModalActive] = useState(false);
-  const [blockNumber, setBlockNumber] = useState('0');
+  const [blockNumber, setBlockNumber] = useState("0");
   const [filter, setFilter] = useState("main");
   const [startLoader, stopLoader] = useContext(LoaderContext);
   const [, setAssetProvider] = useContext(AssetProviderContext);
@@ -49,7 +49,10 @@ export default function NetworkSelector() {
     try {
       const provider = getWeb3Connection(network.chainName as NETWORKS);
 
-      const walletAssets = await fetchWalletAssets(account.address, network.chainId);
+      const walletAssets = await fetchWalletAssets(
+        account.address,
+        network.chainId
+      );
 
       const balance = Number(
         await getWalletBalanceEth(provider, account.address)
@@ -101,7 +104,7 @@ export default function NetworkSelector() {
   }
 
   function networkFilterFunction(e: INET_CONFIG) {
-    if (filter === "main") return e.test == false;
+    if (filter === "main") return e.test === false;
     else if (filter === "test") return e.test === true;
     else return true;
   }
@@ -112,12 +115,13 @@ export default function NetworkSelector() {
 
   useEffect(() => {
     (async () => {
-      const latesBlock = await provider.eth.getBlockNumber();
+      if (provider) {
+        const latesBlock = await provider.eth.getBlockNumber();
 
-      setBlockNumber(latesBlock.toLocaleString() )
-    })()
- 
-  },[])
+        setBlockNumber(latesBlock.toLocaleString());
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -145,7 +149,7 @@ export default function NetworkSelector() {
           <div>
             {network.nativeCurrency.symbol} - {network.nativeCurrency.name}
           </div>
-          <div>Last Block: { blockNumber }</div>
+          <div>Last Block: {blockNumber}</div>
         </div>
       </button>
       <div className={`${styles.modal} ${modalActive ? styles.active : ""}`}>

@@ -174,8 +174,6 @@ function Step2Component({
         NET_CONFIG.ETHEREUM.chainId
       );
 
-      console.log(walletAssets);
-
       const balance = Number(
         await getWalletBalanceEth(provider, wallet.address)
       );

@@ -13,3 +13,15 @@ export enum GAS_PRIORITY {
   HIGH = 0.025,
   HIGHEST = 0.05,
 }
+
+export enum TX_STATUS {
+  SUCCESS,
+  PENDING,
+  FAILED,
+}
+
+export enum TX_TYPE {
+  IN,
+  OUT,
+  SWAP,
+}
