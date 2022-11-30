@@ -132,7 +132,7 @@ const SendWalletPage: NextPageX = () => {
         time: Date.now(),
         direction: TX_TYPE.OUT,
         chain: currentNetwork.chainName,
-        txLink: `${currentNetwork.blockExplorer}/tx/${tx.transactionHash}`
+        txLink: `${currentNetwork.blockExplorer}/tx/${tx.transactionHash}`,
       });
 
       setTxHash(`${currentNetwork.blockExplorer}/tx/${tx.transactionHash}`);
