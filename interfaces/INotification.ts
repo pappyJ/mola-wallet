@@ -10,7 +10,9 @@ export interface INotification {
   gasLimit: number;
   status: TX_STATUS;
   time: number;
-  direction: TX_TYPE
+  direction: TX_TYPE;
+  chain: string;
+  txLink: string;
 }
 
 export interface INotifications {

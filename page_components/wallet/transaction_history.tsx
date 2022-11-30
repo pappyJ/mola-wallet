@@ -7,41 +7,20 @@ import { Notifier } from "utils/notifications";
 import { INotification } from "interfaces/INotification";
 import { TX_STATUS, TX_TYPE } from "constants/digits";
 
-type transactionList = {
-  address: string;
-  amount: string;
-  status: string;
-  direction: string;
-  time: number;
-};
-
-export default function TransactionHistory() {
-  function getTransactionHistory(): transactionList[] {
-    return [
-      {
-        address: "0xb7409a1046b02b1b6970507871B8B9cc5dA546a4",
-        amount: "0.0001ETH",
-        status: "pending",
-        direction: "out",
-        time: Date.now(),
-      },
-      {
-        address: "0xb7409a1046b02b1b6970507871B8B9cc5dA546a4",
-        amount: "0.0001ETH",
-        status: "completed",
-        direction: "out",
-        time: Date.now(),
-      },
-    ];
-  }
+export default function TransactionHistory({ network }: { network: string }) {
+  const notifications = Object.values(Notifier.state).filter(
+    (notifier) => notifier.chain === network
+  );
 
   return (
     <div className={styles.main}>
       <p className={styles.heading}>TX History</p>
       <div style={{ margin: "2rem 0 4rem" }}>
-        {Object.values(Notifier.state).map((e) => (
-          <List key={e.id} e={e} />
-        ))}
+        {notifications.length > 0 ? (
+          notifications.map((e) => <List key={e?.id} e={e} />)
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

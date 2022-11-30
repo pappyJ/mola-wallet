@@ -131,6 +131,8 @@ const SendWalletPage: NextPageX = () => {
         status: TX_STATUS.PENDING,
         time: Date.now(),
         direction: TX_TYPE.OUT,
+        chain: currentNetwork.chainName,
+        txLink: `${currentNetwork.blockExplorer}/tx/${tx.transactionHash}`
       });
 
       setTxHash(`${currentNetwork.blockExplorer}/tx/${tx.transactionHash}`);
@@ -456,7 +458,9 @@ const SendWalletPage: NextPageX = () => {
           <div>
             <TokenValue />
           </div>
-          <div>{Notifier.state ? <TransactionHistory /> : <></>}</div>
+          <div>
+            <TransactionHistory network={network.chainName} />
+          </div>
         </div>
       </div>
     </div>
@@ -772,11 +776,11 @@ function TransInitModal({
           </p>
         </div>
         <div className={styles.href_box}>
-          <Link href="#">
-            <a>View Mola Coin</a>
-          </Link>
           <Link href={txHash}>
-            <a target="_blank">View Progress</a>
+            <a target="_blank">View On Explorer</a>
+          </Link>
+          <Link href="/wallet/notifications">
+            <a>View Progress</a>
           </Link>
         </div>
         <div className={styles.center_box}>

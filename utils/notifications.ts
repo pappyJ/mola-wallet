@@ -1,12 +1,15 @@
 import { TX_STATUS, TX_TYPE } from "constants/digits";
 import { INotification, INotifications } from "interfaces/INotification";
+import { NETWORKS } from "interfaces/IRpc";
 
 export class Notifier {
 
   static get state() {
     const store: typeof window.localStorage = window.localStorage;
 
-    return JSON.parse(store.getItem(Notifier.keyName)!) as INotifications;
+    const notificationBank = JSON.parse(store.getItem(Notifier.keyName)!) as INotifications
+
+    return notificationBank || {};
   }
 
   static get keyName() {
@@ -42,7 +45,8 @@ export const buildNotification = (
   amount: number,
   gasPrice: number,
   gasLimit: number,
-  storage: typeof Notifier
+  chain: NETWORKS,
+  txLink: string,
 ) => {
   const notification : INotification = {
     id,
@@ -55,9 +59,11 @@ export const buildNotification = (
     time: Date.now(),
     status: TX_STATUS.PENDING,
     direction: TX_TYPE.IN,
+    chain,
+    txLink
   };
 
-  storage.create(id, notification);
+  Notifier.create(id, notification);
 
   return true;
 };
