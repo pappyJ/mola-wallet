@@ -302,3 +302,21 @@
   background-color: white;
   color: #00244e;
 }
+
+@media screen and (max-width: 800px) {
+  .card_section {
+    flex-direction: column;
+  }
+  .card_section .balance_section {
+    margin: 0 0 1.6rem 0;
+  }
+  .card_section .buy_with_card_section {
+    margin: 0;
+  }
+  .bottom_section {
+    flex-direction: column;
+  }
+  .bottom_section .right {
+    display: none;
+  }
+}
