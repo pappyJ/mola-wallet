@@ -8,9 +8,12 @@ import { INotification } from "interfaces/INotification";
 import { TX_STATUS, TX_TYPE } from "constants/digits";
 
 export default function TransactionHistory({ network }: { network: string }) {
-  const notifications = Object.values(Notifier.state).filter(
-    (notifier) => notifier.chain === network
-  );
+  const notifications =
+    typeof window !== "undefined"
+      ? Object.values(Notifier.state).filter(
+          (notifier) => notifier.chain === network
+        )
+      : [];
 
   return (
     <div className={styles.main}>
