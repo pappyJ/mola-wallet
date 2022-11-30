@@ -25,12 +25,24 @@ import { AssetProviderContext } from "context/web3/assets";
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const [account] = useContext(AccountContext);
   const [logoutModalActive, setLogoutModalActive] = useState(false);
+  const [modalActive, setModalActive] = useState(false);
   const router = useRouter();
 
   function activateLogout() {
     if (window.location.hash === "#logout") setLogoutModalActive(true);
     else setLogoutModalActive(false);
   }
+
+  function closeModal() {
+    setModalActive(false);
+  }
+
+  useEffect(() => {
+    router.events.on("routeChangeComplete", closeModal);
+    return () => {
+      router.events.off("routeChangeComplete", closeModal);
+    };
+  }, [router]);
 
   useEffect(() => {
     if (!account?.address) router.replace("/wallet/access");
@@ -51,7 +63,14 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
             <SideNav />
           </div>
           <div className={styles.md} style={{ height: "100%" }}>
-            <MdHeader />
+            <header className={styles.header}>
+              <button
+                className={styles.menu}
+                onClick={() => setModalActive(true)}
+              >
+                <MenuIcon />
+              </button>
+            </header>
           </div>
         </div>
         <div className={styles.right}>
@@ -69,6 +88,20 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
           </footer>
+        </div>
+        <div
+          className={`${styles.side_nav_modal} ${
+            modalActive ? styles.active : ""
+          }`}
+          onFocus={() => setModalActive(false)}
+          tabIndex={1}
+        >
+          <div
+            className={styles.side_nav_container}
+            onFocusCapture={(e) => e.stopPropagation()}
+          >
+            <SideNav />
+          </div>
         </div>
       </div>
     </WalletContext>
@@ -96,51 +129,11 @@ const links = [
   { text: "Settings", href: "/wallet/settings", icon: SettingsIcon },
 ];
 
-function MdHeader() {
-  const [modalActive, setModalActive] = useState(false);
-  const router = useRouter();
-
-  function closeModal() {
-    setModalActive(false);
-  }
-
-  useEffect(() => {
-    router.events.on("routeChangeComplete", closeModal);
-    return () => {
-      router.events.off("routeChangeComplete", closeModal);
-    };
-  }, [router]);
-
-  return (
-    <>
-      <header className={styles.header}>
-        <button className={styles.menu} onClick={() => setModalActive(true)}>
-          <MenuIcon />
-        </button>
-      </header>
-      <div
-        className={`${styles.side_nav_modal} ${
-          modalActive ? styles.active : ""
-        }`}
-        onFocus={() => setModalActive(false)}
-        tabIndex={1}
-      >
-        <div
-          className={styles.side_nav_container}
-          onFocusCapture={(e) => e.stopPropagation()}
-        >
-          <SideNav />
-        </div>
-      </div>
-    </>
-  );
-}
-
 function SideNav() {
   return (
     <>
       {" "}
-      <h1>
+      <h1 className={styles.nav_head}>
         <Link href="/wallet">
           <a>
             <span className={styles.logo_image_container}>
@@ -154,7 +147,7 @@ function SideNav() {
           </a>
         </Link>
       </h1>
-      <nav>
+      <nav className={styles.nav}>
         <ul>
           {links.map((e, i) =>
             e.child ? (

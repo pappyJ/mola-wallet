@@ -28,14 +28,16 @@
   border: 3px solid #f5f5f5;
 }
 
-.main > .left h1 a {
+.main .nav_head a {
   padding: 4rem 0 1.6rem 3.2rem;
   font-weight: 600;
 
   display: flex;
   align-items: center;
+
+  color: white;
 }
-.main > .left .logo_image_container {
+.main .logo_image_container {
   display: flex;
   width: 3.2rem;
   height: 3.2rem;
@@ -43,13 +45,13 @@
   margin-right: 1.6rem;
 }
 
-.main > .left nav {
+.main .nav {
   padding: 2.4rem 0 0 3.2rem;
 }
-.main > .left nav ul {
+.main .nav ul {
   width: 100%;
 }
-.main > .left nav .li {
+.main .nav .li {
   list-style: none;
   width: 100%;
   margin: 2rem 0;
@@ -58,49 +60,49 @@
   border-bottom-left-radius: 1rem;
 }
 
-.main > .left nav .li2 {
+.main .nav .li2 {
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 1rem;
   height: 0;
   overflow: hidden;
 }
 
-.main > .left nav .li.open .li2 {
+.main .nav .li.open .li2 {
   height: auto;
   margin: 1rem 0 0 4rem;
 }
 
-.main > .left nav .li.active {
+.main .nav .li.active {
   background-color: #f5f5f5;
   color: #00244e;
   font-weight: 600;
 }
-.main > .left nav .li2.active {
+.main .nav .li2.active {
   background-color: #f5f5f5;
   color: #00244e;
   font-weight: 600;
 }
 
-.main > .left nav .li .anchor {
+.main .nav .li .anchor {
   display: flex;
   align-items: center;
   width: 100%;
   padding: 1rem 0 1rem 2.4rem;
 }
-.main > .left nav .li .icon {
+.main .nav .li .icon {
   display: inline-flex;
   width: 2rem;
   height: 2rem;
   margin-right: 1.6rem;
   flex: 0 0 2rem;
 }
-.main > .left nav ul .li .text {
+.main .nav ul .li .text {
   flex: 0 1 100%;
   font-size: 1.6rem;
   line-height: 1.5rem;
 }
 
-.main > .left nav .li .drop_icon {
+.main .nav .li .drop_icon {
   width: 2rem;
   height: 1.6rem;
   display: inline-block;
@@ -110,7 +112,7 @@
   border: none;
   color: inherit;
 }
-.main > .left nav .li.open .drop_icon {
+.main .nav .li.open .drop_icon {
   transform: rotate(-180deg);
 }
 
