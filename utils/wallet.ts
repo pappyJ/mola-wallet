@@ -5,15 +5,17 @@ import saveFile from "js-file-download";
 import PROVIDERS from "./config";
 import { NETWORKS } from "interfaces/IRpc";
 import { EncryptedKeystoreV3Json } from "web3-core";
-import { primaryFixedValue } from 'constants/digits'
-import { WALLET_PATH } from 'constants/networks'
+import { primaryFixedValue } from "constants/digits";
+import { WALLET_PATH } from "constants/networks";
 
 let web3: Web3;
 
-export const getWeb3Connection = (network: NETWORKS) => {
+export const getWeb3Connection = (network: NETWORKS, ws?: boolean) => {
   const selectProvider = PROVIDERS.getProvider(network);
 
-  const connection = new Web3(selectProvider.jsonRpc);
+  const connection = new Web3(
+    ws ? selectProvider.wsRpc : selectProvider.jsonRpc
+  );
 
   web3 = connection;
 
@@ -88,4 +90,6 @@ export const getWalletBalanceEth = async (
   provider: Web3,
   address: string
 ): Promise<string> =>
-  Number(provider.utils.fromWei(await provider.eth.getBalance(address), "ether")).toFixed(primaryFixedValue);
+  Number(
+    provider.utils.fromWei(await provider.eth.getBalance(address), "ether")
+  ).toFixed(primaryFixedValue);

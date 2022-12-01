@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import type { AppPropsX } from "types/next";
 import Head from "next/head";
 import { ProviderContextComponent } from "context/web3";
+import { SocketProviderContextComponent } from "context/web3/socket";
 import { AssetProviderContextComponent } from "context/web3/assets";
 import { AcoountContextComponent } from "context/account";
 import LoaderContextComponent from "context/loader";
@@ -16,10 +17,10 @@ function MyApp({ Component, pageProps }: AppPropsX) {
   let Layout = GivenLayout || DefaultLayout;
 
   useEffect(() => {
-    (( async () => {
-      await initAssetEngine()
-    }))()
-  })
+    (async () => {
+      await initAssetEngine();
+    })();
+  });
 
   return (
     <>
@@ -29,13 +30,15 @@ function MyApp({ Component, pageProps }: AppPropsX) {
       </Head>
       <LoaderContextComponent>
         <ProviderContextComponent>
-          <AssetProviderContextComponent>
-            <AcoountContextComponent>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </AcoountContextComponent>
-          </AssetProviderContextComponent>
+          <SocketProviderContextComponent>
+            <AssetProviderContextComponent>
+              <AcoountContextComponent>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </AcoountContextComponent>
+            </AssetProviderContextComponent>
+          </SocketProviderContextComponent>
         </ProviderContextComponent>
       </LoaderContextComponent>
     </>

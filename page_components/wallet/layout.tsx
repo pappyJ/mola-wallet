@@ -22,6 +22,7 @@ import { ProviderContext } from "context/web3";
 import INetwork from "interfaces/INetwok";
 import { AssetProviderContext } from "context/web3/assets";
 import { IAccount } from "interfaces/IAccount";
+import { Notifier } from "utils/notifications";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const [account] = useContext(AccountContext);
@@ -275,6 +276,7 @@ function LogoutModal({ active }: { active: boolean }) {
               setAssetProvider([]);
               setAccount(defaultAccount);
               setNetwork(defaultNetwork);
+              Notifier.clear();
             }}
             className={logout_styles.primary}
           >

@@ -3,11 +3,12 @@ import { INotification, INotifications } from "interfaces/INotification";
 import { NETWORKS } from "interfaces/IRpc";
 
 export class Notifier {
-
   static get state() {
     const store: typeof window.localStorage = window.localStorage;
 
-    const notificationBank = JSON.parse(store.getItem(Notifier.keyName)!) as INotifications
+    const notificationBank = JSON.parse(
+      store.getItem(Notifier.keyName)!
+    ) as INotifications;
 
     return notificationBank || {};
   }
@@ -35,6 +36,10 @@ export class Notifier {
 
     return true;
   }
+
+  static clear() {
+    localStorage.removeItem(Notifier.keyName);
+  }
 }
 
 export const buildNotification = (
@@ -46,9 +51,9 @@ export const buildNotification = (
   gasPrice: number,
   gasLimit: number,
   chain: NETWORKS,
-  txLink: string,
+  txLink: string
 ) => {
-  const notification : INotification = {
+  const notification: INotification = {
     id,
     from,
     to,
@@ -60,7 +65,7 @@ export const buildNotification = (
     status: TX_STATUS.PENDING,
     direction: TX_TYPE.IN,
     chain,
-    txLink
+    txLink,
   };
 
   Notifier.create(id, notification);
@@ -69,5 +74,5 @@ export const buildNotification = (
 };
 
 export const updateNotification = (id: string, status: TX_STATUS) => {
-    Notifier.update(id, status);
+  Notifier.update(id, status);
 };

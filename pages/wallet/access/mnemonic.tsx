@@ -3,13 +3,13 @@ import mnemonic_styles from "styles/pages/wallet/create_access/mnemonic.module.c
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   accessWalletUsingMnemonic,
   getWeb3Connection,
   getWalletBalanceEth,
 } from "utils/wallet";
-import { fetchWalletAssets } from "utils/assetEngine"
+import { fetchWalletAssets } from "utils/assetEngine";
 
 import { NextPageX } from "types/next";
 import Steps, { useStep } from "components/step";
@@ -22,10 +22,10 @@ import { AssetProviderContext } from "context/web3/assets";
 import { IAccount } from "interfaces/IAccount";
 import { NETWORKS } from "interfaces/IRpc";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
-import { primaryFixedValue } from 'constants/digits'
-import { getCoinUSD } from 'utils/priceFeed';
+import { primaryFixedValue } from "constants/digits";
+import { getCoinUSD } from "utils/priceFeed";
 import NET_CONFIG from "config/allNet";
-
+import { SocketProviderContext } from "context/web3/socket";
 
 const steps = [{ title: "Type in your mnemonic phrase" }];
 
@@ -33,11 +33,13 @@ const CreateWithMnemonic: NextPageX = () => {
   const [step] = useStep(steps);
   const router = useRouter();
   const [notification, pushNotification] = useNotification();
-  const [, setAccount] = useContext(AccountContext);
+  const [account, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
   const [, setAssetProvider] = useContext(AssetProviderContext);
   const [startLoader, stopLoader] = useContext(LoaderContext);
-
+  const [prevSocketProvider, setSocketProvider] = useContext(
+    SocketProviderContext
+  );
   function getMemonicInputValues(): string[] {
     const mnemonicInputs: string[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -57,7 +59,6 @@ const CreateWithMnemonic: NextPageX = () => {
 
     startLoader();
 
-
     if (getMemonicInputValues().some((e) => !e.length)) {
       pushNotification({
         element: (
@@ -72,13 +73,24 @@ const CreateWithMnemonic: NextPageX = () => {
     try {
       const wallet = await accessWalletUsingMnemonic(mnemonicArray.join(" "));
 
-      const walletAssets = await fetchWalletAssets(wallet.address, NET_CONFIG.ETHEREUM.chainId);
+      const walletAssets = await fetchWalletAssets(
+        wallet.address,
+        NET_CONFIG.ETHEREUM.chainId
+      );
 
       const provider = getWeb3Connection(NETWORKS.ETHEREUM);
-      
-      const balance = Number(await getWalletBalanceEth(provider, wallet.address));
 
-      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+      const balance = Number(
+        await getWalletBalanceEth(provider, wallet.address)
+      );
+
+      const balanceFiat = Number(
+        (balance <= 0
+          ? 0
+          : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol))
+              .value! * balance
+        ).toFixed(primaryFixedValue)
+      );
 
       setAccount((prev: IAccount) => ({
         ...prev,
@@ -91,8 +103,7 @@ const CreateWithMnemonic: NextPageX = () => {
 
         privateKey: wallet.privateKey,
 
-        addressList: [{nickname: "my address", address: wallet.address}]
-
+        addressList: [{ nickname: "my address", address: wallet.address }],
       }));
 
       setProvider(provider);
@@ -113,6 +124,47 @@ const CreateWithMnemonic: NextPageX = () => {
 
     stopLoader();
   }
+
+  useEffect(() => {
+    if (account.address) {
+      if (prevSocketProvider.version) {
+        prevSocketProvider.eth.clearSubscriptions((err, res) => {
+          return console.log(err, res);
+        });
+
+        setSocketProvider(null);
+      }
+      const socketProvider = getWeb3Connection(NETWORKS.ETHEREUM, true);
+      socketProvider.eth.subscribe("newBlockHeaders", async (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          const balance = Number(
+            await getWalletBalanceEth(socketProvider, account.address)
+          );
+          if (balance !== account.balance) {
+            const balanceFiat = Number(
+              (balance <= 0
+                ? 0
+                : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol))
+                    .value! * balance
+              ).toFixed(primaryFixedValue)
+            );
+
+            setAccount((prev: IAccount) => ({
+              ...prev,
+
+              balance: balance,
+
+              balanceFiat,
+            }));
+          }
+        }
+      });
+
+      setSocketProvider(socketProvider);
+    }
+  }, []);
 
   return (
     <>

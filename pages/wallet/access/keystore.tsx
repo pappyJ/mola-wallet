@@ -21,6 +21,7 @@ import Notification, { useNotification } from "components/notification";
 import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3";
+import { SocketProviderContext } from "context/web3/socket";
 import { AssetProviderContext } from "context/web3/assets";
 import { IAccount } from "interfaces/IAccount";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
@@ -149,6 +150,9 @@ function Step2Component({
   const [account, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
   const [, setAssetProvider] = useContext(AssetProviderContext);
+  const [prevSocketProvider, setSocketProvider] = useContext(
+    SocketProviderContext
+  );
   const [startLoader, stopLoader] = useContext(LoaderContext);
 
   useEffect(() => {
@@ -221,6 +225,47 @@ function Step2Component({
 
     stopLoader();
   }
+
+  useEffect(() => {
+    if (account.address) {
+      if (prevSocketProvider.version) {
+        prevSocketProvider.eth.clearSubscriptions((err, res) => {
+          return console.log(err, res);
+        });
+
+        setSocketProvider(null);
+      }
+      const socketProvider = getWeb3Connection(NETWORKS.ETHEREUM, true);
+      socketProvider.eth.subscribe("newBlockHeaders", async (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          const balance = Number(
+            await getWalletBalanceEth(socketProvider, account.address)
+          );
+          if (balance !== account.balance) {
+            const balanceFiat = Number(
+              (balance <= 0
+                ? 0
+                : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol))
+                    .value! * balance
+              ).toFixed(primaryFixedValue)
+            );
+
+            setAccount((prev: IAccount) => ({
+              ...prev,
+
+              balance: balance,
+
+              balanceFiat,
+            }));
+          }
+        }
+      });
+
+      setSocketProvider(socketProvider);
+    }
+  }, []);
 
   return (
     <>

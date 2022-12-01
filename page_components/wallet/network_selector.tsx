@@ -23,6 +23,7 @@ import styles from "styles/pages/wallet/network_selector.module.css";
 import { LoaderContext } from "context/loader";
 import { fetchWalletAssets } from "utils/assetEngine";
 import { AssetProviderContext } from "context/web3/assets";
+import { SocketProviderContext } from "context/web3/socket";
 
 export const networkLogoMap: { [key: string]: JSX.Element } = {
   [NETWORKS.ETHEREUM]: <EthereumIcon />,
@@ -43,6 +44,9 @@ export default function NetworkSelector() {
   const [filter, setFilter] = useState("main");
   const [startLoader, stopLoader] = useContext(LoaderContext);
   const [, setAssetProvider] = useContext(AssetProviderContext);
+  const [prevSocketProvider, setSocketProvider] = useContext(
+    SocketProviderContext
+  );
 
   async function chooseNetwork(network: INET_CONFIG) {
     startLoader();
@@ -102,6 +106,60 @@ export default function NetworkSelector() {
     setModalActive(false);
     stopLoader();
   }
+
+  useEffect(() => {
+    if (account.address) {
+      if (prevSocketProvider.version) {
+        prevSocketProvider.eth.clearSubscriptions((err, res) => {
+          return console.log(err, res);
+        });
+
+        setSocketProvider(null);
+      }
+
+      const socketProvider = getWeb3Connection(
+        network.chainName as NETWORKS,
+        true
+      );
+
+      socketProvider.eth.subscribe("newBlockHeaders", async (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          const balance = Number(
+            await getWalletBalanceEth(socketProvider, account.address)
+          );
+          if (balance !== account.balance) {
+            startLoader();
+
+            const balanceFiat = Number(
+              (balance <= 0
+                ? 0
+                : (
+                    await getCoinUSD(
+                      NET_CONFIG[network.chainName as NETWORKS].nativeCurrency
+                        .symbol
+                    )
+                  ).value! * balance
+              ).toFixed(primaryFixedValue)
+            );
+
+            setAccount((prev: IAccount) => ({
+              ...prev,
+
+              balance,
+
+              balanceFiat,
+            }));
+          }
+
+          stopLoader();
+        }
+      });
+
+      setSocketProvider(socketProvider);
+    }
+  }, []);
 
   function networkFilterFunction(e: INET_CONFIG) {
     if (filter === "main") return e.test === false;
