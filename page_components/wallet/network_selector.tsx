@@ -124,12 +124,12 @@ export default function NetworkSelector() {
 
       socketProvider.eth.subscribe("newBlockHeaders", async (err) => {
         if (err) {
-           console.log(err);
+          console.log(err);
         } else {
           const balance = Number(
             await getWalletBalanceEth(socketProvider, account.address)
           );
-          if (balance) {
+          if (balance !== account.balance) {
             startLoader();
 
             const balanceFiat = Number(
@@ -159,7 +159,7 @@ export default function NetworkSelector() {
 
       setSocketProvider(socketProvider);
     }
-  }, [network]);
+  }, []);
 
   function networkFilterFunction(e: INET_CONFIG) {
     if (filter === "main") return e.test === false;

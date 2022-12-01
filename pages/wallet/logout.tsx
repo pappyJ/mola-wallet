@@ -7,7 +7,6 @@ import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3/index";
 import { AssetProviderContext } from "context/web3/assets";
 import { NetworkContext } from "page_components/wallet/context";
-
 import { IAccount } from "interfaces/IAccount";
 import INetwork from "interfaces/INetwok";
 import { Notifier } from "utils/notifications";
@@ -27,11 +26,12 @@ const Page: NextPageX = () => {
           <button onClick={() => router.back()}>No</button>
           <button
             onClick={() => {
-              setProvider(null);
+              router.replace("/access");
               setAccount({} as IAccount);
-              setAssetProvider([])
-              setNetwork({} as INetwork)
+              setProvider(null);
+              setAssetProvider([]);
               Notifier.clear();
+              setNetwork({} as INetwork);
             }}
             className={styles.primary}
           >

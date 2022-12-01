@@ -148,3 +148,13 @@
   color: #00244e;
   font-weight: 300;
 }
+
+@media screen and (max-width: 480px) {
+  .main {
+    padding: 1.6rem 0;
+  }
+  .main .container {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
