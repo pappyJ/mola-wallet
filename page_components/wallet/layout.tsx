@@ -21,6 +21,8 @@ import network_styles from "styles/pages/wallet/network_selector.module.css";
 import { ProviderContext } from "context/web3";
 import INetwork from "interfaces/INetwok";
 import { AssetProviderContext } from "context/web3/assets";
+import { IAccount } from "interfaces/IAccount";
+import { Notifier } from "utils/notifications";
 
 export default function DashBoardLayout({ children }: { children: ReactNode }) {
   const [account] = useContext(AccountContext);
@@ -272,10 +274,9 @@ function LogoutModal({ active }: { active: boolean }) {
             onClick={() => {
               setProvider(null);
               setAssetProvider([]);
-              setAccount((prev) => {
-                return { ...prev, address: "" };
-              });
-              setNetwork({} as INetwork);
+              setAccount(defaultAccount);
+              setNetwork(defaultNetwork);
+              Notifier.clear();
             }}
             className={logout_styles.primary}
           >
@@ -286,3 +287,22 @@ function LogoutModal({ active }: { active: boolean }) {
     </div>
   );
 }
+
+const defaultNetwork: INetwork = {
+  blockExplorer: "",
+  nativeCurrency: { name: "", symbol: "", decimals: 0 },
+  chainId: 0,
+  chainName: "",
+  rpcUrls: "",
+  test: false,
+};
+
+const defaultAccount: IAccount = {
+  address: "",
+  balance: 0,
+  balanceFiat: 0,
+  fiat: "",
+  privateKey: "",
+  addressList: [],
+  gasPriority: 0,
+};

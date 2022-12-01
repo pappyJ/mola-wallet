@@ -100,11 +100,14 @@
   align-items: center;
 }
 
+.network_selector_container {
+  width: 28rem;
+  flex-shrink: 0;
+}
+
 @media screen and (max-width: 900px) {
   .network_selector_container {
     display: none;
-    width: 28rem;
-    flex-shrink: 0;
   }
 
   .padder {

@@ -108,13 +108,15 @@ export default function NetworkSelector() {
 
   useEffect(() => {
     if (account.address) {
-      if (prevSocketProvider.version) {
-        prevSocketProvider.eth.clearSubscriptions((err, res) => {
-          return console.log(err, res);
-        });
+      try {
+        if (prevSocketProvider.version) {
+          prevSocketProvider.eth.clearSubscriptions((err, res) => {
+            return console.log(err, res);
+          });
 
-        setSocketProvider(null);
-      }
+          setSocketProvider(null);
+        }
+      } catch (_) {}
 
       const socketProvider = getWeb3Connection(
         network.chainName as NETWORKS,
@@ -158,7 +160,7 @@ export default function NetworkSelector() {
 
       setSocketProvider(socketProvider);
     }
-  }, []);
+  }, [account.address]);
 
   function networkFilterFunction(e: INET_CONFIG) {
     if (filter === "main") return e.test === false;
