@@ -3,7 +3,12 @@ import DashBoardLayout from "page_components/wallet/layout";
 import { NextPageX } from "types/next";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
-import { gasPriceFixedValue, TX_STATUS, TX_TYPE } from "constants/digits";
+import {
+  gasPriceFixedValue,
+  GAS_PRIORITY,
+  TX_STATUS,
+  TX_TYPE,
+} from "constants/digits";
 import { sendTxn, signNativeTokenTx, sendERC20Token } from "utils/transactions";
 import { primaryFixedValue } from "constants/digits";
 import { IAccount } from "interfaces/IAccount";
@@ -17,7 +22,10 @@ import {
   ArrowRightIcon,
   CaretDownOutline,
   ClockFillIcon,
+  ClockIcon,
+  DoubleIcon,
   TickHeavyIcon,
+  UpIcon,
 } from "components/icons";
 import React, {
   ReactNode,
@@ -36,8 +44,11 @@ import NetworkSelector, {
 import WalletHeader from "page_components/wallet/header";
 import { LoaderContext } from "context/loader";
 import Image from "next/image";
+
 import styles from "styles/pages/wallet/send.module.css";
 import network_styles from "styles/pages/wallet/network_selector.module.css";
+import settings_styles from "styles/pages/wallet/settings.module.css";
+
 import { useRouter } from "next/router";
 import Link from "next/link";
 import TokenValue from "page_components/wallet/token_value";
@@ -86,6 +97,7 @@ const SendWalletPage: NextPageX = () => {
 
   const [transConfirmModalActive, setTransConfirmModalActive] = useState(false);
   const [transInitModalActive, setTransInitModalActive] = useState(false);
+  const [transFee, setTransFee] = useState(false);
 
   const sendNative = async (e: any) => {
     e.preventDefault();
@@ -292,6 +304,7 @@ const SendWalletPage: NextPageX = () => {
         active={transInitModalActive}
         setActive={setTransInitModalActive}
       />
+      <TransFee active={transFee} setActive={setTransFee} />
       <div className={styles.container}>
         <div className={styles.md_network_selector}>
           <NetworkSelector />
@@ -393,6 +406,7 @@ const SendWalletPage: NextPageX = () => {
                         <button
                           className={styles.caret_down_icon}
                           style={{ marginLeft: "1rem", color: "#00244e" }}
+                          onClick={() => setTransFee(true)}
                         >
                           <CaretDownOutline />
                         </button>
@@ -794,6 +808,84 @@ function TransInitModal({
           >
             Close
           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TransFee({
+  active,
+  setActive,
+}: {
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const [account] = useContext(AccountContext);
+
+  const priorities = [
+    {
+      icon: TickHeavyIcon,
+      text: "Normal Priority",
+      time: "15 Min",
+      id: GAS_PRIORITY.NORMAL,
+    },
+    {
+      icon: UpIcon,
+      text: "High Priority",
+      time: "5 Min",
+      id: GAS_PRIORITY.HIGH,
+    },
+    {
+      icon: DoubleIcon,
+      text: "Highest Priority",
+      time: "2 Min",
+      id: GAS_PRIORITY.HIGHEST,
+    },
+  ];
+
+  return (
+    <div
+      className={`${network_styles.modal} ${
+        active ? network_styles.active : ""
+      }`}
+    >
+      <div
+        className={`${network_styles.container} ${styles.trans_init} c-scroll`}
+        style={{ padding: "4rem" }}
+      >
+        <h4>SELECT TRANSACTION FEE</h4>
+
+        <div style={{ margin: "2rem" }}>
+          <p style={{ textAlign: "center", fontSize: "1.7rem" }}>
+            The fee is charged by ethereum network and fluntuate depending on
+            network traffic, mola does not profit from this fee.
+          </p>
+        </div>
+
+        <div className={settings_styles.priorities_container}>
+          {priorities.map((e, i) => {
+            return (
+              <button
+                className={`${settings_styles.priorities_box} ${
+                  account.gasPriority == e.id ? settings_styles.active : ""
+                }`}
+                key={i}
+                onClick={() => setTimeout(() => setActive(false), 100)}
+              >
+                <span className={settings_styles.icon_box}>
+                  <e.icon />
+                </span>
+                <span className={settings_styles.text}>{e.text}</span>
+                <span className={settings_styles.time_box}>
+                  <span className={settings_styles.clock_icon_box}>
+                    <ClockIcon />
+                  </span>
+                  <span className={settings_styles.time}>{e.time}</span>
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
