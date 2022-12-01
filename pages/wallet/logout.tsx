@@ -10,6 +10,7 @@ import { NetworkContext } from "page_components/wallet/context";
 import { IAccount } from "interfaces/IAccount";
 import INetwork from "interfaces/INetwok";
 import { Notifier } from "utils/notifications";
+import { SocketProviderContext } from "context/web3/socket";
 
 const Page: NextPageX = () => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const Page: NextPageX = () => {
   const [, setAccount] = useContext(AccountContext);
   const [, setProvider] = useContext(ProviderContext);
   const [, setAssetProvider] = useContext(AssetProviderContext);
-
+  const [,setSocketProvider] = useContext(SocketProviderContext);
   return (
     <div className={styles.main}>
       <div className={styles.container}>
@@ -29,6 +30,8 @@ const Page: NextPageX = () => {
               router.replace("/access");
               setAccount({} as IAccount);
               setProvider(null);
+              setProvider(null);
+              setSocketProvider(null);
               setAssetProvider([]);
               Notifier.clear();
               setNetwork({} as INetwork);
