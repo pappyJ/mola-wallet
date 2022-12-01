@@ -14,7 +14,6 @@ export function useLoader() {
 
   function startLoader() {
     setActive(true);
-    console.log("loader started");
   }
 
   function stopLoader() {

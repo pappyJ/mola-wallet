@@ -4,9 +4,22 @@ import { NextPageX } from "types/next";
 import styles from "styles/pages/wallet/notifications.module.css";
 import { useContext } from "react";
 import { AccountContext } from "context/account";
+import { List } from "page_components/wallet/transaction_history";
+import { Notifier } from "utils/notifications";
+import { NetworkContext } from "page_components/wallet/context";
 
 const NotificationsPage: NextPageX = () => {
   const [account] = useContext(AccountContext);
+  const [network] = useContext(NetworkContext);
+
+  const notifications =
+    typeof window !== "undefined"
+      ? Object.values(Notifier.state)
+          .filter((notifier) => notifier.chain === network.chainName)
+          .sort((a, b) => b.time - a.time)
+          .slice(0, 3)
+      : [];
+
   return (
     <div className={styles.main}>
       <WalletHeader />
@@ -26,6 +39,14 @@ const NotificationsPage: NextPageX = () => {
             <span className={`${styles.color} ${styles.error}`}></span>
             <span className={styles.text}>Error</span>
           </span>
+        </div>
+
+        <div style={{ margin: "2rem 0 4rem" }}>
+          {notifications.length > 0 ? (
+            notifications.map((e) => <List key={e?.id} e={e} />)
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

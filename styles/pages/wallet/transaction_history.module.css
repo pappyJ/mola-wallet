@@ -14,17 +14,32 @@
 .list {
   margin-bottom: 1rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 1rem;
   border-radius: 0.5rem;
   font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  width: 100%;
 }
 
+.list .visible {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.list.success {
+  background-color: #dafdd7;
+  border: 1px solid #44a71d;
+}
 .list.pending {
   background-color: #fff9e2;
+  border: 1px solid #e0b007;
 }
-.list.out {
-  background-color: #ffe7e2;
+.list.error {
+  background-color: #d80f03;
 }
 
 .list .field_label {
@@ -35,11 +50,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 2rem;
+  font-size: 1.4rem;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .direction {
-  background-color: #d80f03;
   color: white;
   padding: 0.1rem 1rem;
   border-radius: 0.5rem;
@@ -47,6 +63,33 @@
   font-size: 1.4rem;
 }
 
+.list.success .direction {
+  background-color: #44a71d;
+}
+.list.error .direction {
+  background-color: #d80f03;
+}
 .list.pending .direction {
   background-color: #e0b007;
+}
+
+.list .expandable_section {
+  max-height: 0;
+  width: 100%;
+  overflow: hidden;
+  transition: all 500ms;
+}
+.list .expandable_section.active {
+  max-height: 30rem;
+  transition: all 1s;
+}
+
+.list .expandable_section .item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+}
+
+.list .expandable_section .item:first-child {
+  padding-top: 1rem;
 }

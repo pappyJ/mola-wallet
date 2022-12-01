@@ -1,7 +1,7 @@
 import styles from "styles/pages/wallet/transaction_history.module.css";
 import network_styles from "styles/pages/wallet/network_selector.module.css";
 import { shorten } from "utils/string";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import blockies from "ethereum-blockies";
 import { Notifier } from "utils/notifications";
 import { INotification } from "interfaces/INotification";
@@ -10,9 +10,10 @@ import { TX_STATUS, TX_TYPE } from "constants/digits";
 export default function TransactionHistory({ network }: { network: string }) {
   const notifications =
     typeof window !== "undefined"
-      ? Object.values(Notifier.state).filter(
-          (notifier) => notifier.chain === network
-        )
+      ? Object.values(Notifier.state)
+          .filter((notifier) => notifier.chain === network)
+          .sort((a, b) => b.time - a.time)
+          .slice(0, 3)
       : [];
 
   return (
@@ -29,8 +30,9 @@ export default function TransactionHistory({ network }: { network: string }) {
   );
 }
 
-function List({ e }: { e: INotification }) {
+export function List({ e }: { e: INotification }) {
   const imageRef = useRef<HTMLSpanElement>(null);
+  const [expandActive, setExpandActive] = useState(false);
 
   useEffect(() => {
     imageRef.current?.lastChild &&
@@ -41,34 +43,70 @@ function List({ e }: { e: INotification }) {
   }, [e.from]);
 
   return (
-    <div
+    <button
       className={`${styles.list} ${
         e.status === TX_STATUS.PENDING
           ? styles.pending
-          : e.direction === TX_TYPE.IN
-          ? styles.in
-          : styles.out
+          : e.status === TX_STATUS.SUCCESS
+          ? styles.success
+          : styles.error
       }`}
+      onClick={() => setExpandActive((prev) => !prev)}
     >
-      <span
-        className={network_styles.network_icon_box}
-        style={{ borderRadius: "50%", overflow: "hidden" }}
-        ref={imageRef}
-      ></span>
-      <div style={{ width: "100%", marginLeft: "0.5rem" }}>
-        <p>
-          <span className={styles.field_label}>From:</span>
-          {shorten(e.from, 8, 4, 15)}
-        </p>
-        <p>
-          <span className={styles.field_label}>Amount:</span>
-          {e.amount}
-        </p>
+      <span className={styles.visible}>
+        <span
+          className={network_styles.network_icon_box}
+          style={{ borderRadius: "50%", overflow: "hidden" }}
+          ref={imageRef}
+        ></span>
+        <span style={{ width: "100%", marginLeft: "0.5rem" }}>
+          <p>
+            <span className={styles.field_label}>From:</span>
+            {shorten(e.from, 8, 4, 15)}
+          </p>
+          <span>
+            <span className={styles.field_label}>Amount:</span>
+            {e.amount}
+          </span>
+        </span>
+        <span className={styles.time_box}>
+          <span className={styles.direction}>
+            {e.direction === TX_TYPE.OUT
+              ? "OUT"
+              : e.direction === TX_TYPE.IN
+              ? "IN"
+              : e.direction === TX_TYPE.SWAP
+              ? "SWAP"
+              : ""}
+          </span>
+          <span>{Math.round((Date.now() - e.time) / 60000)} mins</span>
+        </span>
+      </span>
+      <div
+        className={`${styles.expandable_section} ${
+          expandActive ? styles.active : ""
+        }`}
+      >
+        <div className={styles.item}>
+          <span>Transaction Hash:</span>
+          <span>{e.txHash}</span>
+        </div>
+
+        <div className={styles.item}>
+          <span>Gas Price:</span>
+          <span>{e.gasPrice}</span>
+        </div>
+
+        <div className={styles.item}>
+          <span>Gas Limit:</span>
+          <span>{e.gasLimit}</span>
+        </div>
+
+        <div className={styles.item}>
+          <span>Total transaction fee:</span>
+          <span>{e.amount + e.gasLimit}</span>
+        </div>
       </div>
-      <div className={styles.time_box}>
-        <div className={styles.direction}>{e.direction}</div>
-        <div>{Math.round((Date.now() - e.time) / 1000)} secs</div>
-      </div>
-    </div>
+    </button>
   );
 }

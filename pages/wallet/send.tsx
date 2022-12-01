@@ -103,6 +103,7 @@ const SendWalletPage: NextPageX = () => {
     e.preventDefault();
 
     startLoader();
+    setTransConfirmModalActive(false);
 
     try {
       const tx = isNotNative
@@ -413,12 +414,9 @@ const SendWalletPage: NextPageX = () => {
                       </div>
                       {gasPrice}
                     </div>
-                    <button className={styles.blue_text}>
-                      How fees are determined?
-                    </button>
                   </div>
                   <button className={styles.blue_text}>
-                    Buy more {network.nativeCurrency.symbol}
+                    How fees are determined?
                   </button>
                 </div>
 
