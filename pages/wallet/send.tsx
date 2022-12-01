@@ -292,7 +292,10 @@ const SendWalletPage: NextPageX = () => {
         active={transInitModalActive}
         setActive={setTransInitModalActive}
       />
-      <div style={{ display: "flex" }}>
+      <div className={styles.container}>
+        <div className={styles.md_network_selector}>
+          <NetworkSelector />
+        </div>
         <div>
           <div className={styles.send_container}>
             <h2 className={styles.heading}>
@@ -452,7 +455,7 @@ const SendWalletPage: NextPageX = () => {
           />
         </div>
         <div className={styles.cards_container}>
-          <div>
+          <div className={styles.lg_network_selector}>
             <NetworkSelector />
           </div>
           <div>

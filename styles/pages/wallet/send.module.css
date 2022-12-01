@@ -4,6 +4,10 @@
   margin: 0 auto;
 }
 
+.container {
+  display: flex;
+}
+
 .send_container {
   flex: 1 1 100%;
   background-color: white;
@@ -396,4 +400,37 @@
 }
 .cards_container > * {
   margin-bottom: 1rem;
+}
+
+.md_network_selector {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+  .send_container {
+    margin-right: 0;
+    margin-bottom: 1.6rem;
+  }
+  .cards_container {
+    width: 100%;
+  }
+  .lg_network_selector {
+    display: none;
+  }
+  .md_network_selector {
+    display: block;
+    margin-bottom: 1.6rem;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .input_container {
+    flex-direction: column;
+  }
+  .input_box:not(:last-child) {
+    margin: 1rem 0 !important;
+  }
 }
