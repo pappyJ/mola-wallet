@@ -9,6 +9,8 @@ import { AssetProviderContext } from "context/web3/assets";
 import { NetworkContext } from "page_components/wallet/context";
 
 import { IAccount } from "interfaces/IAccount";
+import INetwork from "interfaces/INetwok";
+import { Notifier } from "utils/notifications";
 
 const Page: NextPageX = () => {
   const router = useRouter();
@@ -28,7 +30,8 @@ const Page: NextPageX = () => {
               setProvider(null);
               setAccount({} as IAccount);
               setAssetProvider([])
-              setNetwork(null)
+              setNetwork({} as INetwork)
+              Notifier.clear();
             }}
             className={styles.primary}
           >

@@ -16,13 +16,14 @@ import {
   generateWalletUsingPKey,
   getWalletBalanceEth,
 } from "utils/wallet";
-import { fetchWalletAssets } from "utils/assetEngine"
+import { fetchWalletAssets } from "utils/assetEngine";
 import { NETWORKS } from "interfaces/IRpc";
 import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
-import { primaryFixedValue } from 'constants/digits'
-import { getCoinUSD } from 'utils/priceFeed';
+import { primaryFixedValue } from "constants/digits";
+import { getCoinUSD } from "utils/priceFeed";
 import NET_CONFIG from "config/allNet";
+import { SocketProviderContext } from "context/web3/socket";
 
 const PrivateKeyPage: NextPageX = () => {
   const [step] = useStep(steps);
@@ -33,7 +34,9 @@ const PrivateKeyPage: NextPageX = () => {
   const [, setAssetProvider] = useContext(AssetProviderContext);
   const [notification, pushNotification] = useNotification();
   const [startLoader, stopLoader] = useContext(LoaderContext);
-
+  const [prevSocketProvider, setSocketProvider] = useContext(
+    SocketProviderContext
+  );
   useEffect(() => {}, [account]);
   async function handleFormSubmit(e: any, privateKey: string) {
     e.preventDefault();
@@ -45,11 +48,22 @@ const PrivateKeyPage: NextPageX = () => {
 
       const provider = getWeb3Connection(NETWORKS.ETHEREUM);
 
-      const walletAssets = await fetchWalletAssets(wallet.address, NET_CONFIG.ETHEREUM.chainId);
-      
-      const balance = Number(await getWalletBalanceEth(provider, wallet.address));
+      const walletAssets = await fetchWalletAssets(
+        wallet.address,
+        NET_CONFIG.ETHEREUM.chainId
+      );
 
-      const balanceFiat = Number((balance <= 0 ? 0 : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol)).value! * balance).toFixed(primaryFixedValue));
+      const balance = Number(
+        await getWalletBalanceEth(provider, wallet.address)
+      );
+
+      const balanceFiat = Number(
+        (balance <= 0
+          ? 0
+          : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol))
+              .value! * balance
+        ).toFixed(primaryFixedValue)
+      );
 
       setAccount((prev: IAccount) => ({
         ...prev,
@@ -62,8 +76,7 @@ const PrivateKeyPage: NextPageX = () => {
 
         privateKey: wallet.privateKey,
 
-        addressList: [{nickname: "my address", address: wallet.address}]
-
+        addressList: [{ nickname: "my address", address: wallet.address }],
       }));
 
       setProvider(provider);
@@ -80,8 +93,48 @@ const PrivateKeyPage: NextPageX = () => {
     }
 
     stopLoader();
-
   }
+
+  useEffect(() => {
+    if (account.address) {
+      if (prevSocketProvider.version) {
+        prevSocketProvider.eth.clearSubscriptions((err, res) => {
+          return console.log(err, res);
+        });
+
+        setSocketProvider(null);
+      }
+      const socketProvider = getWeb3Connection(NETWORKS.ETHEREUM, true);
+      socketProvider.eth.subscribe("newBlockHeaders", async (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          const balance = Number(
+            await getWalletBalanceEth(socketProvider, account.address)
+          );
+          if (balance !== account.balance) {
+            const balanceFiat = Number(
+              (balance <= 0
+                ? 0
+                : (await getCoinUSD(NET_CONFIG.ETHEREUM.nativeCurrency.symbol))
+                    .value! * balance
+              ).toFixed(primaryFixedValue)
+            );
+
+            setAccount((prev: IAccount) => ({
+              ...prev,
+
+              balance: balance,
+
+              balanceFiat,
+            }));
+          }
+        }
+      });
+
+      setSocketProvider(socketProvider);
+    }
+  }, []);
 
   useEffect(() => {
     privateKeyRef.current?.focus();

@@ -1,9 +1,7 @@
-import { useEffect } from "react";
 import styles from "styles/pages/wallet/create_access/index.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { NextPageX } from "types/next";
-import { initAssetEngine } from "utils/assetEngine";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 
 const CreateWalletPage: NextPageX = () => {
