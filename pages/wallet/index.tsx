@@ -113,7 +113,9 @@ const WalletPage: NextPageX = () => {
           </div>
         </div>
         <div className={styles.buy_with_card_section}>
-          <p className={styles.md_text}>My ETH Balance Is Empty</p>
+          <p className={styles.md_text}>
+            {account.balance > 0 ? "" : "My ETH Balance Is Empty"}
+          </p>
           <Link href="#">
             <a className={styles.buy_eth}>Buy Eth with credit card</a>
           </Link>

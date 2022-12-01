@@ -5,7 +5,6 @@ import {
   EthereumIcon,
   PolygonIcon,
   SearchIcon,
-  WBTCIcon,
 } from "components/icons";
 import { useContext, useEffect, useState } from "react";
 import { NetworkContext } from "./context";
@@ -31,7 +30,7 @@ export const networkLogoMap: { [key: string]: JSX.Element } = {
   [NETWORKS.POLYGON]: <PolygonIcon />,
   [NETWORKS.GOERLI]: <EthereumIcon />,
   [NETWORKS.T_BINANCE]: <BNBIcon />,
-  [NETWORKS.MUMBAI]: <WBTCIcon />,
+  [NETWORKS.MUMBAI]: <PolygonIcon />,
 };
 
 export default function NetworkSelector() {
@@ -129,7 +128,7 @@ export default function NetworkSelector() {
           console.log(err);
         } else {
           const balance = Number(
-            await getWalletBalanceEth(socketProvider, account.address)
+            await getWalletBalanceEth(provider, account.address)
           );
           if (balance !== account.balance) {
             startLoader();

@@ -72,7 +72,7 @@ export const  POLYGON_RPC = process.env.NEXT_PUBLIC_NEXT_PUBLIC_POLYGON_RPC!
 
 export const  MUMBAI_CHAIN_ID = 80001
 
-export const  MUMBAI_NAME = "POLYGON"
+export const  MUMBAI_NAME = "MUMBAI"
 
 export const  MUMBAI_SYMBOL = "MATIC"
 
