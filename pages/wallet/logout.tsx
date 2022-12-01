@@ -7,7 +7,6 @@ import { AccountContext } from "context/account";
 import { ProviderContext } from "context/web3/index";
 import { AssetProviderContext } from "context/web3/assets";
 import { NetworkContext } from "page_components/wallet/context";
-
 import { IAccount } from "interfaces/IAccount";
 import INetwork from "interfaces/INetwok";
 
@@ -27,9 +26,9 @@ const Page: NextPageX = () => {
           <button
             onClick={() => {
               setProvider(null);
-              setAccount({} as IAccount);
+              setAccount(defaultAccount);
               setAssetProvider([]);
-              setNetwork({} as INetwork);
+              setNetwork(defaultNetwork);
             }}
             className={styles.primary}
           >
@@ -39,6 +38,25 @@ const Page: NextPageX = () => {
       </div>
     </div>
   );
+};
+
+const defaultNetwork: INetwork = {
+  blockExplorer: "",
+  nativeCurrency: { name: "", symbol: "", decimals: 0 },
+  chainId: 0,
+  chainName: "",
+  rpcUrls: "",
+  test: false,
+};
+
+const defaultAccount: IAccount = {
+  address: "",
+  balance: 0,
+  balanceFiat: 0,
+  fiat: "",
+  privateKey: "",
+  addressList: [],
+  gasPriority: 0,
 };
 
 Page.Layout = DashboardLayout;

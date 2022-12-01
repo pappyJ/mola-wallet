@@ -92,7 +92,7 @@ const WalletPage: NextPageX = () => {
           <div className={styles.center}>
             <div className={styles.fiat_balance}>$ {account.balanceFiat}</div>
             <div className={styles.crypto_balance}>
-              {account.balance} {currentNetwork.nativeCurrency.symbol}
+              {account.balance} {currentNetwork.nativeCurrency?.symbol}
             </div>
           </div>
           <div className={styles.bottom}>
