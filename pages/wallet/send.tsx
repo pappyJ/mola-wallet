@@ -98,6 +98,7 @@ const SendWalletPage: NextPageX = () => {
   const [transConfirmModalActive, setTransConfirmModalActive] = useState(false);
   const [transInitModalActive, setTransInitModalActive] = useState(false);
   const [transFee, setTransFee] = useState(false);
+  const [infoModal, setInfoModal] = useState(false);
 
   const sendNative = async (e: any) => {
     e.preventDefault();
@@ -884,6 +885,36 @@ function TransFee({
               </button>
             );
           })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HowFeesAreDetermined({
+  active,
+  setActive,
+}: {
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <div
+      className={`${network_styles.modal} ${
+        active ? network_styles.active : ""
+      }`}
+    >
+      <div
+        className={`${network_styles.container} ${styles.trans_init} c-scroll`}
+        style={{ padding: "4rem" }}
+      >
+        <h3>How fees are determined</h3>
+        <div style={{ margin: "2rem" }}>
+          <p style={{ textAlign: "center", fontSize: "1.7rem" }}>
+            Ones completed the token amount will be deposited to the address you
+            provided, this takes a few min depending on how conjested the
+            etherum network is.
+          </p>
         </div>
       </div>
     </div>
