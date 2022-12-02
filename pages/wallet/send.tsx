@@ -59,8 +59,6 @@ import { Notifier } from "utils/notifications";
 import { Priority, details, Priories } from "types/gas";
 import { priorities } from "constants/gas";
 
-
-
 const SendWalletPage: NextPageX = () => {
   const [account, setAccount] = useContext(AccountContext);
   const [provider] = useContext(ProviderContext);
@@ -111,7 +109,7 @@ const SendWalletPage: NextPageX = () => {
             details.address,
             account.address,
             account.privateKey,
-            account.gasPriority!,
+            gasPriority.id,
             Number(details.gasLimit),
             currentToken.token.contractAddress
           )
@@ -122,7 +120,7 @@ const SendWalletPage: NextPageX = () => {
             details.address,
             account.address,
             account.privateKey,
-            account.gasPriority!,
+            gasPriority.id,
             Number(details.gasLimit)
           );
 
@@ -308,6 +306,7 @@ const SendWalletPage: NextPageX = () => {
       />
       <TransFee
         priorities={priorities}
+        gasPriority={gasPriority}
         active={transFee}
         setActive={setTransFee}
         setGasPriority={setGasPriority}
@@ -403,7 +402,9 @@ const SendWalletPage: NextPageX = () => {
                   <div className={styles.transfer_fee_container}>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <div className={styles.transfer_fee_box}>
-                        <span style={{ fontSize: "1.7rem" }}>0.54</span>
+                        <span style={{ fontSize: "1.7rem" }}>
+                          Bal:    {account.balance}
+                        </span>
                         <span className={styles.timer}>
                           <span className={styles.clock_icon}>
                             <ClockFillIcon />
@@ -822,15 +823,15 @@ function TransFee({
   active,
   setActive,
   priorities,
+  gasPriority,
   setGasPriority,
 }: {
   active: boolean;
   priorities: Priories;
+  gasPriority: Priority;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
   setGasPriority: React.Dispatch<React.SetStateAction<Priority>>;
 }) {
-  const [account] = useContext(AccountContext);
-
   return (
     <div
       className={`${network_styles.modal} ${
@@ -855,7 +856,7 @@ function TransFee({
             return (
               <button
                 className={`${settings_styles.priorities_box} ${
-                  account.gasPriority == e.id ? settings_styles.active : ""
+                  gasPriority.id == e.id ? settings_styles.active : ""
                 }`}
                 key={i}
                 onClick={() => {
