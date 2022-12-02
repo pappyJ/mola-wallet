@@ -303,6 +303,11 @@
   color: #00244e;
 }
 
+.md_network_container {
+  display: none;
+  margin-bottom: 1.6rem;
+}
+
 @media screen and (max-width: 800px) {
   .card_section {
     flex-direction: column;
@@ -327,5 +332,8 @@
   .token_value_table::-webkit-scrollbar-thumb:hover {
     border: 4px solid white;
     background-color: #125386;
+  }
+  .md_network_container {
+    display: flex;
   }
 }

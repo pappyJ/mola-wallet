@@ -21,6 +21,7 @@
   color: #2189dc;
   font-size: 1.8rem;
   text-align: center;
+  word-break: break-all;
 }
 
 .notification_keys_container {
