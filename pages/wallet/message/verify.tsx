@@ -23,7 +23,7 @@ const Page: NextPageX = () => {
           type: "info",
         });
 
-      alert(provider.eth.accounts.recover(message));
+      pushNotification({ element: provider.eth.accounts.recover(message) });
     } catch (error) {
       pushNotification({
         element: "Invalid Wallet Message Format Please Check Input",
