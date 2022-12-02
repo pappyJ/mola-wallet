@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { NextPageX } from "types/next";
-import { CloseIconInBigCircle } from "components/icons";
+import { ArrowLeftIcon, CloseIconInBigCircle } from "components/icons";
 import Steps, { useStep } from "components/step";
 import { EncryptedKeystoreV3Json } from "web3-core";
 
@@ -49,12 +49,24 @@ const CreateWithKeystorePage: NextPageX = () => {
 
   return (
     <>
-      <div className={styles.close_icon_container}>
-        <Link href="/wallet/access">
-          <a className={styles.close_icon}>
-            <CloseIconInBigCircle />
-          </a>
-        </Link>
+      <div className={styles.back_controller}>
+        <div className={styles.close_icon_container}>
+          <Link href="/wallet/access">
+            <a className={styles.close_icon}>
+              <CloseIconInBigCircle />
+            </a>
+          </Link>
+        </div>
+        <div className={styles.btn_with_icon_container}>
+          <Link href="/wallet/access">
+            <a>
+              <span className={styles.icon_container}>
+                <ArrowLeftIcon />
+              </span>
+              <span>Back</span>
+            </a>
+          </Link>
+        </div>
       </div>
 
       <h1 style={{ paddingTop: 0 }}>Access wallet with keystore file</h1>
@@ -203,7 +215,7 @@ function Step2Component({
 
         addressList: [{ nickname: "my address", address: wallet.address }],
 
-        gasPriority: GAS_PRIORITY.NORMAL
+        gasPriority: GAS_PRIORITY.NORMAL,
       }));
 
       setProvider(provider);

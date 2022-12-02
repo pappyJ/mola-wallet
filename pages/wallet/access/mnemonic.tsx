@@ -13,7 +13,7 @@ import { fetchWalletAssets } from "utils/assetEngine";
 
 import { NextPageX } from "types/next";
 import Steps, { useStep } from "components/step";
-import { CloseIconInBigCircle } from "components/icons";
+import { ArrowLeftIcon, CloseIconInBigCircle } from "components/icons";
 import Notification, { useNotification } from "components/notification";
 import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
@@ -65,6 +65,7 @@ const CreateWithMnemonic: NextPageX = () => {
           <p style={{ textAlign: "center" }}>Enter all mnemonic phrase</p>
         ),
       });
+      stopLoader();
       return;
     }
 
@@ -105,8 +106,7 @@ const CreateWithMnemonic: NextPageX = () => {
 
         addressList: [{ nickname: "my address", address: wallet.address }],
 
-        gasPriority: GAS_PRIORITY.NORMAL
-
+        gasPriority: GAS_PRIORITY.NORMAL,
       }));
 
       setProvider(provider);
@@ -171,12 +171,24 @@ const CreateWithMnemonic: NextPageX = () => {
 
   return (
     <>
-      <div className={styles.close_icon_container}>
-        <Link href="/wallet/access">
-          <a className={styles.close_icon}>
-            <CloseIconInBigCircle />
-          </a>
-        </Link>
+      <div className={styles.back_controller}>
+        <div className={styles.close_icon_container}>
+          <Link href="/wallet/access">
+            <a className={styles.close_icon}>
+              <CloseIconInBigCircle />
+            </a>
+          </Link>
+        </div>
+        <div className={styles.btn_with_icon_container}>
+          <Link href="/wallet/access">
+            <a>
+              <span className={styles.icon_container}>
+                <ArrowLeftIcon />
+              </span>
+              <span>Back</span>
+            </a>
+          </Link>
+        </div>
       </div>
       <h1 style={{ paddingTop: 0 }}>Access wallet with Mnemonic Phrase</h1>
 

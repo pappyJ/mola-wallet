@@ -48,6 +48,9 @@ const WalletPage: NextPageX = () => {
   return (
     <main className={styles.main}>
       <WalletHeader />
+      <div className={styles.md_network_container}>
+        <NetworkSelector />
+      </div>
       <div className={styles.card_section}>
         <div className={styles.balance_section}>
           <div className={styles.top}>

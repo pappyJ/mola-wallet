@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { NextPageX } from "types/next";
-import { CloseIconInBigCircle } from "components/icons";
+import { ArrowLeftIcon, CloseIconInBigCircle } from "components/icons";
 
 import styles from "styles/pages/wallet/create_access/index.module.css";
 import keystore_styles from "styles/pages/wallet/create_access/keystore.module.css";
@@ -23,12 +23,24 @@ const CreateWithKeystorePage: NextPageX = () => {
 
   return (
     <>
-      <div className={styles.close_icon_container}>
-        <Link href="/wallet/import">
-          <a className={styles.close_icon}>
-            <CloseIconInBigCircle />
-          </a>
-        </Link>
+      <div className={styles.back_controller}>
+        <div className={styles.close_icon_container}>
+          <Link href="/wallet/access">
+            <a className={styles.close_icon}>
+              <CloseIconInBigCircle />
+            </a>
+          </Link>
+        </div>
+        <div className={styles.btn_with_icon_container}>
+          <Link href="/wallet/access">
+            <a>
+              <span className={styles.icon_container}>
+                <ArrowLeftIcon />
+              </span>
+              <span>Back</span>
+            </a>
+          </Link>
+        </div>
       </div>
 
       <h1 style={{ paddingTop: 0 }}>Import wallet with keystore file</h1>

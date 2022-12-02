@@ -119,12 +119,20 @@
   border-radius: 0.6rem;
 }
 
+.back_controller .btn_with_icon_container {
+  display: none;
+}
+.back_controller .close_icon_container {
+  display: flex;
+}
+
 .btn_with_icon_container {
   display: flex;
   justify-content: flex-end;
   padding: 0 4.8rem;
 }
-.btn_with_icon_container button {
+.btn_with_icon_container button,
+.btn_with_icon_container a {
   display: flex;
   border: none;
   outline: none;
@@ -132,7 +140,8 @@
   font-weight: 600;
   color: #00244e;
 }
-.btn_with_icon_container button .icon_container {
+.btn_with_icon_container button .icon_container,
+.btn_with_icon_container a .icon_container {
   display: flex;
   margin-right: 0.4rem;
   width: 2.4rem;
@@ -156,5 +165,27 @@
   .main .container {
     background-color: transparent;
     box-shadow: none;
+  }
+  .main h1 {
+    font-size: 2.8rem;
+  }
+  .main h2,
+  .main h3 {
+    font-size: 2.2rem;
+  }
+  .back_controller .btn_with_icon_container {
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 2.4rem;
+    margin: 1.6rem 0;
+  }
+  .back_controller .close_icon_container {
+    display: none;
+  }
+  .back_controller .btn_with_icon_container button .icon_container,
+  .back_controller .btn_with_icon_container a .icon_container {
+    display: flex;
+    margin-right: 0.4rem;
+    width: 2rem;
   }
 }

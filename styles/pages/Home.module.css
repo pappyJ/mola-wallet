@@ -372,4 +372,14 @@
   .store_button.app_store {
     margin: 0 0 1rem 0;
   }
+
+  .section_b .card_container {
+    margin: 0.5rem;
+  }
+  .section_b .padder {
+    padding: 0rem;
+  }
+  .section_b .card {
+    margin-bottom: 1rem !important;
+  }
 }
