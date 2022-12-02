@@ -53,3 +53,12 @@
 .steps_list.active {
   color: #00244e;
 }
+
+@media screen and (max-width: 480px) {
+  .steps h2 {
+    font-size: 2.4rem;
+  }
+  .steps_list {
+    font-size: 1.5rem;
+  }
+}

@@ -9,6 +9,7 @@ import { createMnemonic } from "utils/wallet";
 import { NextPageX } from "types/next";
 import Steps, { useStep } from "components/step";
 import {
+  ArrowLeftIcon,
   CloseIconInBigCircle,
   CloseIconInCircle,
   ReloadIcon,
@@ -40,12 +41,24 @@ const CreateWithMnemonic: NextPageX = () => {
 
   return (
     <>
-      <div className={styles.close_icon_container}>
-        <Link href="/wallet/create">
-          <a className={styles.close_icon}>
-            <CloseIconInBigCircle />
-          </a>
-        </Link>
+      <div className={styles.back_controller}>
+        <div className={styles.close_icon_container}>
+          <Link href="/wallet/access">
+            <a className={styles.close_icon}>
+              <CloseIconInBigCircle />
+            </a>
+          </Link>
+        </div>
+        <div className={styles.btn_with_icon_container}>
+          <Link href="/wallet/access">
+            <a>
+              <span className={styles.icon_container}>
+                <ArrowLeftIcon />
+              </span>
+              <span>Back</span>
+            </a>
+          </Link>
+        </div>
       </div>
       <h1 style={{ paddingTop: 0 }}>Create wallet with Mnemonic Phrase</h1>
 
