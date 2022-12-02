@@ -20,7 +20,7 @@ import { fetchWalletAssets } from "utils/assetEngine";
 import { NETWORKS } from "interfaces/IRpc";
 import { IAccount } from "interfaces/IAccount";
 import Notification, { useNotification } from "components/notification";
-import { primaryFixedValue } from "constants/digits";
+import { GAS_PRIORITY, primaryFixedValue } from "constants/digits";
 import { getCoinUSD } from "utils/priceFeed";
 import NET_CONFIG from "config/allNet";
 import { SocketProviderContext } from "context/web3/socket";
@@ -77,6 +77,9 @@ const PrivateKeyPage: NextPageX = () => {
         privateKey: wallet.privateKey,
 
         addressList: [{ nickname: "my address", address: wallet.address }],
+
+        gasPriority: GAS_PRIORITY.NORMAL
+
       }));
 
       setProvider(provider);

@@ -56,14 +56,8 @@ import TransactionHistory from "page_components/wallet/transaction_history";
 import { AssetProviderContext } from "context/web3/assets";
 import { fetchWalletAssets } from "utils/assetEngine";
 import { Notifier } from "utils/notifications";
-
-type details = {
-  currency: string;
-  amount: string;
-  address: string;
-  gasLimit: string;
-  addData: string;
-};
+import { Priority, details, Priories } from "types/gas";
+import { priorities } from "constants/gas";
 
 const SendWalletPage: NextPageX = () => {
   const [account, setAccount] = useContext(AccountContext);
@@ -99,6 +93,7 @@ const SendWalletPage: NextPageX = () => {
   const [transInitModalActive, setTransInitModalActive] = useState(false);
   const [transFee, setTransFee] = useState(false);
   const [infoModal, setInfoModal] = useState(false);
+  const [gasPriority, setGasPriority] = useState({} as Priority);
 
   const sendNative = async (e: any) => {
     e.preventDefault();
@@ -220,6 +215,10 @@ const SendWalletPage: NextPageX = () => {
   }
 
   useEffect(() => {
+    setGasPriority(priorities[account.gasPriority]);
+  }, []);
+
+  useEffect(() => {
     (async () => {
       try {
         if (details.address && details.amount) {
@@ -306,7 +305,12 @@ const SendWalletPage: NextPageX = () => {
         active={transInitModalActive}
         setActive={setTransInitModalActive}
       />
-      <TransFee active={transFee} setActive={setTransFee} />
+      <TransFee
+        priorities={priorities}
+        active={transFee}
+        setActive={setTransFee}
+        setGasPriority={setGasPriority}
+      />
       <div className={styles.container}>
         <div className={styles.md_network_selector}>
           <NetworkSelector />
@@ -403,7 +407,7 @@ const SendWalletPage: NextPageX = () => {
                           <span className={styles.clock_icon}>
                             <ClockFillIcon />
                           </span>
-                          15 mins
+                          {gasPriority.time}
                         </span>
                         <button
                           className={styles.caret_down_icon}
@@ -816,32 +820,15 @@ function TransInitModal({
 function TransFee({
   active,
   setActive,
+  priorities,
+  setGasPriority,
 }: {
   active: boolean;
+  priorities: Priories;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  setGasPriority: React.Dispatch<React.SetStateAction<Priority>>;
 }) {
   const [account] = useContext(AccountContext);
-
-  const priorities = [
-    {
-      icon: TickHeavyIcon,
-      text: "Normal Priority",
-      time: "15 Min",
-      id: GAS_PRIORITY.NORMAL,
-    },
-    {
-      icon: UpIcon,
-      text: "High Priority",
-      time: "5 Min",
-      id: GAS_PRIORITY.HIGH,
-    },
-    {
-      icon: DoubleIcon,
-      text: "Highest Priority",
-      time: "2 Min",
-      id: GAS_PRIORITY.HIGHEST,
-    },
-  ];
 
   return (
     <div
@@ -863,14 +850,17 @@ function TransFee({
         </div>
 
         <div className={settings_styles.priorities_container}>
-          {priorities.map((e, i) => {
+          {Object.values(priorities).map((e, i) => {
             return (
               <button
                 className={`${settings_styles.priorities_box} ${
                   account.gasPriority == e.id ? settings_styles.active : ""
                 }`}
                 key={i}
-                onClick={() => setTimeout(() => setActive(false), 100)}
+                onClick={() => {
+                  setGasPriority(e);
+                  setTimeout(() => setActive(false), 100);
+                }}
               >
                 <span className={settings_styles.icon_box}>
                   <e.icon />

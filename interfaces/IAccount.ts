@@ -1,3 +1,5 @@
+import { GAS_PRIORITY } from "constants/digits";
+
 export interface IAccount {
   address: string;
   balance: number;
@@ -5,5 +7,5 @@ export interface IAccount {
   fiat: string;
   privateKey: string;
   addressList?: { nickname: string; address: string }[];
-  gasPriority?: number;
+  gasPriority: GAS_PRIORITY;
 }

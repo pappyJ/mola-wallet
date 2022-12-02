@@ -22,7 +22,7 @@ import { AssetProviderContext } from "context/web3/assets";
 import { IAccount } from "interfaces/IAccount";
 import { NETWORKS } from "interfaces/IRpc";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
-import { primaryFixedValue } from "constants/digits";
+import { GAS_PRIORITY, primaryFixedValue } from "constants/digits";
 import { getCoinUSD } from "utils/priceFeed";
 import NET_CONFIG from "config/allNet";
 import { SocketProviderContext } from "context/web3/socket";
@@ -104,6 +104,9 @@ const CreateWithMnemonic: NextPageX = () => {
         privateKey: wallet.privateKey,
 
         addressList: [{ nickname: "my address", address: wallet.address }],
+
+        gasPriority: GAS_PRIORITY.NORMAL
+
       }));
 
       setProvider(provider);
