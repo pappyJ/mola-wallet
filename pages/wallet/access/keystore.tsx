@@ -27,7 +27,7 @@ import { IAccount } from "interfaces/IAccount";
 import WalletCreateAccessLayout from "page_components/wallet/create_access_layout";
 import { getCoinUSD } from "utils/priceFeed";
 import NET_CONFIG from "config/allNet";
-import { primaryFixedValue } from "constants/digits";
+import { GAS_PRIORITY, primaryFixedValue } from "constants/digits";
 
 const steps = [
   {
@@ -202,6 +202,8 @@ function Step2Component({
         privateKey: wallet.privateKey,
 
         addressList: [{ nickname: "my address", address: wallet.address }],
+
+        gasPriority: GAS_PRIORITY.NORMAL
       }));
 
       setProvider(provider);
