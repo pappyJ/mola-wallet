@@ -696,7 +696,16 @@ function TransConfirmModal({
         className={`${network_styles.container} c-scroll`}
         style={{ padding: "4rem" }}
       >
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
         <h4>TRANSACTION CONFIRMATION</h4>
+
         <p style={{ fontSize: "1.7rem", padding: "1rem 0 3rem" }}>
           Please double check everything, mola team will not be able to reverse
           your transactions once it summited, you will still be charged gas fee
@@ -789,6 +798,14 @@ function TransInitModal({
         className={`${network_styles.container} ${styles.trans_init} c-scroll`}
         style={{ padding: "4rem" }}
       >
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
         <h4>TRANSACTION INITIATED</h4>
         <div className={styles.tick_icon_box}>
           <TickHeavyIcon />
@@ -845,6 +862,14 @@ function TransFee({
         className={`${network_styles.container} ${styles.trans_init} c-scroll`}
         style={{ padding: "4rem" }}
       >
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
         <h4>SELECT TRANSACTION FEE</h4>
 
         <div style={{ margin: "2rem" }}>
