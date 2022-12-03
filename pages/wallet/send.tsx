@@ -303,7 +303,6 @@ const SendWalletPage: NextPageX = () => {
       <TransFee
         gasPriority={gasPriority}
         priorities={priorities}
-        gasPriority={gasPriority}
         active={transFee}
         setActive={setTransFee}
         setGasPriority={setGasPriority}
@@ -401,7 +400,7 @@ const SendWalletPage: NextPageX = () => {
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <div className={styles.transfer_fee_box}>
                         <span style={{ fontSize: "1.7rem" }}>
-                          Bal:    {account.balance}
+                          Bal: {account.balance}
                         </span>
                         <span className={styles.timer}>
                           <span className={styles.clock_icon}>
@@ -903,10 +902,7 @@ function InfoModal({
       <div
         className={`${network_styles.container} ${styles.trans_init} c-scroll`}
         style={{ padding: "4rem" }}
-        onClick={() => setActive(false)}
       >
-        <h3 style={{ display: "flex" }}>How fees are determined</h3>
-
         <button
           className={network_styles.close_btn}
           type="button"
@@ -914,12 +910,38 @@ function InfoModal({
         >
           <CloseIconInBigCircle />
         </button>
-
-        <div style={{ margin: "2rem" }}>
-          <p style={{ textAlign: "center", fontSize: "1.7rem" }}>
+        <div style={{ margin: "2rem 0" }}>
+          <h3
+            style={{
+              fontSize: "2.4rem",
+              fontWeight: "600",
+              marginBottom: "1rem",
+            }}
+          >
+            How fees are determined
+          </h3>
+          <p>
             Ones completed the token amount will be deposited to the address you
             provided, this takes a few min depending on how conjested the
             etherum network is.
+          </p>
+        </div>
+        <div style={{ margin: "2rem 0" }}>
+          <h3
+            style={{
+              fontSize: "2.4rem",
+              fontWeight: "600",
+              marginBottom: "1rem",
+            }}
+          >
+            What should I do?
+          </h3>
+          <p>
+            Good news! You have options! If you’re not in a hurry, you can use
+            the “Normal” setting and your transaction will be mined at a later
+            time. MEW supports Ethereum scaling solutions Polygon and Binance
+            Smart Chain (accessible on MEW web and Android). Consider using
+            these chains to avoid congestion and save on fees.
           </p>
         </div>
       </div>
