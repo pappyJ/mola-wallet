@@ -15,7 +15,7 @@ import {
   TickHeavyIcon,
 } from "components/icons";
 import Image from "next/image";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 // import { LoaderContext } from "context/loader";
 import { AccountContext } from "context/account";
 import { NetworkContext } from "page_components/wallet/context";
@@ -44,6 +44,10 @@ const WalletPage: NextPageX = () => {
     document.execCommand("copy");
     setCopied(true);
   }
+
+  useEffect(() => {
+    if (copied) setTimeout(() => setCopied(false), 2000);
+  }, [copied]);
 
   return (
     <main className={styles.main}>
