@@ -100,6 +100,7 @@ const SendWalletPage: NextPageX = () => {
 
     startLoader();
     setTransConfirmModalActive(false);
+    resetDetails();
 
     try {
       const tx = isNotNative
