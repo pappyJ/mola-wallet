@@ -1,6 +1,8 @@
 import { NextPageX } from "types/next";
 import DashboardLayout from "page_components/wallet/layout";
 import styles from "styles/pages/wallet/settings.module.css";
+import network_styles from "styles/pages/wallet/network_selector.module.css";
+
 import {
   AttachmentIcon,
   CaretDownOutline,
@@ -218,18 +220,18 @@ function AddressModal({
 
   return (
     <div
-      className={`${styles.add_address_modal} ${
-        addressModalActive ? styles.active : ""
+      className={`${network_styles.modal} ${
+        addressModalActive ? network_styles.active : ""
       }`}
     >
       <form
-        className={`${styles.container} c-scroll`}
+        className={`${network_styles.container} c-scroll`}
         onSubmit={confirmAndAdd}
         autoComplete="off"
       >
         <h4>Add a contact address</h4>
         <button
-          className={styles.close_btn}
+          className={network_styles.close_btn}
           type="button"
           onClick={() => setAddressModalActive(false)}
         >
@@ -250,7 +252,7 @@ function AddressModal({
           </div>
         </div>
 
-        <div className={styles.btn_container}>
+        <div className={styles.address_btn_container}>
           <button className={styles.btn} type="submit">
             Confirm and Add
           </button>
@@ -557,18 +559,18 @@ function EditAddressModal({ editActive, setEditAcitve, editAddress }: any) {
 
   return (
     <div
-      className={`${styles.add_address_modal} ${
-        editActive ? styles.active : ""
+      className={`${network_styles.modal} ${
+        editActive ? network_styles.active : ""
       }`}
     >
       <form
-        className={`${styles.container} c-scroll`}
+        className={`${network_styles.container} c-scroll`}
         autoComplete="off"
         onSubmit={confirmAndEdit}
       >
         <h4>Edit Address</h4>
         <button
-          className={styles.close_btn}
+          className={network_styles.close_btn}
           type="button"
           onClick={() => setEditAcitve(false)}
         >
@@ -593,7 +595,7 @@ function EditAddressModal({ editActive, setEditAcitve, editAddress }: any) {
           </div>
         </div>
 
-        <div className={styles.btn_container}>
+        <div className={styles.address_btn_container}>
           <button className={styles.btn} type="submit">
             Confirm and Edit
           </button>

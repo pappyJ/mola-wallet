@@ -3,12 +3,7 @@ import DashBoardLayout from "page_components/wallet/layout";
 import { NextPageX } from "types/next";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
-import {
-  gasPriceFixedValue,
-  GAS_PRIORITY,
-  TX_STATUS,
-  TX_TYPE,
-} from "constants/digits";
+import { gasPriceFixedValue, TX_STATUS, TX_TYPE } from "constants/digits";
 import { sendTxn, signNativeTokenTx, sendERC20Token } from "utils/transactions";
 import { primaryFixedValue } from "constants/digits";
 import { IAccount } from "interfaces/IAccount";
@@ -23,9 +18,8 @@ import {
   CaretDownOutline,
   ClockFillIcon,
   ClockIcon,
-  DoubleIcon,
+  CloseIconInBigCircle,
   TickHeavyIcon,
-  UpIcon,
 } from "components/icons";
 import React, {
   ReactNode,
@@ -243,7 +237,7 @@ const SendWalletPage: NextPageX = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [details]);
+  }, [details, gasPriority]);
 
   useEffect(() => {
     if (assets.length) {
@@ -307,11 +301,13 @@ const SendWalletPage: NextPageX = () => {
         setActive={setTransInitModalActive}
       />
       <TransFee
+        gasPriority={gasPriority}
         priorities={priorities}
         active={transFee}
         setActive={setTransFee}
         setGasPriority={setGasPriority}
       />
+      <InfoModal active={infoModal} setActive={setInfoModal} />
       <div className={styles.container}>
         <div className={styles.md_network_selector}>
           <NetworkSelector />
@@ -408,7 +404,7 @@ const SendWalletPage: NextPageX = () => {
                           <span className={styles.clock_icon}>
                             <ClockFillIcon />
                           </span>
-                          {gasPriority.time}
+                          {gasPriority?.time}
                         </span>
                         <button
                           className={styles.caret_down_icon}
@@ -420,8 +416,14 @@ const SendWalletPage: NextPageX = () => {
                       </div>
                       {gasPrice}
                     </div>
+                    <div style={{ padding: "1.6rem 0" }}>
+                      Total: {+details.amount + +gasPrice}
+                    </div>
                   </div>
-                  <button className={styles.blue_text}>
+                  <button
+                    className={styles.blue_text}
+                    onClick={() => setInfoModal(true)}
+                  >
                     How fees are determined?
                   </button>
                 </div>
@@ -741,7 +743,7 @@ function TransConfirmModal({
           </div>
           <div className={styles.transaction_details}>
             <p>TOTAL</p>
-            <p>{+details.amount + +gasPrice}</p>
+            <p>{(+details.amount + +gasPrice).toFixed(10)}</p>
           </div>
         </div>
         <div className={styles.transaction_label}>Transaction Details</div>
@@ -822,10 +824,12 @@ function TransFee({
   active,
   setActive,
   priorities,
+  gasPriority,
   setGasPriority,
 }: {
   active: boolean;
   priorities: Priories;
+  gasPriority: Priority;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
   setGasPriority: React.Dispatch<React.SetStateAction<Priority>>;
 }) {
@@ -855,7 +859,7 @@ function TransFee({
             return (
               <button
                 className={`${settings_styles.priorities_box} ${
-                  account.gasPriority == e.id ? settings_styles.active : ""
+                  gasPriority.id == e.id ? settings_styles.active : ""
                 }`}
                 key={i}
                 onClick={() => {
@@ -882,7 +886,7 @@ function TransFee({
   );
 }
 
-function HowFeesAreDetermined({
+function InfoModal({
   active,
   setActive,
 }: {
@@ -898,8 +902,18 @@ function HowFeesAreDetermined({
       <div
         className={`${network_styles.container} ${styles.trans_init} c-scroll`}
         style={{ padding: "4rem" }}
+        onClick={() => setActive(false)}
       >
-        <h3>How fees are determined</h3>
+        <h3 style={{ display: "flex" }}>How fees are determined</h3>
+
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
         <div style={{ margin: "2rem" }}>
           <p style={{ textAlign: "center", fontSize: "1.7rem" }}>
             Ones completed the token amount will be deposited to the address you

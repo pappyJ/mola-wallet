@@ -217,73 +217,11 @@
   margin-right: 1rem;
 }
 
-.add_address_modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  background-color: rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  z-index: -5;
-
-  transition: all 300ms;
-
-  width: 100%;
-  height: 100%;
-  padding: 3rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.add_address_modal.active {
-  opacity: 1;
-  z-index: 100;
-}
-
-.add_address_modal .container {
-  background-color: white;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
-
-  padding: 1.6rem 3.6rem;
-
-  max-width: 64rem;
-  width: 100%;
-  max-height: 95%;
-  overflow-y: auto;
-
-  position: relative;
-}
-.add_address_modal .container h4 {
-  padding: 2rem;
-  font-weight: 600;
-  font-size: 2.8rem;
-  color: #00244e;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.add_address_modal .container .close_btn {
-  width: 4rem;
-  height: 4rem;
-  flex-shrink: 0;
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  border: none;
-  background-color: transparent;
-}
-.add_address_modal .btn_container {
+.address_btn_container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 2rem 0;
-}
-.address_btn_container {
-  display: flex;
-  justify-content: center;
   margin: 2rem 0;
 }
 
@@ -536,5 +474,9 @@
 
   .priorities_box .time_box {
     flex-shrink: 0;
+  }
+
+  .input_container {
+    padding: 0 1.6rem;
   }
 }
