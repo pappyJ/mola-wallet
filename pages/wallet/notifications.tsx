@@ -24,7 +24,9 @@ const NotificationsPage: NextPageX = () => {
     <div className={styles.main}>
       <WalletHeader />
       <div className={styles.container}>
-        <p className={styles.heading}>No notifcation to dispaly for:</p>
+        <p className={styles.heading}>
+          {!notifications.length ? "No" : ""} notifcation to dispaly for:
+        </p>
         <p className={styles.address}>{account.address}</p>
         <div className={styles.notification_keys_container}>
           <span className={styles.notification_key}>
