@@ -24,6 +24,11 @@
   width: 100%;
 }
 
+.main a,
+.list a {
+  color: #1e89dd;
+}
+
 .list .visible {
   width: 100%;
   display: flex;
@@ -84,12 +89,21 @@
   transition: all 1s;
 }
 
+.list .expandable_section .padder {
+  display: table;
+  border-spacing: 0.5rem 1rem;
+}
+
 .list .expandable_section .item {
   display: flex;
   justify-content: space-between;
-  padding: 0.3rem 0;
+  display: table-row;
 }
 
-.list .expandable_section .item:first-child {
-  padding-top: 1rem;
+.list .expandable_section .item * {
+  display: table-cell;
+}
+.list .expandable_section .item *:nth-child(2) {
+  word-break: break-all;
+  padding-left: 0.8rem;
 }

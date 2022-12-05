@@ -3,12 +3,7 @@ import DashBoardLayout from "page_components/wallet/layout";
 import { NextPageX } from "types/next";
 import { shorten } from "utils/string";
 import blockies from "ethereum-blockies";
-import {
-  gasPriceFixedValue,
-  GAS_PRIORITY,
-  TX_STATUS,
-  TX_TYPE,
-} from "constants/digits";
+import { gasPriceFixedValue, TX_STATUS, TX_TYPE } from "constants/digits";
 import { sendTxn, signNativeTokenTx, sendERC20Token } from "utils/transactions";
 import { primaryFixedValue } from "constants/digits";
 import { IAccount } from "interfaces/IAccount";
@@ -23,9 +18,8 @@ import {
   CaretDownOutline,
   ClockFillIcon,
   ClockIcon,
-  DoubleIcon,
+  CloseIconInBigCircle,
   TickHeavyIcon,
-  UpIcon,
 } from "components/icons";
 import React, {
   ReactNode,
@@ -100,6 +94,7 @@ const SendWalletPage: NextPageX = () => {
 
     startLoader();
     setTransConfirmModalActive(false);
+    resetDetails();
 
     try {
       const tx = isNotNative
@@ -242,7 +237,7 @@ const SendWalletPage: NextPageX = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [details]);
+  }, [details, gasPriority]);
 
   useEffect(() => {
     if (assets.length) {
@@ -306,12 +301,13 @@ const SendWalletPage: NextPageX = () => {
         setActive={setTransInitModalActive}
       />
       <TransFee
-        priorities={priorities}
         gasPriority={gasPriority}
+        priorities={priorities}
         active={transFee}
         setActive={setTransFee}
         setGasPriority={setGasPriority}
       />
+      <InfoModal active={infoModal} setActive={setInfoModal} />
       <div className={styles.container}>
         <div className={styles.md_network_selector}>
           <NetworkSelector />
@@ -404,13 +400,13 @@ const SendWalletPage: NextPageX = () => {
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <div className={styles.transfer_fee_box}>
                         <span style={{ fontSize: "1.7rem" }}>
-                          Bal:    {account.balance}
+                          Bal: {account.balance}
                         </span>
                         <span className={styles.timer}>
                           <span className={styles.clock_icon}>
                             <ClockFillIcon />
                           </span>
-                          {gasPriority.time}
+                          {gasPriority?.time}
                         </span>
                         <button
                           className={styles.caret_down_icon}
@@ -422,8 +418,14 @@ const SendWalletPage: NextPageX = () => {
                       </div>
                       {gasPrice}
                     </div>
+                    <div style={{ padding: "1.6rem 0" }}>
+                      Total: {+details.amount + +gasPrice}
+                    </div>
                   </div>
-                  <button className={styles.blue_text}>
+                  <button
+                    className={styles.blue_text}
+                    onClick={() => setInfoModal(true)}
+                  >
                     How fees are determined?
                   </button>
                 </div>
@@ -694,7 +696,16 @@ function TransConfirmModal({
         className={`${network_styles.container} c-scroll`}
         style={{ padding: "4rem" }}
       >
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
         <h4>TRANSACTION CONFIRMATION</h4>
+
         <p style={{ fontSize: "1.7rem", padding: "1rem 0 3rem" }}>
           Please double check everything, mola team will not be able to reverse
           your transactions once it summited, you will still be charged gas fee
@@ -743,7 +754,7 @@ function TransConfirmModal({
           </div>
           <div className={styles.transaction_details}>
             <p>TOTAL</p>
-            <p>{+details.amount + +gasPrice}</p>
+            <p>{(+details.amount + +gasPrice).toFixed(10)}</p>
           </div>
         </div>
         <div className={styles.transaction_label}>Transaction Details</div>
@@ -787,6 +798,14 @@ function TransInitModal({
         className={`${network_styles.container} ${styles.trans_init} c-scroll`}
         style={{ padding: "4rem" }}
       >
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
         <h4>TRANSACTION INITIATED</h4>
         <div className={styles.tick_icon_box}>
           <TickHeavyIcon />
@@ -843,6 +862,14 @@ function TransFee({
         className={`${network_styles.container} ${styles.trans_init} c-scroll`}
         style={{ padding: "4rem" }}
       >
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+
         <h4>SELECT TRANSACTION FEE</h4>
 
         <div style={{ margin: "2rem" }}>
@@ -884,7 +911,7 @@ function TransFee({
   );
 }
 
-function HowFeesAreDetermined({
+function InfoModal({
   active,
   setActive,
 }: {
@@ -901,12 +928,45 @@ function HowFeesAreDetermined({
         className={`${network_styles.container} ${styles.trans_init} c-scroll`}
         style={{ padding: "4rem" }}
       >
-        <h3>How fees are determined</h3>
-        <div style={{ margin: "2rem" }}>
-          <p style={{ textAlign: "center", fontSize: "1.7rem" }}>
+        <button
+          className={network_styles.close_btn}
+          type="button"
+          onClick={() => setActive(false)}
+        >
+          <CloseIconInBigCircle />
+        </button>
+        <div style={{ margin: "2rem 0" }}>
+          <h3
+            style={{
+              fontSize: "2.4rem",
+              fontWeight: "600",
+              marginBottom: "1rem",
+            }}
+          >
+            How fees are determined
+          </h3>
+          <p>
             Ones completed the token amount will be deposited to the address you
             provided, this takes a few min depending on how conjested the
             etherum network is.
+          </p>
+        </div>
+        <div style={{ margin: "2rem 0" }}>
+          <h3
+            style={{
+              fontSize: "2.4rem",
+              fontWeight: "600",
+              marginBottom: "1rem",
+            }}
+          >
+            What should I do?
+          </h3>
+          <p>
+            Good news! You have options! If you’re not in a hurry, you can use
+            the “Normal” setting and your transaction will be mined at a later
+            time. MEW supports Ethereum scaling solutions Polygon and Binance
+            Smart Chain (accessible on MEW web and Android). Consider using
+            these chains to avoid congestion and save on fees.
           </p>
         </div>
       </div>

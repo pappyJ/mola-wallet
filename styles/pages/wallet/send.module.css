@@ -137,8 +137,8 @@
 }
 .btn:disabled {
   cursor: not-allowed;
-  background-color: #acacac;
-  color: #444;
+  background-color: #d3d3d3;
+  color: #8d8d8d;
   border-color: #acacac;
 }
 
@@ -224,6 +224,11 @@
   justify-content: space-between;
   margin: 1rem 0;
   font-weight: 600;
+}
+
+.transfer_fee_container > div {
+  display: flex;
+  align-items: center;
 }
 
 .transfer_fee_box {
@@ -423,6 +428,10 @@
   .md_network_selector {
     display: block;
     margin-bottom: 1.6rem;
+  }
+  .transfer_fee_container {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

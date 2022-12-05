@@ -6,6 +6,7 @@ import blockies from "ethereum-blockies";
 import { Notifier } from "utils/notifications";
 import { INotification } from "interfaces/INotification";
 import { TX_STATUS, TX_TYPE } from "constants/digits";
+import Link from "next/link";
 
 export default function TransactionHistory({ network }: { network: string }) {
   const notifications =
@@ -25,6 +26,11 @@ export default function TransactionHistory({ network }: { network: string }) {
         ) : (
           <></>
         )}
+      </div>
+      <div>
+        <Link href="/wallet/notifications">
+          <a>See more</a>
+        </Link>
       </div>
     </div>
   );
@@ -87,24 +93,28 @@ export function List({ e }: { e: INotification }) {
           expandActive ? styles.active : ""
         }`}
       >
-        <div className={styles.item}>
-          <span>Transaction Hash:</span>
-          <span>{e.txHash}</span>
-        </div>
+        <div className={styles.padder}>
+          <div className={styles.item}>
+            <span>Transaction Hash:</span>
+            <a href={e.txLink} target="_blank" rel="noreferrer">
+              {e.txHash}
+            </a>
+          </div>
 
-        <div className={styles.item}>
-          <span>Gas Price:</span>
-          <span>{e.gasPrice}</span>
-        </div>
+          <div className={styles.item}>
+            <span>Gas Price:</span>
+            <span>{e.gasPrice}</span>
+          </div>
 
-        <div className={styles.item}>
-          <span>Gas Limit:</span>
-          <span>{e.gasLimit}</span>
-        </div>
+          <div className={styles.item}>
+            <span>Gas Limit:</span>
+            <span>{e.gasLimit}</span>
+          </div>
 
-        <div className={styles.item}>
-          <span>Total transaction fee:</span>
-          <span>{e.amount + e.gasLimit}</span>
+          <div className={styles.item}>
+            <span>Total transaction fee:</span>
+            <span>{e.amount + e.gasPrice}</span>
+          </div>
         </div>
       </div>
     </button>
