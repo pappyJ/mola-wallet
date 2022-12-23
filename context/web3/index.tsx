@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Web3 from "web3";
 
 export const ProviderContext = React.createContext<
-  [Web3, React.Dispatch<React.SetStateAction<any>>]
+  [Web3, React.Dispatch<React.SetStateAction<Web3>>]
 >([new Web3, () => {}]);
 
 export function ProviderContextComponent({
