@@ -2,7 +2,7 @@
 
 ## Overview
 
-Mola wallet provides a secure and decentralized way to manage your digital assets on the Ethereum blockchain. With the wallet, you remain in control of your private keys, ensuring full ownership and sovereignty over your funds.
+Mola wallet provides a secure and decentralized way to manage your digital assets on all EVM compatible blockchain Networks. With the wallet, you remain in control of your private keys, ensuring full ownership and sovereignty over your funds.
 
 ## Features
 
