@@ -1,3 +1,23 @@
+# Mola Wallet
+
+## Overview
+
+Mola wallet provides a secure and decentralized way to manage your digital assets on the Ethereum blockchain. With the wallet, you remain in control of your private keys, ensuring full ownership and sovereignty over your funds.
+
+## Features
+
+- Non-Custodial: You control your private keys, providing enhanced security and autonomy.
+Ethereum Integration: Seamlessly interact with Ethereum-based decentralized applications (DApps) and smart contracts.
+
+- User-Friendly Interface: Intuitive design and easy navigation for both beginners and experienced users.
+
+- Secure Transactions: Built-in encryption and authentication mechanisms ensure the safety of your transactions.
+
+- Cross-Platform Compatibility: Access your wallet from any device with a modern web browser.
+
+## Development
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
